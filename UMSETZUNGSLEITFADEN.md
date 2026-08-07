@@ -25,6 +25,13 @@
 | 6 | Projektmanagement / Abstimmung | 1,00 | laufend |
 | | **Summe** | **16,00** | |
 
+### Stundenbuchungen (intern, Arineo)
+
+| Datum | Stunden | Buchungstext | Deckt ab |
+|---|---|---|---|
+| 07.08.2026 | 5,00 | „Neubau der Druck- und Versand-Flows: konsolidierter Flow für AF- und IT-Security-PDFs mit neuem Drucklayout, automatischem Versand an Legal Coordinator bei Abschluss/Ablehnung und Fehlerbehandlung" | Flow-Seite von #1–#3 komplett (inkl. Analyse, B2-Bugfixes F5/F6, Auslöser-Kopie-Feature) |
+| | **Gebucht gesamt: 5,00** | **Restbudget: 11,00 von 16,00** | Restaufwand geschätzt ~6 h (App-Umbau, Aktivierung+Test, Feindesign, GoLive, PM) |
+
 ## 3. Anforderungen im Detail
 
 ### 3.1 Anpassung Drucklayout (#1)
