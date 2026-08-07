@@ -1,0 +1,15 @@
+<environmentvariabledefinition schemaname="hse_shared_sharepointonline_799bc7aec5f1493c998580565ca93ce3">
+  <apiid>/providers/microsoft.powerapps/apis/shared_sharepointonline</apiid>
+  <displayname default="EFABO Anträge (Archiv)">
+    <label description="EFABO Anträge (Archiv)" languagecode="1031" />
+  </displayname>
+  <introducedversion>1.0.0.0</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <parameterkey>table</parameterkey>
+  <parentdefinitionid>
+    <schemaname>hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62</schemaname>
+  </parentdefinitionid>
+  <secretstore>0</secretstore>
+  <type>100000004</type>
+</environmentvariabledefinition>

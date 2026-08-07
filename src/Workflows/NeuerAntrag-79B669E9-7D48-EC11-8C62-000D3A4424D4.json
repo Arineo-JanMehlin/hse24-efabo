@@ -1,0 +1,3483 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "api": {
+          "name": "shared_sharepointonline"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "hse_EFABOSharePoint"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_office365": {
+        "api": {
+          "name": "shared_office365"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "hse_sharedoffice365_44daf"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "EFABO Anträge (hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5)": {
+          "defaultValue": "d8010e65-d7b0-4b11-b0a0-ac65f5b96208",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5"
+          }
+        },
+        "EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)": {
+          "defaultValue": "https://homeshoppingeurope24.sharepoint.com/sites/EFABO_DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62"
+          }
+        },
+        "AppID (hse_AppID)": {
+          "defaultValue": "82f0abdb-6e73-46b5-a033-2611cea27ef9",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_AppID"
+          }
+        },
+        "Arbeitsrechtliche Freigabe (new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d)": {
+          "defaultValue": "312ce00d-e31d-4435-8e4c-63e76f0e6dfa",
+          "type": "String",
+          "metadata": {
+            "schemaName": "new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d"
+          }
+        },
+        "Role Def Id Erstellen (hse_RoleDefIdErstellen)": {
+          "defaultValue": "1073741926",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_RoleDefIdErstellen"
+          }
+        },
+        "Role Def Id Pruefen (hse_RoleDefIdPruefen)": {
+          "defaultValue": "1073741927",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_RoleDefIdPruefen"
+          }
+        },
+        "EFABO Testing (hse_EFABOTesting)": {
+          "defaultValue": true,
+          "type": "Bool",
+          "metadata": {
+            "schemaName": "hse_EFABOTesting"
+          }
+        },
+        "EFABO_Gruppe_SachbearbeiterRechtID (hse_EFABO_Gruppe_SachbearbeiterRechtID)": {
+          "defaultValue": "16",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_EFABO_Gruppe_SachbearbeiterRechtID"
+          }
+        },
+        "EFABO_Gruppe_RechtID (hse_EFABO_Gruppe_RechtID)": {
+          "defaultValue": "15",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_EFABO_Gruppe_RechtID"
+          }
+        },
+        "EFABO_Gruppe_FinanceID (hse_EFABO_Gruppe_FinanceID)": {
+          "defaultValue": "14",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_EFABO_Gruppe_FinanceID"
+          }
+        },
+        "EFABO_Gruppe_EinkaufID (hse_EFABO_Gruppe_EinkaufID)": {
+          "defaultValue": "12",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_EFABO_Gruppe_EinkaufID"
+          }
+        },
+        "EFABO_Gruppe_WorkermanagementID (hse_EFABO_Gruppe_WorkermanagementID)": {
+          "defaultValue": "40",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_EFABO_Gruppe_WorkermanagementID"
+          }
+        },
+        "IT-Security Freigabe (hse_ITSecurityFreigabe)": {
+          "defaultValue": "15e4a9aa-67e1-46a3-b61e-8d713d4c32f5",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_ITSecurityFreigabe"
+          }
+        },
+        "EFABO_Gruppe_ITSecID (hse_EFABO_Gruppe_ITSecID)": {
+          "defaultValue": "45",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_EFABO_Gruppe_ITSecID"
+          }
+        }
+      },
+      "triggers": {
+        "When_an_item_is_created": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "table": "@parameters('EFABO Anträge (hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5)')"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "GetOnNewItems",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "recurrence": {
+            "interval": 5,
+            "frequency": "Minute"
+          },
+          "conditions": [],
+          "splitOn": "@triggerOutputs()?['body/value']",
+          "metadata": {
+            "operationMetadataId": "275f3aaa-fd02-45f9-bbbc-1b1b38b069d7"
+          }
+        }
+      },
+      "actions": {
+        "Freigabe_eines_Elements_oder_einer_Datei_beenden": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "table": "@parameters('EFABO Anträge (hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5)')",
+              "id": "@triggerOutputs()?['body/ID']"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "UnshareItem",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {
+            "Set_Link_Feld": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d5b0c2e6-08b9-4584-bf31-6b0e10181ceb"
+          }
+        },
+        "Get_UserPrincipalId_-_Genehmiger": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "parameters/method": "POST",
+              "parameters/uri": "_api/web/SiteUsers/getbyemail('@{triggerOutputs()?['body/Genehmiger/Email']}')",
+              "parameters/headers": {
+                "accept": "application/json;odata=verbose",
+                "content-type": "application/json;odata=verbose"
+              }
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "HttpRequest",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {
+            "Bedingung_-_Efabo_Status_=_Entwurf": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "62124368-bad4-46be-b537-85c82e3a2a66"
+          }
+        },
+        "Set_Link_Feld": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "parameters/method": "POST",
+              "parameters/uri": "_api/web/lists/getbytitle('EFABO Anträge')/items(@{triggerOutputs()?['body/ID']})",
+              "parameters/headers": {
+                "X-HTTP-Method": "MERGE",
+                "IF-Match": "*",
+                "Content-Type": "application/json;odata=verbose",
+                "Accept": "application/json;odata=verbose"
+              },
+              "parameters/body": "{\n\"__metadata\":{\n\t\"type\": \"SP.Data.EFABO_x0020_AntrgeListItem\"\n\t},\n\"Zum_x0020_Formular\":\n{\n\t\"__metadata\":{\n\t\"type\":\"SP.FieldUrlValue\"\n        },\n       \"Description\": \"Link\",\n        \"Url\": \"https://apps.powerapps.com/play/@{parameters('AppID (hse_AppID)')}?tenantId=1d0f52d7-4151-4a31-ad92-b176d150d4e6&ID=@{triggerOutputs()?['body/ID']}\"\n\t}\n}"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "HttpRequest",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {
+            "Variable_initialisieren_-_varURLzuElement": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d464c5e4-c2b9-4805-8180-c85f754a61d2"
+          }
+        },
+        "JSON_analysieren_-_Genehmiger": {
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@outputs('Get_UserPrincipalId_-_Genehmiger')?['body']",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "d": {
+                  "type": "object",
+                  "properties": {
+                    "__metadata": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "uri": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "Id": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Get_UserPrincipalId_-_Genehmiger": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "99eb9f93-a02b-45f2-848e-3567f0bc89e9"
+          }
+        },
+        "Bedingung_-_Überprüfen_ob_Antrag_von_jemand_anderem_erstellt_wurde": {
+          "type": "If",
+          "description": "Der Ersteller hat immer autom. Berechtigungen auf die Anträge durch die SharePoint Einstellungen",
+          "expression": {
+            "not": {
+              "equals": [
+                "@triggerOutputs()?['body/VerantwortlicherMitarbeiter/Email']",
+                "@triggerOutputs()?['body/Author']"
+              ]
+            }
+          },
+          "actions": {
+            "Get_UserPrincipalId_-_Verantwortlicher": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/SiteUsers/getbyemail('@{triggerOutputs()?['body/VerantwortlicherMitarbeiter/Email']}')",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "HttpRequest",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "metadata": {
+                "operationMetadataId": "5b375552-56a3-4836-b225-52224cea25b8"
+              }
+            },
+            "JSON_analysieren_-_Verantwortlicher": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@outputs('Get_UserPrincipalId_-_Verantwortlicher')?['body']",
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "d": {
+                      "type": "object",
+                      "properties": {
+                        "__metadata": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "uri": {
+                              "type": "string"
+                            },
+                            "type": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "Id": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Get_UserPrincipalId_-_Verantwortlicher": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "313ba7ab-9703-45b7-a451-1a2eea4769c1"
+              }
+            },
+            "Set_Verantwortlicher_mit_Schreiberechte": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('EFABO Anträge')/items(@{triggerOutputs()?['body/ID']})/roleassignments/addroleassignment(principalId=@{body('JSON_analysieren_-_Verantwortlicher')?['d']?['Id']},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "HttpRequest",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "JSON_analysieren_-_Verantwortlicher": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "73e59135-480f-45c2-a718-21644da9c991"
+              }
+            }
+          },
+          "else": {
+            "actions": {}
+          },
+          "runAfter": {
+            "Set_Workermanagement_mit_Lesen": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "800c6b5b-883d-46f5-aa1e-aa56953dabd6"
+          }
+        },
+        "Set_Genehmiger_mit_Prüfer_(ohne_Löschen)": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "parameters/method": "POST",
+              "parameters/uri": "_api/web/lists/getbytitle('EFABO Anträge')/items(@{triggerOutputs()?['body/ID']})/roleassignments/addroleassignment(principalId=@{body('JSON_analysieren_-_Genehmiger')?['d']?['Id']},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+              "parameters/headers": {
+                "accept": "application/json;odata=verbose",
+                "content-type": "application/json;odata=verbose"
+              }
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "HttpRequest",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {
+            "JSON_analysieren_-_Genehmiger": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "1f720298-af92-48e1-8c6d-68cc7d91a41d"
+          }
+        },
+        "Set_Sachbearbeiter_Recht_mit_Prüfer_(ohne_Löschen)": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "parameters/method": "POST",
+              "parameters/uri": "_api/web/lists/getbytitle('EFABO Anträge')/items(@{triggerOutputs()?['body/ID']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_SachbearbeiterRechtID (hse_EFABO_Gruppe_SachbearbeiterRechtID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+              "parameters/headers": {
+                "accept": "application/json;odata=verbose",
+                "content-type": "application/json;odata=verbose"
+              }
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "HttpRequest",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {
+            "Set_Genehmiger_mit_Prüfer_(ohne_Löschen)": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d3aeb45f-063b-4050-8e0d-bdb4f30abb09"
+          }
+        },
+        "Set_Sachbearbeiter_Prüfende_Rechtsanwälte_mit_Prüfer_(ohne_Löschen)": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "parameters/method": "POST",
+              "parameters/uri": "_api/web/lists/getbytitle('EFABO Anträge')/items(@{triggerOutputs()?['body/ID']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_RechtID (hse_EFABO_Gruppe_RechtID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+              "parameters/headers": {
+                "accept": "application/json;odata=verbose",
+                "content-type": "application/json;odata=verbose"
+              }
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "HttpRequest",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {
+            "Set_Sachbearbeiter_Recht_mit_Prüfer_(ohne_Löschen)": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b1b16f18-c1ca-4402-b27c-ead09fe6b5b8"
+          }
+        },
+        "Set_Sachbearbeiter_Sachbearbeiter_Finanzen_mit_Prüfer_(ohne_Löschen)": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "parameters/method": "POST",
+              "parameters/uri": "_api/web/lists/getbytitle('EFABO Anträge')/items(@{triggerOutputs()?['body/ID']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_FinanceID (hse_EFABO_Gruppe_FinanceID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+              "parameters/headers": {
+                "accept": "application/json;odata=verbose",
+                "content-type": "application/json;odata=verbose"
+              }
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "HttpRequest",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {
+            "Set_Sachbearbeiter_Prüfende_Rechtsanwälte_mit_Prüfer_(ohne_Löschen)": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "250154c8-c2f3-465e-abc9-50fa96a473a2"
+          }
+        },
+        "Set_Sachbearbeiter_Einkauf_mit_Prüfer_(ohne_Löschen)": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "parameters/method": "POST",
+              "parameters/uri": "_api/web/lists/getbytitle('EFABO Anträge')/items(@{triggerOutputs()?['body/ID']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_EinkaufID (hse_EFABO_Gruppe_EinkaufID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+              "parameters/headers": {
+                "accept": "application/json;odata=verbose",
+                "content-type": "application/json;odata=verbose"
+              }
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "HttpRequest",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {
+            "Set_Sachbearbeiter_Sachbearbeiter_Finanzen_mit_Prüfer_(ohne_Löschen)": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "12b783c0-7ed6-432e-b9c7-066584140344"
+          }
+        },
+        "Get_UserPrincipalId_-_Verantwortlich": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "parameters/method": "POST",
+              "parameters/uri": "_api/web/SiteUsers/getbyemail('@{triggerOutputs()?['body/VerantwortlicherMitarbeiter/Email']}')",
+              "parameters/headers": {
+                "accept": "application/json;odata=verbose",
+                "content-type": "application/json;odata=verbose"
+              }
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "HttpRequest",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {
+            "Freigabe_eines_Elements_oder_einer_Datei_beenden": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f7c7678b-d5d3-4a82-9088-69bd29bea882"
+          }
+        },
+        "JSON_analysieren_-_Verantwortlich": {
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@outputs('Get_UserPrincipalId_-_Verantwortlich')?['body']",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "d": {
+                  "type": "object",
+                  "properties": {
+                    "__metadata": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "uri": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "Id": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Get_UserPrincipalId_-_Verantwortlich": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a89a7d24-f1a5-45bc-9317-a047d9c95905"
+          }
+        },
+        "Set_Verantwortlich_mit_Ersteller_(ohne_Löschen)": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "parameters/method": "POST",
+              "parameters/uri": "_api/web/lists/getbytitle('EFABO Anträge')/items(@{triggerOutputs()?['body/ID']})/roleassignments/addroleassignment(principalId=@{body('JSON_analysieren_-_Verantwortlich')?['d']?['Id']},roledefId=@{parameters('Role Def Id Erstellen (hse_RoleDefIdErstellen)')})",
+              "parameters/headers": {
+                "accept": "application/json;odata=verbose",
+                "content-type": "application/json;odata=verbose"
+              }
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "HttpRequest",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {
+            "JSON_analysieren_-_Verantwortlich": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "8def8938-910d-4aca-b843-6afe346ea3aa"
+          }
+        },
+        "Bedingung_-_Arbeitsrechtliche_Fragen_werden_benötigt": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@triggerOutputs()?['body/AufwandsbezogeneVerguetung']",
+                  "@true"
+                ]
+              },
+              {
+                "not": {
+                  "equals": [
+                    "@triggerOutputs()?['body/Whitelist']",
+                    "@true"
+                  ]
+                }
+              },
+              {
+                "not": {
+                  "equals": [
+                    "@triggerOutputs()?['body/Generalfreigabe']",
+                    "@true"
+                  ]
+                }
+              }
+            ]
+          },
+          "actions": {
+            "Set_Arbeitsrechtliche_Fragen_In_Prüfung": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "table": "@parameters('EFABO Anträge (hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5)')",
+                  "id": "@triggerOutputs()?['body/ID']",
+                  "item/PruefungArbeitsrechtlicheFragen": "In Prüfung"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "PatchItem",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "metadata": {
+                "operationMetadataId": "927a4ab0-7692-42e6-9b6d-ee69226dd411"
+              }
+            },
+            "Get_Arbeitsrechtliche_Prüfung": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "table": "@parameters('Arbeitsrechtliche Freigabe (new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d)')",
+                  "$filter": "Title eq @{triggerOutputs()?['body/ID']}",
+                  "$top": 1
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "GetItems",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Set_Arbeitsrechtliche_Fragen_In_Prüfung": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "c6b184b2-2641-494e-a44a-f143cad458cd"
+              }
+            },
+            "Parse_Arbeitsrechtliche_Prüfung": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@First(outputs('Get_Arbeitsrechtliche_Prüfung')?['body/value'])",
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "object",
+                      "properties": {
+                        "@@odata.etag": {
+                          "type": "string"
+                        },
+                        "ItemInternalId": {
+                          "type": "string"
+                        },
+                        "ID": {
+                          "type": "integer"
+                        },
+                        "Title": {
+                          "type": "string"
+                        },
+                        "Modified": {
+                          "type": "string"
+                        },
+                        "Created": {
+                          "type": "string"
+                        },
+                        "Author": {
+                          "type": "object",
+                          "properties": {
+                            "@@odata.type": {
+                              "type": "string"
+                            },
+                            "Claims": {
+                              "type": "string"
+                            },
+                            "DisplayName": {
+                              "type": "string"
+                            },
+                            "Email": {
+                              "type": "string"
+                            },
+                            "Picture": {
+                              "type": "string"
+                            },
+                            "Department": {
+                              "type": "string"
+                            },
+                            "JobTitle": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "Author#Claims": {
+                          "type": "string"
+                        },
+                        "Editor": {
+                          "type": "object",
+                          "properties": {
+                            "@@odata.type": {
+                              "type": "string"
+                            },
+                            "Claims": {
+                              "type": "string"
+                            },
+                            "DisplayName": {
+                              "type": "string"
+                            },
+                            "Email": {
+                              "type": "string"
+                            },
+                            "Picture": {
+                              "type": "string"
+                            },
+                            "Department": {
+                              "type": "string"
+                            },
+                            "JobTitle": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "Editor#Claims": {
+                          "type": "string"
+                        },
+                        "Zweck_der_Software": {
+                          "type": "string"
+                        },
+                        "Website_des_Herstellers": {
+                          "type": "string"
+                        },
+                        "Techn_Ansprechpartner_HSE": {
+                          "type": "object",
+                          "properties": {
+                            "@@odata.type": {
+                              "type": "string"
+                            },
+                            "Claims": {
+                              "type": "string"
+                            },
+                            "DisplayName": {
+                              "type": "string"
+                            },
+                            "Email": {},
+                            "Picture": {},
+                            "Department": {},
+                            "JobTitle": {}
+                          }
+                        },
+                        "Techn_Ansprechpartner_HSE#Claims": {
+                          "type": "string"
+                        },
+                        "Techn_Ansprechpartner_DL": {
+                          "type": "string"
+                        },
+                        "Techn_Ansprechpartner_Anbieter": {
+                          "type": "string"
+                        },
+                        "Verwendung_KI": {
+                          "type": "boolean"
+                        },
+                        "Lizenvariante": {
+                          "type": "string"
+                        },
+                        "Anzahl_Lizenzen": {
+                          "type": "string"
+                        },
+                        "Schutzbedarf_Verfuegbarkeit": {
+                          "type": "object",
+                          "properties": {
+                            "@@odata.type": {
+                              "type": "string"
+                            },
+                            "Id": {
+                              "type": "integer"
+                            },
+                            "Value": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "Schutzbedarf_Verfuegbarkeit#Id": {
+                          "type": "integer"
+                        },
+                        "Schutzbedarf_Integritaet": {
+                          "type": "object",
+                          "properties": {
+                            "@@odata.type": {
+                              "type": "string"
+                            },
+                            "Id": {
+                              "type": "integer"
+                            },
+                            "Value": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "Schutzbedarf_Integritaet#Id": {
+                          "type": "integer"
+                        },
+                        "Schutzbedarf_Vertraulichkeit": {
+                          "type": "object",
+                          "properties": {
+                            "@@odata.type": {
+                              "type": "string"
+                            },
+                            "Id": {
+                              "type": "integer"
+                            },
+                            "Value": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "Schutzbedarf_Vertraulichkeit#Id": {
+                          "type": "integer"
+                        },
+                        "Personenbezogene_Daten": {
+                          "type": "boolean"
+                        },
+                        "Personenbezogene_Daten_mit_erhoe": {
+                          "type": "boolean"
+                        },
+                        "Vertrauliche_Daten": {
+                          "type": "boolean"
+                        },
+                        "Streng_Vertrauliche_Daten": {
+                          "type": "boolean"
+                        },
+                        "Freitext_Kategorie_Daten": {
+                          "type": "string"
+                        },
+                        "Benutzergruppe_Software": {
+                          "type": "string"
+                        },
+                        "Anzahl_Nutzer": {
+                          "type": "string"
+                        },
+                        "Andere_Softwareloesungen_Zugriff": {
+                          "type": "boolean"
+                        },
+                        "Daten_von_DL_verarbeitet": {
+                          "type": "boolean"
+                        },
+                        "DL_Zugriff_auf_Software_Daten": {
+                          "type": "boolean"
+                        },
+                        "Welche_Systeme_Software": {
+                          "type": "string"
+                        },
+                        "Wo_Systeme": {
+                          "type": "string"
+                        },
+                        "Software_erreichbar_Internet": {
+                          "type": "string"
+                        },
+                        "Betreiber_Systeme": {
+                          "type": "string"
+                        },
+                        "Standarsierte_Schnittstellen": {
+                          "type": "boolean"
+                        },
+                        "Transportweg_Verschluesselung": {
+                          "type": "string"
+                        },
+                        "Genutztes_Verfahren": {
+                          "type": "string"
+                        },
+                        "Wo_Speicherung_Authentifikations": {
+                          "type": "string"
+                        },
+                        "Zugriff_nur_aus_HSE_Netzwerk": {
+                          "type": "boolean"
+                        },
+                        "{Identifier}": {
+                          "type": "string"
+                        },
+                        "{IsFolder}": {
+                          "type": "boolean"
+                        },
+                        "{Thumbnail}": {
+                          "type": "object",
+                          "properties": {
+                            "Large": {},
+                            "Medium": {},
+                            "Small": {}
+                          }
+                        },
+                        "{Link}": {
+                          "type": "string"
+                        },
+                        "{Name}": {
+                          "type": "string"
+                        },
+                        "{FilenameWithExtension}": {
+                          "type": "string"
+                        },
+                        "{Path}": {
+                          "type": "string"
+                        },
+                        "{FullPath}": {
+                          "type": "string"
+                        },
+                        "{ContentType}": {
+                          "type": "object",
+                          "properties": {
+                            "@@odata.type": {
+                              "type": "string"
+                            },
+                            "Id": {
+                              "type": "string"
+                            },
+                            "Name": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "{ContentType}#Id": {
+                          "type": "string"
+                        },
+                        "{HasAttachments}": {
+                          "type": "boolean"
+                        },
+                        "{VersionNumber}": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string"
+                        },
+                        "properties": {
+                          "type": "object",
+                          "properties": {
+                            "ItemInternalId": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "ID": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Title": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Modified": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Created": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Author": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                },
+                                "properties": {
+                                  "type": "object",
+                                  "properties": {
+                                    "Claims": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "DisplayName": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "Email": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "Picture": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "Department": {
+                                      "type": "object",
+                                      "properties": {}
+                                    },
+                                    "JobTitle": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "@@odata.type": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "Author#Claims": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Editor": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                },
+                                "properties": {
+                                  "type": "object",
+                                  "properties": {
+                                    "Claims": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "DisplayName": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "Email": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "Picture": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "Department": {
+                                      "type": "object",
+                                      "properties": {}
+                                    },
+                                    "JobTitle": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "@@odata.type": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "Editor#Claims": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Zweck_der_Software": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Website_des_Herstellers": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Techn_Ansprechpartner_HSE": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                },
+                                "properties": {
+                                  "type": "object",
+                                  "properties": {
+                                    "Claims": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "DisplayName": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "Email": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "Picture": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "Department": {
+                                      "type": "object",
+                                      "properties": {}
+                                    },
+                                    "JobTitle": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "@@odata.type": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "Techn_Ansprechpartner_HSE#Claims": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Techn_Ansprechpartner_DL": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Techn_Ansprechpartner_Anbieter": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Verwendung_KI": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Lizenvariante": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Anzahl_Lizenzen": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Schutzbedarf_Verfuegbarkeit": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                },
+                                "properties": {
+                                  "type": "object",
+                                  "properties": {
+                                    "Id": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "Value": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "@@odata.type": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "Schutzbedarf_Verfuegbarkeit#Id": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Schutzbedarf_Integritaet": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                },
+                                "properties": {
+                                  "type": "object",
+                                  "properties": {
+                                    "Id": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "Value": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "@@odata.type": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "Schutzbedarf_Integritaet#Id": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Schutzbedarf_Vertraulichkeit": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                },
+                                "properties": {
+                                  "type": "object",
+                                  "properties": {
+                                    "Id": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "Value": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "@@odata.type": {
+                                      "type": "object",
+                                      "properties": {
+                                        "type": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "Schutzbedarf_Vertraulichkeit#Id": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Personenbezogene_Daten": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Personenbezogene_Daten_mit_erhoe": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Vertrauliche_Daten": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Streng_Vertrauliche_Daten": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Freitext_Kategorie_Daten": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Benutzergruppe_Software": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Anzahl_Nutzer": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Andere_Softwareloesungen_Zugriff": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Daten_von_DL_verarbeitet": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "DL_Zugriff_auf_Software_Daten": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Welche_Systeme_Software": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Wo_Systeme": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Software_erreichbar_Internet": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Betreiber_Systeme": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Standarsierte_Schnittstellen": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Transportweg_Verschluesselung": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Genutztes_Verfahren": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Wo_Speicherung_Authentifikations": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Zugriff_nur_aus_HSE_Netzwerk": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "{Identifier}": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "{IsFolder}": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "{Thumbnail}": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                },
+                                "properties": {
+                                  "type": "object",
+                                  "properties": {
+                                    "Large": {
+                                      "type": "object",
+                                      "properties": {}
+                                    },
+                                    "Medium": {
+                                      "type": "object",
+                                      "properties": {}
+                                    },
+                                    "Small": {
+                                      "type": "object",
+                                      "properties": {}
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            "{Link}": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "{Name}": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "{FilenameWithExtension}": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "{Path}": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "{FullPath}": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "{HasAttachments}": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "{VersionNumber}": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "@@odata.etag": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Get_Arbeitsrechtliche_Prüfung": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "43eac314-117f-4a4d-a1e9-51c5377b695f"
+              }
+            },
+            "Freigabe_der_Arbeitsrechtlichen_Prüfung_beenden": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "table": "@parameters('Arbeitsrechtliche Freigabe (new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d)')",
+                  "id": "@body('Parse_Arbeitsrechtliche_Prüfung')?['ID']"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "UnshareItem",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Parse_Arbeitsrechtliche_Prüfung": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d5b0c2e6-08b9-4584-bf31-6b0e10181ceb"
+              }
+            },
+            "Set_Verantwortlich_mit_Ersteller_(ohne_Löschen)_AP": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('Arbeitsrechtliche Freigabe')/items(@{body('Parse_Arbeitsrechtliche_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{body('JSON_analysieren_-_Verantwortlich')?['d']?['Id']},roledefId=@{parameters('Role Def Id Erstellen (hse_RoleDefIdErstellen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "HttpRequest",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Freigabe_der_Arbeitsrechtlichen_Prüfung_beenden": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "8def8938-910d-4aca-b843-6afe346ea3aa"
+              }
+            },
+            "Set_Genehmiger_mit_Prüfer_(ohne_Löschen)_AP": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('Arbeitsrechtliche Freigabe')/items(@{body('Parse_Arbeitsrechtliche_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{body('JSON_analysieren_-_Genehmiger')?['d']?['Id']},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "HttpRequest",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Set_Verantwortlich_mit_Ersteller_(ohne_Löschen)_AP": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "1f720298-af92-48e1-8c6d-68cc7d91a41d"
+              }
+            },
+            "Set_Sachbearbeiter_Recht_mit_Prüfer_(ohne_Löschen)_AP": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('Arbeitsrechtliche Freigabe')/items(@{body('Parse_Arbeitsrechtliche_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_SachbearbeiterRechtID (hse_EFABO_Gruppe_SachbearbeiterRechtID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "HttpRequest",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Set_Genehmiger_mit_Prüfer_(ohne_Löschen)_AP": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d3aeb45f-063b-4050-8e0d-bdb4f30abb09"
+              }
+            },
+            "Set_Sachbearbeiter_Prüfende_Rechtsanwälte_mit_Prüfer_(ohne_Löschen)_AP": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('Arbeitsrechtliche Freigabe')/items(@{body('Parse_Arbeitsrechtliche_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_RechtID (hse_EFABO_Gruppe_RechtID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "HttpRequest",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Set_Sachbearbeiter_Recht_mit_Prüfer_(ohne_Löschen)_AP": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b1b16f18-c1ca-4402-b27c-ead09fe6b5b8"
+              }
+            },
+            "Set_Sachbearbeiter_Sachbearbeiter_Finanzen_mit_Prüfer_(ohne_Löschen)_AP": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('Arbeitsrechtliche Freigabe')/items(@{body('Parse_Arbeitsrechtliche_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_FinanceID (hse_EFABO_Gruppe_FinanceID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "HttpRequest",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Set_Sachbearbeiter_Prüfende_Rechtsanwälte_mit_Prüfer_(ohne_Löschen)_AP": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "250154c8-c2f3-465e-abc9-50fa96a473a2"
+              }
+            },
+            "Set_Sachbearbeiter_Einkauf_mit_Prüfer_(ohne_Löschen)_AP": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('Arbeitsrechtliche Freigabe')/items(@{body('Parse_Arbeitsrechtliche_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_EinkaufID (hse_EFABO_Gruppe_EinkaufID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "HttpRequest",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Set_Sachbearbeiter_Sachbearbeiter_Finanzen_mit_Prüfer_(ohne_Löschen)_AP": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "12b783c0-7ed6-432e-b9c7-066584140344"
+              }
+            },
+            "Bedingung_-_Überprüfen_ob_Antrag_von_jemand_anderem_erstellt_wurde_AP": {
+              "type": "If",
+              "description": "Der Ersteller hat immer autom. Berechtigungen auf die Anträge durch die SharePoint Einstellungen",
+              "expression": {
+                "not": {
+                  "equals": [
+                    "@triggerOutputs()?['body/VerantwortlicherMitarbeiter/Email']",
+                    "@triggerOutputs()?['body/Author']"
+                  ]
+                }
+              },
+              "actions": {
+                "Set_Verantwortlicher_mit_Schreiberechte_AP": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                      "parameters/method": "POST",
+                      "parameters/uri": "_api/web/lists/getbytitle('Arbeitsrechtliche Freigabe')/items(@{body('Parse_Arbeitsrechtliche_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{body('JSON_analysieren_-_Verantwortlicher')?['d']?['Id']},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                      "parameters/headers": {
+                        "accept": "application/json;odata=verbose",
+                        "content-type": "application/json;odata=verbose"
+                      }
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "operationId": "HttpRequest",
+                      "connectionName": "shared_sharepointonline"
+                    }
+                  },
+                  "metadata": {
+                    "operationMetadataId": "73e59135-480f-45c2-a718-21644da9c991"
+                  }
+                }
+              },
+              "else": {
+                "actions": {}
+              },
+              "runAfter": {
+                "Set_Sachbearbeiter_Einkauf_mit_Prüfer_(ohne_Löschen)_AP": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "800c6b5b-883d-46f5-aa1e-aa56953dabd6"
+              }
+            }
+          },
+          "else": {
+            "actions": {}
+          },
+          "runAfter": {
+            "Bedingung_-_Genehmiger_=_Ersteller_und_Verwantwortlicher_": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a6aa6259-c589-4dac-865a-df0146720b6b"
+          }
+        },
+        "Bedingung_-_Efabo_Status_=_Entwurf": {
+          "type": "If",
+          "description": "Flow wird nach Setzen der Berechtigung für AP abgebrochen, da der EFABO Status \"Entwurf\" ist.",
+          "expression": {
+            "equals": [
+              "@triggerOutputs()?['body/Status/Value']",
+              "Entwurf"
+            ]
+          },
+          "actions": {
+            "Bedingung_-_Whitelistprüfung_wird_benötigt_Draft": {
+              "type": "If",
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@triggerOutputs()?['body/AufwandsbezogeneVerguetung']",
+                      "@true"
+                    ]
+                  },
+                  {
+                    "not": {
+                      "equals": [
+                        "@triggerOutputs()?['body/Whitelist']",
+                        "@true"
+                      ]
+                    }
+                  },
+                  {
+                    "not": {
+                      "equals": [
+                        "@triggerOutputs()?['body/Generalfreigabe']",
+                        "@true"
+                      ]
+                    }
+                  }
+                ]
+              },
+              "actions": {
+                "Get_Arbeitsrechtliche_Prüfung_Draft": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                      "table": "@parameters('Arbeitsrechtliche Freigabe (new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d)')",
+                      "$filter": "Title eq @{triggerOutputs()?['body/ID']}",
+                      "$top": 1
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "operationId": "GetItems",
+                      "connectionName": "shared_sharepointonline"
+                    }
+                  },
+                  "metadata": {
+                    "operationMetadataId": "c6b184b2-2641-494e-a44a-f143cad458cd"
+                  }
+                },
+                "Parse_Arbeitsrechtliche_Prüfung_Draft": {
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": "@First(outputs('Get_Arbeitsrechtliche_Prüfung_Draft')?['body/value'])",
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "@@odata.etag": {
+                          "type": "string"
+                        },
+                        "ItemInternalId": {
+                          "type": "string"
+                        },
+                        "ID": {
+                          "type": "integer"
+                        },
+                        "Title": {
+                          "type": "string"
+                        },
+                        "Weisungen_des_Kreditors_von_HSE_": {
+                          "type": "boolean"
+                        },
+                        "Weisungen_von_Kreditor_erteilt": {
+                          "type": "boolean"
+                        },
+                        "Ausschlie_x00df_liche_Teilnahme_": {
+                          "type": "boolean"
+                        },
+                        "Benutzt_Kreditor_ausschlie_x00df": {
+                          "type": "boolean"
+                        },
+                        "Beautragung_des_Kreditors_in_let": {
+                          "type": "boolean"
+                        },
+                        "Prominenter_vor_der_Kamera_Exper": {
+                          "type": "boolean"
+                        },
+                        "Muss_Kreditor_in_HSE_Raeumlichke": {
+                          "type": "boolean"
+                        },
+                        "Zeitraum_Leistungen_Fachbereich_": {
+                          "type": "string"
+                        },
+                        "Arbeit_des_Kreditors_mit_mehr_al": {
+                          "type": "boolean"
+                        },
+                        "Warum_mehr_als_eine_Person": {
+                          "type": "string"
+                        },
+                        "Wie_viele_Tage_vor_Ort": {
+                          "type": "string"
+                        },
+                        "Warum_keine_pauschale_Verg_x00fc": {
+                          "type": "string"
+                        },
+                        "Kommentar_Legal": {
+                          "type": "string"
+                        },
+                        "Kreditor_in_Dienstplaene_und_Abl": {
+                          "type": "boolean"
+                        },
+                        "Beschaeftigung_des_Kreditors_bei": {
+                          "type": "boolean"
+                        },
+                        "Kreditor_laenger_6_Monate_ben_x0": {
+                          "type": "boolean"
+                        },
+                        "Kosten_groe_x00df_er_gleich_5000": {
+                          "type": "boolean"
+                        },
+                        "Warum_muss_Kreditor_Leistung_hoe": {
+                          "type": "string"
+                        },
+                        "Ausgleich_Kapazitaetsengpaesse": {
+                          "type": "boolean"
+                        },
+                        "Pauschale_Verguetung_Kreditor": {
+                          "type": "boolean"
+                        },
+                        "Best_x00e4_tigung_der_Antworten": {
+                          "type": "boolean"
+                        },
+                        "Author": {
+                          "type": "object",
+                          "properties": {
+                            "@@odata.type": {
+                              "type": "string"
+                            },
+                            "Claims": {
+                              "type": "string"
+                            },
+                            "DisplayName": {
+                              "type": "string"
+                            },
+                            "Email": {
+                              "type": "string"
+                            },
+                            "Picture": {
+                              "type": "string"
+                            },
+                            "Department": {},
+                            "JobTitle": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "Author#Claims": {
+                          "type": "string"
+                        },
+                        "Created": {
+                          "type": "string"
+                        },
+                        "Zugriff_des_Dienstleisters_auf_H": {
+                          "type": "boolean"
+                        },
+                        "Beschreibung_Weisungen_von_MA": {
+                          "type": "string"
+                        },
+                        "Beschreibung_Weisungen_Kreditor": {
+                          "type": "string"
+                        },
+                        "Projektbescheibung_Zeitraum": {
+                          "type": "string"
+                        },
+                        "Beschreibung_Hard_Software": {
+                          "type": "string"
+                        },
+                        "Kommentar_Antragsteller": {
+                          "type": "string"
+                        },
+                        "Modified": {
+                          "type": "string"
+                        },
+                        "Editor": {
+                          "type": "object",
+                          "properties": {
+                            "@@odata.type": {
+                              "type": "string"
+                            },
+                            "Claims": {
+                              "type": "string"
+                            },
+                            "DisplayName": {
+                              "type": "string"
+                            },
+                            "Email": {
+                              "type": "string"
+                            },
+                            "Picture": {
+                              "type": "string"
+                            },
+                            "Department": {},
+                            "JobTitle": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "Editor#Claims": {
+                          "type": "string"
+                        },
+                        "{Identifier}": {
+                          "type": "string"
+                        },
+                        "{IsFolder}": {
+                          "type": "boolean"
+                        },
+                        "{Thumbnail}": {
+                          "type": "object",
+                          "properties": {
+                            "Large": {},
+                            "Medium": {},
+                            "Small": {}
+                          }
+                        },
+                        "{Link}": {
+                          "type": "string"
+                        },
+                        "{Name}": {
+                          "type": "string"
+                        },
+                        "{FilenameWithExtension}": {
+                          "type": "string"
+                        },
+                        "{Path}": {
+                          "type": "string"
+                        },
+                        "{FullPath}": {
+                          "type": "string"
+                        },
+                        "{VersionNumber}": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Get_Arbeitsrechtliche_Prüfung_Draft": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "43eac314-117f-4a4d-a1e9-51c5377b695f"
+                  }
+                },
+                "Freigabe_der_Arbeitsrechtlichen_Prüfung_beenden_Draft": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                      "table": "@parameters('Arbeitsrechtliche Freigabe (new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d)')",
+                      "id": "@body('Parse_Arbeitsrechtliche_Prüfung_Draft')?['ID']"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "operationId": "UnshareItem",
+                      "connectionName": "shared_sharepointonline"
+                    }
+                  },
+                  "runAfter": {
+                    "Parse_Arbeitsrechtliche_Prüfung_Draft": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "d5b0c2e6-08b9-4584-bf31-6b0e10181ceb"
+                  }
+                },
+                "Set_Verantwortlich_mit_Ersteller_(ohne_Löschen)_AP_Draft": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                      "parameters/method": "POST",
+                      "parameters/uri": "_api/web/lists/getbytitle('Arbeitsrechtliche Freigabe')/items(@{body('Parse_Arbeitsrechtliche_Prüfung_Draft')?['ID']})/roleassignments/addroleassignment(principalId=@{body('JSON_analysieren_-_Verantwortlich')?['d']?['Id']},roledefId=@{parameters('Role Def Id Erstellen (hse_RoleDefIdErstellen)')})",
+                      "parameters/headers": {
+                        "accept": "application/json;odata=verbose",
+                        "content-type": "application/json;odata=verbose"
+                      }
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "operationId": "HttpRequest",
+                      "connectionName": "shared_sharepointonline"
+                    }
+                  },
+                  "runAfter": {
+                    "Freigabe_der_Arbeitsrechtlichen_Prüfung_beenden_Draft": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "8def8938-910d-4aca-b843-6afe346ea3aa"
+                  }
+                }
+              },
+              "else": {
+                "actions": {}
+              },
+              "metadata": {
+                "operationMetadataId": "a6aa6259-c589-4dac-865a-df0146720b6b"
+              }
+            },
+            "Flow_als_Erfolgreich_beenden": {
+              "type": "Terminate",
+              "inputs": {
+                "runStatus": "Succeeded"
+              },
+              "runAfter": {
+                "Bedingung_-_Einsatz_Software_wird_benötigt_Draft": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "56f9647b-cdfc-4ff9-8000-baa9cb3053ac"
+              }
+            },
+            "Bedingung_-_Einsatz_Software_wird_benötigt_Draft": {
+              "type": "If",
+              "expression": {
+                "equals": [
+                  "@triggerOutputs()?['body/Einsatz_Software']",
+                  "@true"
+                ]
+              },
+              "actions": {
+                "Get_ITSec_Prüfung_Draft": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                      "table": "@parameters('IT-Security Freigabe (hse_ITSecurityFreigabe)')",
+                      "$filter": "Title eq @{triggerOutputs()?['body/ID']}",
+                      "$top": 1
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "operationId": "GetItems",
+                      "connectionName": "shared_sharepointonline"
+                    }
+                  },
+                  "metadata": {
+                    "operationMetadataId": "c6b184b2-2641-494e-a44a-f143cad458cd"
+                  }
+                },
+                "Parse_ITSec_Prüfung_Draft": {
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": "@First(outputs('Get_ITSec_Prüfung_Draft')?['body/value'])",
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "@@odata.etag": {
+                          "type": "string"
+                        },
+                        "ItemInternalId": {
+                          "type": "string"
+                        },
+                        "ID": {
+                          "type": "integer"
+                        },
+                        "Title": {
+                          "type": "string"
+                        },
+                        "Modified": {
+                          "type": "string"
+                        },
+                        "Created": {
+                          "type": "string"
+                        },
+                        "Author": {
+                          "type": "object",
+                          "properties": {
+                            "@@odata.type": {
+                              "type": "string"
+                            },
+                            "Claims": {
+                              "type": "string"
+                            },
+                            "DisplayName": {
+                              "type": "string"
+                            },
+                            "Email": {
+                              "type": "string"
+                            },
+                            "Picture": {
+                              "type": "string"
+                            },
+                            "Department": {},
+                            "JobTitle": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "Author#Claims": {
+                          "type": "string"
+                        },
+                        "Editor": {
+                          "type": "object",
+                          "properties": {
+                            "@@odata.type": {
+                              "type": "string"
+                            },
+                            "Claims": {
+                              "type": "string"
+                            },
+                            "DisplayName": {
+                              "type": "string"
+                            },
+                            "Email": {
+                              "type": "string"
+                            },
+                            "Picture": {
+                              "type": "string"
+                            },
+                            "Department": {},
+                            "JobTitle": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "Editor#Claims": {
+                          "type": "string"
+                        },
+                        "Zweck_der_Software": {
+                          "type": "string"
+                        },
+                        "Website_des_Herstellers": {
+                          "type": "string"
+                        },
+                        "Techn_Ansprechpartner_HSE": {
+                          "type": "object",
+                          "properties": {
+                            "@@odata.type": {
+                              "type": "string"
+                            },
+                            "Claims": {
+                              "type": "string"
+                            },
+                            "DisplayName": {
+                              "type": "string"
+                            },
+                            "Email": {
+                              "type": "string"
+                            },
+                            "Picture": {
+                              "type": "string"
+                            },
+                            "Department": {},
+                            "JobTitle": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "Techn_Ansprechpartner_HSE#Claims": {
+                          "type": "string"
+                        },
+                        "Techn_Ansprechpartner_DL": {
+                          "type": "string"
+                        },
+                        "Techn_Ansprechpartner_Anbieter": {
+                          "type": "string"
+                        },
+                        "Verwendung_KI": {
+                          "type": "boolean"
+                        },
+                        "Lizenvariante": {
+                          "type": "string"
+                        },
+                        "Anzahl_Lizenzen": {
+                          "type": "string"
+                        },
+                        "Schutzbedarf_Verfuegbarkeit": {
+                          "type": "object",
+                          "properties": {
+                            "@@odata.type": {
+                              "type": "string"
+                            },
+                            "Id": {
+                              "type": "integer"
+                            },
+                            "Value": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "Schutzbedarf_Verfuegbarkeit#Id": {
+                          "type": "integer"
+                        },
+                        "Schutzbedarf_Integritaet": {
+                          "type": "object",
+                          "properties": {
+                            "@@odata.type": {
+                              "type": "string"
+                            },
+                            "Id": {
+                              "type": "integer"
+                            },
+                            "Value": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "Schutzbedarf_Integritaet#Id": {
+                          "type": "integer"
+                        },
+                        "Schutzbedarf_Vertraulichkeit": {
+                          "type": "object",
+                          "properties": {
+                            "@@odata.type": {
+                              "type": "string"
+                            },
+                            "Id": {
+                              "type": "integer"
+                            },
+                            "Value": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "Schutzbedarf_Vertraulichkeit#Id": {
+                          "type": "integer"
+                        },
+                        "Personenbezogene_Daten": {
+                          "type": "boolean"
+                        },
+                        "Personenbezogene_Daten_mit_erhoe": {
+                          "type": "boolean"
+                        },
+                        "Vertrauliche_Daten": {
+                          "type": "boolean"
+                        },
+                        "Streng_Vertrauliche_Daten": {
+                          "type": "boolean"
+                        },
+                        "Freitext_Kategorie_Daten": {
+                          "type": "string"
+                        },
+                        "Benutzergruppe_Software": {
+                          "type": "string"
+                        },
+                        "Anzahl_Nutzer": {
+                          "type": "string"
+                        },
+                        "Andere_Softwareloesungen_Zugriff": {
+                          "type": "boolean"
+                        },
+                        "Daten_von_DL_verarbeitet": {
+                          "type": "boolean"
+                        },
+                        "DL_Zugriff_auf_Software_Daten": {
+                          "type": "boolean"
+                        },
+                        "Welche_Systeme_Software": {
+                          "type": "string"
+                        },
+                        "Wo_Systeme": {
+                          "type": "string"
+                        },
+                        "Software_erreichbar_Internet": {
+                          "type": "string"
+                        },
+                        "Betreiber_Systeme": {
+                          "type": "string"
+                        },
+                        "Standarsierte_Schnittstellen": {
+                          "type": "boolean"
+                        },
+                        "Transportweg_Verschluesselung": {
+                          "type": "string"
+                        },
+                        "Genutztes_Verfahren": {
+                          "type": "string"
+                        },
+                        "Wo_Speicherung_Authentifikations": {
+                          "type": "string"
+                        },
+                        "Zugriff_nur_aus_HSE_Netzwerk": {
+                          "type": "boolean"
+                        },
+                        "{Identifier}": {
+                          "type": "string"
+                        },
+                        "{IsFolder}": {
+                          "type": "boolean"
+                        },
+                        "{Thumbnail}": {
+                          "type": "object",
+                          "properties": {
+                            "Large": {},
+                            "Medium": {},
+                            "Small": {}
+                          }
+                        },
+                        "{Link}": {
+                          "type": "string"
+                        },
+                        "{Name}": {
+                          "type": "string"
+                        },
+                        "{FilenameWithExtension}": {
+                          "type": "string"
+                        },
+                        "{Path}": {
+                          "type": "string"
+                        },
+                        "{FullPath}": {
+                          "type": "string"
+                        },
+                        "{HasAttachments}": {
+                          "type": "boolean"
+                        },
+                        "{VersionNumber}": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {
+                    "Get_ITSec_Prüfung_Draft": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "43eac314-117f-4a4d-a1e9-51c5377b695f"
+                  }
+                },
+                "Freigabe_der_ITSec_Prüfung_beenden_Draft": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                      "table": "@parameters('IT-Security Freigabe (hse_ITSecurityFreigabe)')",
+                      "id": "@body('Parse_ITSec_Prüfung_Draft')?['ID']"
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "operationId": "UnshareItem",
+                      "connectionName": "shared_sharepointonline"
+                    }
+                  },
+                  "runAfter": {
+                    "Parse_ITSec_Prüfung_Draft": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "d5b0c2e6-08b9-4584-bf31-6b0e10181ceb"
+                  }
+                },
+                "Set_Verantwortlich_mit_Ersteller_(ohne_Löschen)_ITSec_Draft": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                      "parameters/method": "POST",
+                      "parameters/uri": "_api/web/lists/getbytitle('IT Security Freigabe')/items(@{body('Parse_Arbeitsrechtliche_Prüfung_Draft')?['ID']})/roleassignments/addroleassignment(principalId=@{body('JSON_analysieren_-_Verantwortlich')?['d']?['Id']},roledefId=@{parameters('Role Def Id Erstellen (hse_RoleDefIdErstellen)')})",
+                      "parameters/headers": {
+                        "accept": "application/json;odata=verbose",
+                        "content-type": "application/json;odata=verbose"
+                      }
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "operationId": "HttpRequest",
+                      "connectionName": "shared_sharepointonline"
+                    }
+                  },
+                  "runAfter": {
+                    "Freigabe_der_ITSec_Prüfung_beenden_Draft": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "8def8938-910d-4aca-b843-6afe346ea3aa"
+                  }
+                }
+              },
+              "else": {
+                "actions": {}
+              },
+              "runAfter": {
+                "Bedingung_-_Whitelistprüfung_wird_benötigt_Draft": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "a6aa6259-c589-4dac-865a-df0146720b6b"
+              }
+            }
+          },
+          "else": {
+            "actions": {}
+          },
+          "runAfter": {
+            "Set_Verantwortlich_mit_Ersteller_(ohne_Löschen)": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "235eadcd-2af5-4e34-b24e-f7fe7eba01ff"
+          }
+        },
+        "Variable_initialisieren_-_varTestingBool": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varTestingBool",
+                "type": "boolean",
+                "value": "@parameters('EFABO Testing (hse_EFABOTesting)')"
+              }
+            ]
+          },
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "9895f730-497d-4fe0-82e2-51fa4f88609e"
+          }
+        },
+        "Variable_initialisieren_-_varTesting": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varTesting",
+                "type": "string",
+                "value": "@{if(variables('varTestingBool'),'TEST: ','')}"
+              }
+            ]
+          },
+          "runAfter": {
+            "Variable_initialisieren_-_varTestingBool": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "525b3bf7-00b7-46ad-869c-534c774a3ca8"
+          }
+        },
+        "Variable_initialisieren_-_varURLzuElement": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varURLzuElement",
+                "type": "string",
+                "value": "https://apps.powerapps.com/play/@{parameters('AppID (hse_AppID)')}?tenantId=1d0f52d7-4151-4a31-ad92-b176d150d4e6&ID=@{triggerOutputs()?['body/ID']}"
+              }
+            ]
+          },
+          "runAfter": {
+            "Variable_initialisieren_-_varTesting": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "aa00f6c0-a61c-4db7-a064-68d0f888408a"
+          }
+        },
+        "Bedingung_-_Genehmiger_=_Ersteller_und_Verwantwortlicher_": {
+          "type": "If",
+          "description": "Wenn ja muss der Genehmiger Schritt übersprungen werden",
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@triggerOutputs()?['body/Author/Email']",
+                  "@triggerOutputs()?['body/Genehmiger/Email']"
+                ]
+              },
+              {
+                "equals": [
+                  "@triggerOutputs()?['body/VerantwortlicherMitarbeiter/Email']",
+                  "@triggerOutputs()?['body/Genehmiger/Email']"
+                ]
+              }
+            ]
+          },
+          "actions": {
+            "Element_aktualisieren": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "table": "@parameters('EFABO Anträge (hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5)')",
+                  "id": "@triggerOutputs()?['body/ID']",
+                  "item/Status/Value": "In Prüfung",
+                  "item/PruefungFinanzen": "In Prüfung",
+                  "item/PruefungEinkauf": "In Prüfung",
+                  "item/PruefungRecht": "Anlage Akte in Lecare",
+                  "item/NeuerKommentar": false,
+                  "item/NeuerStatus": true
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "PatchItem",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "metadata": {
+                "operationMetadataId": "47538604-6e16-4895-b775-7f32c95f321f"
+              }
+            }
+          },
+          "else": {
+            "actions": {
+              "E-Mail_senden_(V2)_-_Genehmiger_Fachbereich": {
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "parameters": {
+                    "emailMessage/To": "@triggerOutputs()?['body/Genehmiger/Email']",
+                    "emailMessage/Subject": "@{variables('varTesting')}EFABO: Neuer erfasster Vertrag (ID:) - Genehmigen/Ablehnen",
+                    "emailMessage/Body": "<p>Hallo @{triggerOutputs()?['body/Genehmiger/DisplayName']},<br>\n<br>\nes wurde ein neuer Erfassungsbogen für Verträge (EFABO) angelegt.<br>\n<br>\nVertragsparnter: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>\nGeplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}<br>\n<br>\n@{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']} ist verantwortlich für den Vertrag. Es wurde als verantwortlicher Fachbereich @{triggerOutputs()?['body/Fachbereich/Value']} ausgewählt. Gemäß den Organisationsvorschriften müssen die wirtschaftlichen Eckwerte des Vertrags von Dir überprüft und der Vorgang bestätigt werden.<br>\n<br>\nHier geht es zum Formular: <a href=\"@{variables('varURLzuElement')}\">Link</a></p>"
+                  },
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                    "operationId": "SendEmailV2",
+                    "connectionName": "shared_office365"
+                  }
+                },
+                "metadata": {
+                  "operationMetadataId": "5c4e2e4b-b1dc-4f03-b61d-ab8ed92447a3"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Bedingung_-_Überprüfen_ob_Antrag_von_jemand_anderem_erstellt_wurde": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b6d2daae-406b-4c4d-a329-8eceffba82f4"
+          }
+        },
+        "Set_Workermanagement_mit_Lesen": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "parameters/method": "POST",
+              "parameters/uri": "_api/web/lists/getbytitle('EFABO Anträge')/items(@{triggerOutputs()?['body/ID']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_WorkermanagementID (hse_EFABO_Gruppe_WorkermanagementID)')},roledefId=1073741826)",
+              "parameters/headers": {
+                "accept": "application/json;odata=verbose",
+                "content-type": "application/json;odata=verbose"
+              }
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "HttpRequest",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {
+            "Set_ITSec_mit_Prüfer_(ohne_Löschen)": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "12b783c0-7ed6-432e-b9c7-066584140344"
+          }
+        },
+        "Set_ITSec_mit_Prüfer_(ohne_Löschen)": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "parameters/method": "POST",
+              "parameters/uri": "_api/web/lists/getbytitle('EFABO Anträge')/items(@{triggerOutputs()?['body/ID']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_ITSecID (hse_EFABO_Gruppe_ITSecID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+              "parameters/headers": {
+                "accept": "application/json;odata=verbose",
+                "content-type": "application/json;odata=verbose"
+              }
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "HttpRequest",
+              "connectionName": "shared_sharepointonline"
+            }
+          },
+          "runAfter": {
+            "Set_Sachbearbeiter_Einkauf_mit_Prüfer_(ohne_Löschen)": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "12b783c0-7ed6-432e-b9c7-066584140344"
+          }
+        },
+        "Bedingung_-_Einsatz_Software_wird_benötigt": {
+          "type": "If",
+          "expression": {
+            "equals": [
+              "@triggerOutputs()?['body/Einsatz_Software']",
+              "@true"
+            ]
+          },
+          "actions": {
+            "Set_ITSec_Status_In_Prüfung": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "table": "@parameters('EFABO Anträge (hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5)')",
+                  "id": "@triggerOutputs()?['body/ID']",
+                  "item/PruefungITSec": "In Prüfung"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "PatchItem",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "metadata": {
+                "operationMetadataId": "927a4ab0-7692-42e6-9b6d-ee69226dd411"
+              }
+            },
+            "Get_ITSec_Prüfung": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "table": "@parameters('IT-Security Freigabe (hse_ITSecurityFreigabe)')",
+                  "$filter": "Title eq @{triggerOutputs()?['body/ID']}",
+                  "$top": 1
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "GetItems",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Set_ITSec_Status_In_Prüfung": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "c6b184b2-2641-494e-a44a-f143cad458cd"
+              }
+            },
+            "Parse_ITSec_Prüfung": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@First(outputs('Get_ITSec_Prüfung')?['body/value'])",
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "@@odata.etag": {
+                      "type": "string"
+                    },
+                    "ItemInternalId": {
+                      "type": "string"
+                    },
+                    "ID": {
+                      "type": "integer"
+                    },
+                    "Title": {
+                      "type": "string"
+                    },
+                    "Modified": {
+                      "type": "string"
+                    },
+                    "Created": {
+                      "type": "string"
+                    },
+                    "Author": {
+                      "type": "object",
+                      "properties": {
+                        "@@odata.type": {
+                          "type": "string"
+                        },
+                        "Claims": {
+                          "type": "string"
+                        },
+                        "DisplayName": {
+                          "type": "string"
+                        },
+                        "Email": {
+                          "type": "string"
+                        },
+                        "Picture": {
+                          "type": "string"
+                        },
+                        "Department": {},
+                        "JobTitle": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "Author#Claims": {
+                      "type": "string"
+                    },
+                    "Editor": {
+                      "type": "object",
+                      "properties": {
+                        "@@odata.type": {
+                          "type": "string"
+                        },
+                        "Claims": {
+                          "type": "string"
+                        },
+                        "DisplayName": {
+                          "type": "string"
+                        },
+                        "Email": {
+                          "type": "string"
+                        },
+                        "Picture": {
+                          "type": "string"
+                        },
+                        "Department": {},
+                        "JobTitle": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "Editor#Claims": {
+                      "type": "string"
+                    },
+                    "Zweck_der_Software": {
+                      "type": "string"
+                    },
+                    "Website_des_Herstellers": {
+                      "type": "string"
+                    },
+                    "Techn_Ansprechpartner_HSE": {
+                      "type": "object",
+                      "properties": {
+                        "@@odata.type": {
+                          "type": "string"
+                        },
+                        "Claims": {
+                          "type": "string"
+                        },
+                        "DisplayName": {
+                          "type": "string"
+                        },
+                        "Email": {
+                          "type": "string"
+                        },
+                        "Picture": {
+                          "type": "string"
+                        },
+                        "Department": {},
+                        "JobTitle": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "Techn_Ansprechpartner_HSE#Claims": {
+                      "type": "string"
+                    },
+                    "Techn_Ansprechpartner_DL": {
+                      "type": "string"
+                    },
+                    "Techn_Ansprechpartner_Anbieter": {
+                      "type": "string"
+                    },
+                    "Verwendung_KI": {
+                      "type": "boolean"
+                    },
+                    "Lizenvariante": {
+                      "type": "string"
+                    },
+                    "Anzahl_Lizenzen": {
+                      "type": "string"
+                    },
+                    "Schutzbedarf_Verfuegbarkeit": {
+                      "type": "object",
+                      "properties": {
+                        "@@odata.type": {
+                          "type": "string"
+                        },
+                        "Id": {
+                          "type": "integer"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "Schutzbedarf_Verfuegbarkeit#Id": {
+                      "type": "integer"
+                    },
+                    "Schutzbedarf_Integritaet": {
+                      "type": "object",
+                      "properties": {
+                        "@@odata.type": {
+                          "type": "string"
+                        },
+                        "Id": {
+                          "type": "integer"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "Schutzbedarf_Integritaet#Id": {
+                      "type": "integer"
+                    },
+                    "Schutzbedarf_Vertraulichkeit": {
+                      "type": "object",
+                      "properties": {
+                        "@@odata.type": {
+                          "type": "string"
+                        },
+                        "Id": {
+                          "type": "integer"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "Schutzbedarf_Vertraulichkeit#Id": {
+                      "type": "integer"
+                    },
+                    "Personenbezogene_Daten": {
+                      "type": "boolean"
+                    },
+                    "Personenbezogene_Daten_mit_erhoe": {
+                      "type": "boolean"
+                    },
+                    "Vertrauliche_Daten": {
+                      "type": "boolean"
+                    },
+                    "Streng_Vertrauliche_Daten": {
+                      "type": "boolean"
+                    },
+                    "Freitext_Kategorie_Daten": {
+                      "type": "string"
+                    },
+                    "Benutzergruppe_Software": {
+                      "type": "string"
+                    },
+                    "Anzahl_Nutzer": {
+                      "type": "string"
+                    },
+                    "Andere_Softwareloesungen_Zugriff": {
+                      "type": "boolean"
+                    },
+                    "Daten_von_DL_verarbeitet": {
+                      "type": "boolean"
+                    },
+                    "DL_Zugriff_auf_Software_Daten": {
+                      "type": "boolean"
+                    },
+                    "Welche_Systeme_Software": {
+                      "type": "string"
+                    },
+                    "Wo_Systeme": {
+                      "type": "string"
+                    },
+                    "Software_erreichbar_Internet": {
+                      "type": "string"
+                    },
+                    "Betreiber_Systeme": {
+                      "type": "string"
+                    },
+                    "Standarsierte_Schnittstellen": {
+                      "type": "boolean"
+                    },
+                    "Transportweg_Verschluesselung": {
+                      "type": "string"
+                    },
+                    "Genutztes_Verfahren": {
+                      "type": "string"
+                    },
+                    "Wo_Speicherung_Authentifikations": {
+                      "type": "string"
+                    },
+                    "Zugriff_nur_aus_HSE_Netzwerk": {
+                      "type": "boolean"
+                    },
+                    "{Identifier}": {
+                      "type": "string"
+                    },
+                    "{IsFolder}": {
+                      "type": "boolean"
+                    },
+                    "{Thumbnail}": {
+                      "type": "object",
+                      "properties": {
+                        "Large": {},
+                        "Medium": {},
+                        "Small": {}
+                      }
+                    },
+                    "{Link}": {
+                      "type": "string"
+                    },
+                    "{Name}": {
+                      "type": "string"
+                    },
+                    "{FilenameWithExtension}": {
+                      "type": "string"
+                    },
+                    "{Path}": {
+                      "type": "string"
+                    },
+                    "{FullPath}": {
+                      "type": "string"
+                    },
+                    "{HasAttachments}": {
+                      "type": "boolean"
+                    },
+                    "{VersionNumber}": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Get_ITSec_Prüfung": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "43eac314-117f-4a4d-a1e9-51c5377b695f"
+              }
+            },
+            "Freigabe_der_ITSec_Prüfung_beenden": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "table": "@parameters('IT-Security Freigabe (hse_ITSecurityFreigabe)')",
+                  "id": "@body('Parse_ITSec_Prüfung')?['ID']"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "UnshareItem",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Parse_ITSec_Prüfung": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d5b0c2e6-08b9-4584-bf31-6b0e10181ceb"
+              }
+            },
+            "Set_Verantwortlich_mit_Ersteller_(ohne_Löschen)_ITS": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('IT Security Freigabe')/items(@{body('Parse_ITSec_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{body('JSON_analysieren_-_Verantwortlich')?['d']?['Id']},roledefId=@{parameters('Role Def Id Erstellen (hse_RoleDefIdErstellen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "HttpRequest",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Freigabe_der_ITSec_Prüfung_beenden": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "8def8938-910d-4aca-b843-6afe346ea3aa"
+              }
+            },
+            "Set_Genehmiger_mit_Prüfer_(ohne_Löschen)_ITS": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('IT Security Freigabe')/items(@{body('Parse_ITSec_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{body('JSON_analysieren_-_Genehmiger')?['d']?['Id']},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "HttpRequest",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Set_Verantwortlich_mit_Ersteller_(ohne_Löschen)_ITS": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "1f720298-af92-48e1-8c6d-68cc7d91a41d"
+              }
+            },
+            "Set_Sachbearbeiter_Recht_mit_Prüfer_(ohne_Löschen)_ITS": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('IT Security Freigabe')/items(@{body('Parse_ITSec_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_SachbearbeiterRechtID (hse_EFABO_Gruppe_SachbearbeiterRechtID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "HttpRequest",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Set_Genehmiger_mit_Prüfer_(ohne_Löschen)_ITS": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d3aeb45f-063b-4050-8e0d-bdb4f30abb09"
+              }
+            },
+            "Set_Sachbearbeiter_Prüfende_Rechtsanwälte_mit_Prüfer_(ohne_Löschen)_ITS": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('IT Security Freigabe')/items(@{body('Parse_ITSec_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_RechtID (hse_EFABO_Gruppe_RechtID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "HttpRequest",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Set_Sachbearbeiter_Recht_mit_Prüfer_(ohne_Löschen)_ITS": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b1b16f18-c1ca-4402-b27c-ead09fe6b5b8"
+              }
+            },
+            "Set_Sachbearbeiter_Sachbearbeiter_Finanzen_mit_Prüfer_(ohne_Löschen)_ITS": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('IT Security Freigabe')/items(@{body('Parse_ITSec_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_FinanceID (hse_EFABO_Gruppe_FinanceID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "HttpRequest",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Set_Sachbearbeiter_Prüfende_Rechtsanwälte_mit_Prüfer_(ohne_Löschen)_ITS": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "250154c8-c2f3-465e-abc9-50fa96a473a2"
+              }
+            },
+            "Set_Sachbearbeiter_Einkauf_mit_Prüfer_(ohne_Löschen)_ITS": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('IT Security Freigabe')/items(@{body('Parse_ITSec_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_EinkaufID (hse_EFABO_Gruppe_EinkaufID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "HttpRequest",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Set_Sachbearbeiter_Sachbearbeiter_Finanzen_mit_Prüfer_(ohne_Löschen)_ITS": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "12b783c0-7ed6-432e-b9c7-066584140344"
+              }
+            },
+            "Bedingung_-_Überprüfen_ob_Antrag_von_jemand_anderem_erstellt_wurde_ITS": {
+              "type": "If",
+              "description": "Der Ersteller hat immer autom. Berechtigungen auf die Anträge durch die SharePoint Einstellungen",
+              "expression": {
+                "not": {
+                  "equals": [
+                    "@triggerOutputs()?['body/VerantwortlicherMitarbeiter/Email']",
+                    "@triggerOutputs()?['body/Author']"
+                  ]
+                }
+              },
+              "actions": {
+                "Set_Verantwortlicher_mit_Schreiberechte_ITS": {
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "parameters": {
+                      "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                      "parameters/method": "POST",
+                      "parameters/uri": "_api/web/lists/getbytitle('IT Security Freigabe')/items(@{body('Parse_ITSec_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{body('JSON_analysieren_-_Verantwortlicher')?['d']?['Id']},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                      "parameters/headers": {
+                        "accept": "application/json;odata=verbose",
+                        "content-type": "application/json;odata=verbose"
+                      }
+                    },
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "operationId": "HttpRequest",
+                      "connectionName": "shared_sharepointonline"
+                    }
+                  },
+                  "metadata": {
+                    "operationMetadataId": "73e59135-480f-45c2-a718-21644da9c991"
+                  }
+                }
+              },
+              "else": {
+                "actions": {}
+              },
+              "runAfter": {
+                "Set_IT_Security_mit_Prüfer_(ohne_Löschen)_ITS": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "800c6b5b-883d-46f5-aa1e-aa56953dabd6"
+              }
+            },
+            "Set_IT_Security_mit_Prüfer_(ohne_Löschen)_ITS": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('IT Security Freigabe')/items(@{body('Parse_ITSec_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_ITSecID (hse_EFABO_Gruppe_ITSecID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "operationId": "HttpRequest",
+                  "connectionName": "shared_sharepointonline"
+                }
+              },
+              "runAfter": {
+                "Set_Sachbearbeiter_Einkauf_mit_Prüfer_(ohne_Löschen)_ITS": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "12b783c0-7ed6-432e-b9c7-066584140344"
+              }
+            }
+          },
+          "else": {
+            "actions": {}
+          },
+          "runAfter": {
+            "Bedingung_-_Arbeitsrechtliche_Fragen_werden_benötigt": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a6aa6259-c589-4dac-865a-df0146720b6b"
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

@@ -1,0 +1,10 @@
+<environmentvariabledefinition schemaname="hse_RoleDefIdErstellen">
+  <displayname default="Role Def Id Erstellen">
+    <label description="Role Def Id Erstellen" languagecode="1031" />
+  </displayname>
+  <introducedversion>1.0.0.0</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

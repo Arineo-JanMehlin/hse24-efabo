@@ -1,0 +1,51 @@
+[
+  {
+    "ApiId": "/providers/microsoft.powerapps/apis/shared_sharepointonline",
+    "CdpRevision": {
+      "BaseUrl": "/",
+      "LastChangedTimeString": "2025-10-08T16:43:54.6170000Z",
+      "RevisionNumber": 1
+    },
+    "ConnectedDataSourceInfoNameMapping": {
+      "{ContentType}": "Inhaltstyp",
+      "{ContentType}#Id": "Inhaltstyp Id",
+      "{FilenameWithExtension}": "Dateiname mit Erweiterung",
+      "{FullPath}": "Vollständiger Pfad",
+      "{Identifier}": "Bezeichner",
+      "{IsFolder}": "IstOrdner",
+      "{Link}": "Link zu Element",
+      "{ModerationComment}": "Die der Inhaltsgenehmigung dieses Listenelements zugeordnete Kommentare.",
+      "{ModerationStatus}": "Inhaltsgenehmigungsstatus",
+      "{Name}": "Name",
+      "{Path}": "Ordnerpfad",
+      "{Thumbnail}": "Miniaturansicht",
+      "{TriggerWindowEndToken}": "Token für Ende des Zeitfensters auslösen",
+      "{TriggerWindowStartToken}": "Token für Start des Zeitfensters auslösen",
+      "{VersionNumber}": "Versionsnummer",
+      "Author": "Erstellt von",
+      "Author#Claims": "Erstellt von Claims",
+      "ComplianceAssetId": "Complianceobjekt-ID",
+      "Created": "Erstellt",
+      "Editor": "Geändert von",
+      "Editor#Claims": "Geändert von Claims",
+      "Feld": "Feld",
+      "ID": "ID",
+      "Modified": "Geändert",
+      "OData__ColorTag": "Farbkennzeichnung",
+      "Screen": "Screen",
+      "Screen#Id": "Screen Id",
+      "Screen@odata.type": "Screen (Screen@odata.type)",
+      "Sprache": "Sprache",
+      "Sprache#Id": "Sprache Id",
+      "Text": "Text",
+      "Title": "Title",
+      "Wert": "Wert"
+    },
+    "DatasetName": "https://homeshoppingeurope24.sharepoint.com/sites/EFABO_DEV",
+    "EncodeDataset": true,
+    "IsSampleData": false,
+    "IsWritable": true,
+    "Name": "Systemtexte",
+    "Type": "ConnectedDataSourceInfo"
+  }
+]

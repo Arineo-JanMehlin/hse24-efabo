@@ -1,0 +1,44 @@
+<application xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:service="https://europe-002.azure-apim.net/apim/logicflows" xmlns:siena="http://schemas.microsoft.com/MicrosoftProjectSiena/WADL/2014/11" siena:serviceId="[Parent]EFABOBerechtigungenändern" xmlns="http://wadl.dev.java.net/2009/02">
+  <doc title="[Parent] EFABO Berechtigungen ändern" />
+  <grammars>
+    <jsonTypes targetNamespace="https://europe-002.azure-apim.net/apim/logicflows" xmlns="http://schemas.microsoft.com/MicrosoftProjectSiena/WADL/2014/11">
+      <string name="ManualTriggerInput_Variableinitialisieren_Wert_def" />
+      <string name="ManualTriggerInput_Variableinitialisieren2_Wert_def" />
+      <integer name="ManualTriggerInput_EfaboID_Wert_def" />
+      <string name="ManualTriggerInput_RemoveUserMail_Wert_def" />
+      <object name="ManualTriggerInput">
+        <property name="Variableinitialisieren_Wert" type="string" />
+        <property name="Variableinitialisieren2_Wert" type="string" />
+        <property name="EfaboID_Wert" type="integer" />
+        <property name="RemoveUserMail_Wert" type="string" />
+      </object>
+    </jsonTypes>
+  </grammars>
+  <resources siena:authenticationProviderHref="#PowerAppAuth" base="https://europe-002.azure-apim.net/apim/logicflows">
+    <resource path="/{connectionId}/triggers/manual/run">
+      <param style="template" name="connectionId" type="xs:string" required="true" />
+      <method siena:requiresAuthentication="true" name="POST" id="Run">
+        <doc title="Runs a logic flow trigger." />
+        <request>
+          <param style="query" name="api-version" type="xs:string" required="true" fixed="2015-02-01-preview">
+            <doc title="The api version" />
+          </param>
+          <representation mediaType="application/json">
+            <param style="plain" name="Variableinitialisieren_Wert" path="/Variableinitialisieren_Wert" type="xs:string" required="true" />
+            <param style="plain" name="Variableinitialisieren2_Wert" path="/Variableinitialisieren2_Wert" type="xs:string" required="true" />
+            <param style="plain" name="EfaboID_Wert" path="/EfaboID_Wert" type="xs:long" required="true" />
+            <param style="plain" name="RemoveUserMail_Wert" path="/RemoveUserMail_Wert" type="xs:string" required="true" />
+          </representation>
+        </request>
+      </method>
+    </resource>
+  </resources>
+  <authenticationProviders xmlns="http://schemas.microsoft.com/MicrosoftProjectSiena/WADL/2014/11">
+    <connectionProvider id="PowerAppAuth" siena:connectionProviderId="logicflows" />
+  </authenticationProviders>
+  <template xmlns="http://schemas.microsoft.com/MicrosoftProjectSiena/WADL/2014/11">
+    <variable name="connectionId">
+      <modifyParams style="template" name="connectionId" attribute="fixed" />
+    </variable>
+  </template>
+</application>

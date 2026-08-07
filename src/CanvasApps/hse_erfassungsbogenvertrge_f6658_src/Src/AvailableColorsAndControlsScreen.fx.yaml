@@ -1,0 +1,100 @@
+AvailableColorsAndControlsScreen As screen:
+
+    ComboBox2 As combobox:
+        BorderColor: =varHSEBranding.LightGray
+        ChevronBackground: =varHSEBranding.White
+        ChevronDisabledBackground: =ColorFade(varHSEBranding.LightGray,70%)
+        ChevronDisabledFill: =ColorFade(varHSEBranding.Black,50%)
+        ChevronFill: =varHSEBranding.Black
+        ChevronHoverBackground: =varHSEBranding.LightGray
+        ChevronHoverFill: =varHSEBranding.Black
+        Color: =varHSEBranding.Black
+        DefaultSelectedItems: =Parent.Default
+        DisabledBorderColor: =varHSEBranding.LightGray
+        DisabledColor: =ColorFade(varHSEBranding.Black,50%)
+        DisabledFill: =ColorFade(varHSEBranding.LightGray,70%)
+        Fill: =varHSEBranding.White
+        FocusedBorderThickness: =3
+        HoverColor: =varHSEBranding.Black
+        HoverFill: =ColorFade(varHSEBranding.LightGray,70%)
+        Items: =ComboBoxSample
+        PressedBorderColor: =ColorFade(varHSEBranding.LightGray,70%)
+        PressedColor: =ColorFade(varHSEBranding.LightGray,70%)
+        PressedFill: =ColorFade(varHSEBranding.LightGray,70%)
+        SearchItems: =Search(ComboBoxSample,ComboBox2.SearchText,Value1)
+        SelectionColor: =varHSEBranding.Black
+        SelectionFill: =ColorFade(varHSEBranding.LightGray,75%)
+        SelectionTagColor: =varHSEBranding.Black
+        SelectionTagFill: =Color.Transparent
+        Tooltip: =Parent.DisplayName
+        X: =60
+        Y: =87
+        ZIndex: =1
+
+    TextInput2 As text:
+        BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+        Color: =varHSEBranding.Black
+        Default: =Parent.Default
+        DisabledBorderColor: =varHSEBranding.LightGray
+        DisabledColor: =ColorFade(varHSEBranding.Black,50%)
+        DisabledFill: =ColorFade(varHSEBranding.LightGray,70%)
+        Fill: =varHSEBranding.White
+        FocusedBorderThickness: =3
+        HoverBorderColor: =ColorFade(Self.BorderColor, 15%)
+        HoverColor: =varHSEBranding.Black
+        HoverFill: =ColorFade(varHSEBranding.LightGray,70%)
+        MaxLength: =Parent.MaxLength
+        PressedBorderColor: =ColorFade(varHSEBranding.LightGray,70%)
+        PressedColor: =ColorFade(varHSEBranding.LightGray,70%)
+        PressedFill: =ColorFade(varHSEBranding.LightGray,70%)
+        RadiusBottomLeft: =0
+        RadiusBottomRight: =0
+        RadiusTopLeft: =0
+        RadiusTopRight: =0
+        Tooltip: =Parent.DisplayName
+        Width: =328
+        X: =60
+        Y: =178
+        ZIndex: =2
+
+    DatePicker1 As datepicker:
+        BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+        Color: =varHSEBranding.Black
+        DefaultDate: =Parent.Default
+        DisabledBorderColor: =varHSEBranding.LightGray
+        DisabledColor: =ColorFade(varHSEBranding.Black,50%)
+        DisabledFill: =ColorFade(varHSEBranding.LightGray,70%)
+        EndYear: =Year(Today())+100
+        Fill: =varHSEBranding.White
+        FocusedBorderThickness: =3
+        IconBackground: =varHSEBranding.White
+        IconFill: =varHSEBranding.Black
+        StartOfWeek: =StartOfWeek.Monday
+        StartYear: =1899
+        Tooltip: =Parent.DisplayName
+        X: =60
+        Y: =265
+        ZIndex: =3
+
+    Toggle1 As toggleSwitch:
+        BorderColor: =varHSEBranding.LightGray
+        Color: =varHSEBranding.Black
+        Default: =Parent.Default
+        DisabledBorderColor: =varHSEBranding.LightGray
+        DisabledColor: =ColorFade(varHSEBranding.Black,50%)
+        FalseFill: =varHSEBranding.LightGray
+        FalseText: ="Nein"
+        HandleFill: =varHSEBranding.White
+        TrueFill: =varHSEBranding.HSEOrange
+        TrueText: ="Ja"
+        Width: =110
+        X: =60
+        Y: =351
+        ZIndex: =4
+
+    Label6 As label:
+        Text: ="LookUp('Environment Variable Values';DisplayName = 'AppID').Value"
+        X: =500
+        Y: =30
+        ZIndex: =6
+

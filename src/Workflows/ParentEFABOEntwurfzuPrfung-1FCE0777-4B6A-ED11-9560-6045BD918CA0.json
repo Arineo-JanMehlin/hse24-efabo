@@ -1,0 +1,78 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "f64df31c-797e-4859-b227-c4b158079f21"
+          },
+          "type": "Request",
+          "kind": "PowerApp",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Variableinitialisieren_Wert": {
+                  "type": "integer",
+                  "description": "Anfangswert eingeben",
+                  "x-ms-powerflows-param-ispartial": false
+                }
+              },
+              "required": [
+                "Variableinitialisieren_Wert"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "Variable_initialisieren": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "1e242034-54b4-4166-9942-fd7261802aaa"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "EfaboID",
+                "type": "integer",
+                "value": "@triggerBody()['Variableinitialisieren_Wert']"
+              }
+            ]
+          }
+        },
+        "Untergeordneten_Flow_ausführen": {
+          "runAfter": {
+            "Variable_initialisieren": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f3fd2c8e-0045-4631-9ddd-bd12b5ec8dc4"
+          },
+          "type": "Workflow",
+          "inputs": {
+            "host": {
+              "workflowReferenceName": "b4019f00-1379-ec11-8d21-6045bd8d1fa4"
+            },
+            "body": {
+              "number": "@variables('EfaboID')"
+            }
+          }
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}

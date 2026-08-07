@@ -1,0 +1,2772 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline_1": {
+        "api": {
+          "name": "shared_sharepointonline"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "hse_EFABOSharePoint"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_office365_1": {
+        "api": {
+          "name": "shared_office365"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "hse_sharedoffice365_44daf"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_teams_1": {
+        "api": {
+          "name": "shared_teams"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "hse_sharedteams_30bd2"
+        },
+        "runtimeSource": "embedded"
+      },
+      "shared_sharepointonline": {
+        "api": {
+          "name": "shared_sharepointonline"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "hse_EFABOSharePoint"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "EFABO Anträge (hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5)": {
+          "defaultValue": "d8010e65-d7b0-4b11-b0a0-ac65f5b96208",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5"
+          }
+        },
+        "EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)": {
+          "defaultValue": "https://homeshoppingeurope24.sharepoint.com/sites/EFABO_DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62"
+          }
+        },
+        "EFABO Testing (hse_EFABOTesting)": {
+          "defaultValue": true,
+          "type": "Bool",
+          "metadata": {
+            "schemaName": "hse_EFABOTesting"
+          }
+        },
+        "AppID (hse_AppID)": {
+          "defaultValue": "82f0abdb-6e73-46b5-a033-2611cea27ef9",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_AppID"
+          }
+        },
+        "Arbeitsrechtliche Freigabe (new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d)": {
+          "defaultValue": "312ce00d-e31d-4435-8e4c-63e76f0e6dfa",
+          "type": "String",
+          "metadata": {
+            "schemaName": "new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d"
+          }
+        },
+        "IT-Security Freigabe (hse_ITSecurityFreigabe)": {
+          "defaultValue": "15e4a9aa-67e1-46a3-b61e-8d713d4c32f5",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_ITSecurityFreigabe"
+          }
+        }
+      },
+      "triggers": {
+        "Wenn_ein_Element_oder_eine_Datei_geändert_wird": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "table": "@parameters('EFABO Anträge (hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5)')"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "GetOnChangedItems",
+              "connectionName": "shared_sharepointonline_1"
+            }
+          },
+          "recurrence": {
+            "interval": 5,
+            "frequency": "Minute"
+          },
+          "conditions": [
+            {
+              "expression": "@or(equals(triggerBody()?['NeuerStatus'],true),equals(triggerBody()?['NeuerKommentar'],true))"
+            }
+          ],
+          "splitOn": "@triggerOutputs()?['body/value']",
+          "metadata": {
+            "operationMetadataId": "818f5fe2-7302-4b35-a483-68f886aa81d2"
+          }
+        }
+      },
+      "actions": {
+        "Bedingung_-_Neuer_Kommentar_=_true": {
+          "type": "If",
+          "description": "Wurde ein neuer Kommentar hinzugefügt und die Beteiligten müssen informiert werden?",
+          "expression": {
+            "equals": [
+              "@triggerOutputs()?['body/NeuerKommentar']",
+              "@true"
+            ]
+          },
+          "actions": {
+            "Auf_alle_anwenden": {
+              "type": "Foreach",
+              "foreach": "@triggerOutputs()?['body/KommentarVon']",
+              "actions": {
+                "Option_-_Kommentar_Status": {
+                  "type": "Switch",
+                  "expression": "@items('Auf_alle_anwenden')?['Value']",
+                  "default": {
+                    "actions": {}
+                  },
+                  "cases": {
+                    "Kommentar_von_Legal": {
+                      "actions": {
+                        "E-Mail_senden_(V2)_-_an_Verantwortlichen_wegen_Kommentar_von_Recht": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "emailMessage/To": "@triggerOutputs()?['body/VerantwortlicherMitarbeiter/Email']",
+                              "emailMessage/Subject": "@{variables('varTesting')}EFABO: Kommentar zu erfassten Vertrag von Legal (ID: @{triggerOutputs()?['body/ID']})",
+                              "emailMessage/Body": "<p>Hallo @{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']},<br>\n<br>\nes wurde folgender Kommentar zu dem von Dir ausgefüllten Erfassungsbogen für Verträge (EFABO) von Legal verfasst.<br>\n<br>\n\"@{triggerOutputs()?['body/Kommentar_x0020_Recht']}\"<br>\n<br>\nFachbereich: @{triggerOutputs()?['body/Fachbereich/Value']}<br>\nVertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>\nGeplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}<br>\n<br>\nHier geht es zum Formular:&nbsp;<a href=\"@{variables('varURLzuElement')}\">Link</a></p>"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                              "operationId": "SendEmailV2",
+                              "connectionName": "shared_office365_1"
+                            }
+                          },
+                          "metadata": {
+                            "operationMetadataId": "63affb7b-da85-44c2-957d-1ed0eea2cccd"
+                          }
+                        }
+                      },
+                      "case": "Legal"
+                    },
+                    "Kommentar_von_Finance": {
+                      "actions": {
+                        "E-Mail_senden_(V2)_-_an_Verantwortlichen_wegen_Kommentar_von_Finanzen": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "emailMessage/To": "@triggerOutputs()?['body/VerantwortlicherMitarbeiter/Email']",
+                              "emailMessage/Subject": "@{variables('varTesting')}EFABO: Kommentar zu erfassten Vertrag von Finance (ID: @{triggerOutputs()?['body/ID']})",
+                              "emailMessage/Body": "<p>Hallo @{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']},<br>\n<br>\nes wurde folgender Kommentar zu dem von Dir ausgefüllten Erfassungsbogen für Verträge (EFABO) von Finance verfasst.<br>\n<br>\n\"@{triggerOutputs()?['body/Kommentar_x0020_Finanzen']}\"<br>\n<br>\nFachbereich: @{triggerOutputs()?['body/Fachbereich/Value']}<br>\nVertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>\nGeplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}<br>\n<br>\nHier geht es zum Formular:&nbsp;<a href=\"@{variables('varURLzuElement')}\">Link</a></p>"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                              "operationId": "SendEmailV2",
+                              "connectionName": "shared_office365_1"
+                            }
+                          },
+                          "metadata": {
+                            "operationMetadataId": "c89cc3d1-05d7-43ba-bba6-07e9e2116917"
+                          }
+                        }
+                      },
+                      "case": "Finance"
+                    },
+                    "Kommentar_von_Genehmiger": {
+                      "actions": {
+                        "E-Mail_senden_(V2)_-_an_Verantwortlichen_von_Genehmiger": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "emailMessage/To": "@triggerOutputs()?['body/VerantwortlicherMitarbeiter/Email']",
+                              "emailMessage/Subject": "@{variables('varTesting')}EFABO: Kommentar zu erfassten Vertrag vom Genehmiger (ID: @{triggerOutputs()?['body/ID']}) ",
+                              "emailMessage/Body": "<p>Hallo @{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']},<br>\n<br>\nes wurde folgender Kommentar zu dem von Dir ausgefüllten Erfassungsbogen für Verträge (EFABO) von @{triggerOutputs()?['body/Genehmiger/DisplayName']} verfasst.<br>\n<br>\n\"@{triggerOutputs()?['body/Kommentar_x0020_Genehmiger']}\"<br>\n<br>\nFachbereich: @{triggerOutputs()?['body/Fachbereich/Value']}<br>\nVertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>\nGeplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}<br>\n<br>\nHier geht es zum Formular:&nbsp;<a href=\"@{variables('varURLzuElement')}\">Link</a></p>"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                              "operationId": "SendEmailV2",
+                              "connectionName": "shared_office365_1"
+                            }
+                          },
+                          "metadata": {
+                            "operationMetadataId": "9d718a11-59d5-4b84-a37c-88828e62abc3"
+                          }
+                        }
+                      },
+                      "case": "Genehmiger"
+                    },
+                    "Kommentar_von_Indirect_Sourcing": {
+                      "actions": {
+                        "E-Mail_senden_(V2)_-_an_Verwantwortlichen_von_Einkauf": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "emailMessage/To": "@triggerOutputs()?['body/VerantwortlicherMitarbeiter/Email']",
+                              "emailMessage/Subject": "@{variables('varTesting')}EFABO: Kommentar zu erfassten Vertrag von Einkauf (ID: @{triggerOutputs()?['body/ID']})",
+                              "emailMessage/Body": "<p>Hallo @{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']},<br>\n<br>\nes wurde folgender Kommentar zu dem von Dir ausgefüllten Erfassungsbogen für Verträge (EFABO) von Einkauf Indirect Sourcing verfasst.<br>\n<br>\n\"@{triggerOutputs()?['body/KommentarEinkauf']}\"<br>\n<br>\nFachbereich: @{triggerOutputs()?['body/Fachbereich/Value']}<br>\nVertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>\nGeplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}<br>\n<br>\nHier geht es zum Formular:&nbsp;<a href=\"@{variables('varURLzuElement')}\">Link</a></p>"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                              "operationId": "SendEmailV2",
+                              "connectionName": "shared_office365_1"
+                            }
+                          },
+                          "metadata": {
+                            "operationMetadataId": "287d3ec8-6aa0-455f-b5dc-4d3a312b1f88"
+                          }
+                        }
+                      },
+                      "case": "Indirect Sourcing"
+                    },
+                    "Kommentar_von_Antragsteller": {
+                      "actions": {
+                        "Auf_alle_anwenden_-_Für_alle_Kommentar_an_Gruppen_durchführen": {
+                          "type": "Foreach",
+                          "foreach": "@triggerOutputs()?['body/KommentarAn']",
+                          "actions": {
+                            "Option_-_Abfrage_Kommentar_an_wen": {
+                              "type": "Switch",
+                              "expression": "@items('Auf_alle_anwenden_-_Für_alle_Kommentar_an_Gruppen_durchführen')?['Value']",
+                              "default": {
+                                "actions": {}
+                              },
+                              "cases": {
+                                "Legal": {
+                                  "actions": {
+                                    "Nachricht_in_einem_Chat_oder_Kanal_veröffentlichen_-_Kommentar_an_Legal": {
+                                      "type": "OpenApiConnection",
+                                      "inputs": {
+                                        "parameters": {
+                                          "poster": "User",
+                                          "location": "Channel",
+                                          "body/recipient/groupId": "c6b6d561-512d-4925-a0bf-084eeaf27040",
+                                          "body/recipient/channelId": "19:8c014c33c73148e78232ad83af92a2bd@thread.tacv2",
+                                          "body/messageBody": "<p class=\"editor-paragraph\">Hallo zusammen,<br><br>es wurde folgender Kommentar vom Antragsteller @{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']} des Erfassungsbogen für Verträge (EFABO) verfasst.<br><br>\"@{triggerOutputs()?['body/Kommentar']}\"<br><br>Fachbereich: @{triggerOutputs()?['body/Fachbereich/Value']}<br>Vertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>Geplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}<br><br>Hier geht es zum Formular:&nbsp;<a href=\"@{variables('varURLzuElement')}\" class=\"editor-link\">Link</a></p>",
+                                          "body/subject": "@{variables('varTesting')}EFABO: Kommentar zu erfassten Vertrag vom Antragsteller (ID: @{triggerOutputs()?['body/ID']})"
+                                        },
+                                        "host": {
+                                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams",
+                                          "operationId": "PostMessageToConversation",
+                                          "connectionName": "shared_teams_1"
+                                        }
+                                      },
+                                      "metadata": {
+                                        "operationMetadataId": "6a543ba1-d5bd-4983-ab94-92dd5a5db17f"
+                                      }
+                                    },
+                                    "Bedingung_-_Abfrage_on_prüfender_Anwalt_gesetzt_wurde": {
+                                      "type": "If",
+                                      "expression": {
+                                        "not": {
+                                          "equals": [
+                                            "@empty(triggerOutputs()?['body/PruefenderRechtsanwalt'])",
+                                            "@true"
+                                          ]
+                                        }
+                                      },
+                                      "actions": {
+                                        "E-Mail_senden_(V2)_-_an_Recht_wegen_Kommentar_von_Antragsteller": {
+                                          "type": "OpenApiConnection",
+                                          "inputs": {
+                                            "parameters": {
+                                              "emailMessage/To": "@triggerOutputs()?['body/PruefenderRechtsanwalt/Email']",
+                                              "emailMessage/Subject": "@{variables('varTesting')}EFABO: Kommentar zu erfassten Vertrag vom Antragsteller (ID: @{triggerOutputs()?['body/ID']})",
+                                              "emailMessage/Body": "<p><br></p>\n<p>Hallo zusammen,<br>\n<br>\nes wurde folgender Kommentar vom Antragsteller@{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']} des Erfassungsbogen für Verträge (EFABO) verfasst.<br>\n<br>\n\"@{triggerOutputs()?['body/Kommentar']}\"<br>\n<br>\nFachbereich: @{triggerOutputs()?['body/Fachbereich/Value']}<br>\nVertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>\nGeplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}<br>\n<br>\nHier geht es zum Formular:&nbsp;<a href=\"@{variables('varURLzuElement')}\">Link</a></p>"
+                                            },
+                                            "host": {
+                                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                                              "operationId": "SendEmailV2",
+                                              "connectionName": "shared_office365_1"
+                                            }
+                                          },
+                                          "metadata": {
+                                            "operationMetadataId": "141cb2f8-0aef-4a5c-a7ac-6abbfddea86b"
+                                          }
+                                        }
+                                      },
+                                      "else": {
+                                        "actions": {}
+                                      },
+                                      "runAfter": {
+                                        "Nachricht_in_einem_Chat_oder_Kanal_veröffentlichen_-_Kommentar_an_Legal": [
+                                          "Succeeded"
+                                        ]
+                                      },
+                                      "metadata": {
+                                        "operationMetadataId": "16b7fee0-a4a5-464f-95c1-734037f60fac"
+                                      }
+                                    }
+                                  },
+                                  "case": "Legal"
+                                },
+                                "Indirect_Sourcing": {
+                                  "actions": {
+                                    "Nachricht_in_einem_Chat_oder_Kanal_-_Kommentar_Indirect_Sourcing": {
+                                      "type": "OpenApiConnection",
+                                      "inputs": {
+                                        "parameters": {
+                                          "poster": "User",
+                                          "location": "Channel",
+                                          "body/recipient/groupId": "9aaebce9-767e-48c0-b94b-a7992d7a3c8d",
+                                          "body/recipient/channelId": "19:caa7d8c4fa174da686207e4aa27a634d@thread.tacv2",
+                                          "body/messageBody": "<p class=\"editor-paragraph\">Hallo zusammen,<br><br>es wurde folgender Kommentar vom Antragsteller @{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']} des Erfassungsbogen für Verträge (EFABO) verfasst.<br><br>\"@{triggerOutputs()?['body/Kommentar']}\"<br><br>Fachbereich: @{triggerOutputs()?['body/Fachbereich/Value']}<br>Vertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>Geplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}<br><br>Hier geht es zum Formular:&nbsp;<a href=\"@{variables('varURLzuElement')}\" class=\"editor-link\">Link</a></p>",
+                                          "body/subject": "@{variables('varTesting')}EFABO: Kommentar zu erfassten Vertrag vom Antragsteller (ID: @{triggerOutputs()?['body/ID']})"
+                                        },
+                                        "host": {
+                                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams",
+                                          "operationId": "PostMessageToConversation",
+                                          "connectionName": "shared_teams_1"
+                                        }
+                                      },
+                                      "metadata": {
+                                        "operationMetadataId": "3ed8e123-04fa-4249-900d-97c595b6f9ca"
+                                      }
+                                    }
+                                  },
+                                  "case": "Indirect Sourcing"
+                                },
+                                "Finance": {
+                                  "actions": {
+                                    "Nachricht_in_einem_Chat_oder_Kanal_veröffentlichen_-_Kommentar_an_Finance": {
+                                      "type": "OpenApiConnection",
+                                      "inputs": {
+                                        "parameters": {
+                                          "poster": "User",
+                                          "location": "Channel",
+                                          "body/recipient/groupId": "56c88fa1-0984-498f-be6a-b1d2579cb6bc",
+                                          "body/recipient/channelId": "19:4fc50b4e97174b878fadd9a642853cc2@thread.tacv2",
+                                          "body/messageBody": "<p class=\"editor-paragraph\">Hallo zusammen,<br><br>es wurde folgender Kommentar vom Antragsteller @{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']} des Erfassungsbogen für Verträge (EFABO) verfasst.<br><br>\"@{triggerOutputs()?['body/Kommentar']}\"<br><br>Fachbereich: @{triggerOutputs()?['body/Fachbereich/Value']}<br>Vertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>Geplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}<br><br>Hier geht es zum Formular:&nbsp;<a href=\"@{variables('varURLzuElement')}\" class=\"editor-link\">Link</a></p>",
+                                          "body/subject": "@{variables('varTesting')}EFABO: Kommentar zu erfassten Vertrag vom Antragsteller (ID: @{triggerOutputs()?['body/ID']})"
+                                        },
+                                        "host": {
+                                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams",
+                                          "operationId": "PostMessageToConversation",
+                                          "connectionName": "shared_teams_1"
+                                        }
+                                      },
+                                      "metadata": {
+                                        "operationMetadataId": "253b80af-d989-4db9-a696-bc26ae55b536"
+                                      }
+                                    }
+                                  },
+                                  "case": "Finance"
+                                },
+                                "Genehmiger": {
+                                  "actions": {
+                                    "E-Mail_senden_(V2)_-_an_Genehmiger_wegen_Kommentar_Antragsteller": {
+                                      "type": "OpenApiConnection",
+                                      "inputs": {
+                                        "parameters": {
+                                          "emailMessage/To": "@triggerOutputs()?['body/Genehmiger/Email']",
+                                          "emailMessage/Subject": "@{variables('varTesting')}EFABO: Kommentar zu erfassten Vertrag vom Antragsteller (ID: @{triggerOutputs()?['body/ID']})",
+                                          "emailMessage/Body": "<p>Hallo zusammen,<br>\n<br>\nes wurde folgender Kommentar vom Antragsteller@{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']} des Erfassungsbogen für Verträge (EFABO) verfasst.<br>\n<br>\n\"@{triggerOutputs()?['body/Kommentar']}\"<br>\n<br>\nFachbereich: @{triggerOutputs()?['body/Fachbereich/Value']}<br>\nVertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>\nGeplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}<br>\n<br>\nHier geht es zum Formular:&nbsp;<a href=\"@{variables('varURLzuElement')}\">Link</a></p>"
+                                        },
+                                        "host": {
+                                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                                          "operationId": "SendEmailV2",
+                                          "connectionName": "shared_office365_1"
+                                        }
+                                      },
+                                      "metadata": {
+                                        "operationMetadataId": "0d8dc357-12ed-4322-9286-f89f06483599"
+                                      }
+                                    }
+                                  },
+                                  "case": "Genehmiger"
+                                }
+                              },
+                              "metadata": {
+                                "operationMetadataId": "23b2b66a-47e4-4c2d-ae05-01f2b005d129"
+                              }
+                            }
+                          },
+                          "metadata": {
+                            "operationMetadataId": "5cd5c626-a2cf-44a7-9386-2ce4c37f6284"
+                          }
+                        }
+                      },
+                      "case": "Antragsteller"
+                    },
+                    "Kommentar_von_AntragstellerAP": {
+                      "actions": {
+                        "Elemente_AntragstellerAP": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                              "table": "@parameters('Arbeitsrechtliche Freigabe (new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d)')",
+                              "$filter": "Title eq @{triggerOutputs()?['body/ID']}"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                              "operationId": "GetItems",
+                              "connectionName": "shared_sharepointonline_1"
+                            }
+                          },
+                          "metadata": {
+                            "operationMetadataId": "764f301e-63f0-4f26-9d97-697ea89af0f9"
+                          }
+                        },
+                        "JSON_analysieren_-_AntragstellerAP_Kommentar": {
+                          "type": "ParseJson",
+                          "inputs": {
+                            "content": "@first(outputs('Elemente_AntragstellerAP')?['body/value'])",
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "@@odata.etag": {
+                                  "type": "string"
+                                },
+                                "ItemInternalId": {
+                                  "type": "string"
+                                },
+                                "ID": {
+                                  "type": "integer"
+                                },
+                                "Title": {
+                                  "type": "string"
+                                },
+                                "Weisungen_des_Kreditors_von_HSE_": {
+                                  "type": "boolean"
+                                },
+                                "Weisungen_von_Kreditor_erteilt": {
+                                  "type": "boolean"
+                                },
+                                "Ausschlie_x00df_liche_Teilnahme_": {
+                                  "type": "boolean"
+                                },
+                                "Benutzt_Kreditor_ausschlie_x00df": {
+                                  "type": "boolean"
+                                },
+                                "Beautragung_des_Kreditors_in_let": {
+                                  "type": "boolean"
+                                },
+                                "Prominenter_vor_der_Kamera_Exper": {
+                                  "type": "boolean"
+                                },
+                                "Muss_Kreditor_in_HSE_Raeumlichke": {
+                                  "type": "boolean"
+                                },
+                                "Zeitraum_Leistungen_Fachbereich_": {
+                                  "type": "string"
+                                },
+                                "Arbeit_des_Kreditors_mit_mehr_al": {
+                                  "type": "boolean"
+                                },
+                                "Warum_mehr_als_eine_Person": {
+                                  "type": "string"
+                                },
+                                "Wie_viele_Tage_vor_Ort": {
+                                  "type": "string"
+                                },
+                                "Warum_keine_pauschale_Verg_x00fc": {
+                                  "type": "string"
+                                },
+                                "Kommentar_Legal": {
+                                  "type": "string"
+                                },
+                                "Kreditor_in_Dienstplaene_und_Abl": {
+                                  "type": "boolean"
+                                },
+                                "Beschaeftigung_des_Kreditors_bei": {
+                                  "type": "boolean"
+                                },
+                                "Kreditor_laenger_6_Monate_ben_x0": {
+                                  "type": "boolean"
+                                },
+                                "Kosten_groe_x00df_er_gleich_5000": {
+                                  "type": "boolean"
+                                },
+                                "Warum_muss_Kreditor_Leistung_hoe": {
+                                  "type": "string"
+                                },
+                                "Ausgleich_Kapazitaetsengpaesse": {
+                                  "type": "boolean"
+                                },
+                                "Pauschale_Verguetung_Kreditor": {
+                                  "type": "boolean"
+                                },
+                                "Best_x00e4_tigung_der_Antworten": {
+                                  "type": "boolean"
+                                },
+                                "Author": {
+                                  "type": "object",
+                                  "properties": {
+                                    "@@odata.type": {
+                                      "type": "string"
+                                    },
+                                    "Claims": {
+                                      "type": "string"
+                                    },
+                                    "DisplayName": {
+                                      "type": "string"
+                                    },
+                                    "Email": {
+                                      "type": "string"
+                                    },
+                                    "Picture": {
+                                      "type": "string"
+                                    },
+                                    "Department": {},
+                                    "JobTitle": {
+                                      "type": "string"
+                                    }
+                                  }
+                                },
+                                "Author#Claims": {
+                                  "type": "string"
+                                },
+                                "Created": {
+                                  "type": "string"
+                                },
+                                "Zugriff_des_Dienstleisters_auf_H": {
+                                  "type": "boolean"
+                                },
+                                "Beschreibung_Weisungen_von_MA": {
+                                  "type": "string"
+                                },
+                                "Beschreibung_Weisungen_Kreditor": {
+                                  "type": "string"
+                                },
+                                "Projektbescheibung_Zeitraum": {
+                                  "type": "string"
+                                },
+                                "Beschreibung_Hard_Software": {
+                                  "type": "string"
+                                },
+                                "Kommentar_Antragsteller": {
+                                  "type": "string"
+                                },
+                                "Modified": {
+                                  "type": "string"
+                                },
+                                "Editor": {
+                                  "type": "object",
+                                  "properties": {
+                                    "@@odata.type": {
+                                      "type": "string"
+                                    },
+                                    "Claims": {
+                                      "type": "string"
+                                    },
+                                    "DisplayName": {
+                                      "type": "string"
+                                    },
+                                    "Email": {
+                                      "type": "string"
+                                    },
+                                    "Picture": {
+                                      "type": "string"
+                                    },
+                                    "Department": {},
+                                    "JobTitle": {
+                                      "type": "string"
+                                    }
+                                  }
+                                },
+                                "Editor#Claims": {
+                                  "type": "string"
+                                },
+                                "{Identifier}": {
+                                  "type": "string"
+                                },
+                                "{IsFolder}": {
+                                  "type": "boolean"
+                                },
+                                "{Thumbnail}": {
+                                  "type": "object",
+                                  "properties": {
+                                    "Large": {},
+                                    "Medium": {},
+                                    "Small": {}
+                                  }
+                                },
+                                "{Link}": {
+                                  "type": "string"
+                                },
+                                "{Name}": {
+                                  "type": "string"
+                                },
+                                "{FilenameWithExtension}": {
+                                  "type": "string"
+                                },
+                                "{Path}": {
+                                  "type": "string"
+                                },
+                                "{FullPath}": {
+                                  "type": "string"
+                                },
+                                "{VersionNumber}": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Elemente_AntragstellerAP": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "026c65d1-869d-475c-8a0e-c2a3b6e42c58"
+                          }
+                        },
+                        "Nachricht_in_einem_Chat_oder_Kanal_veröffentlichen_-_Kommentar_AP_an_Legal": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "poster": "User",
+                              "location": "Channel",
+                              "body/recipient/groupId": "c6b6d561-512d-4925-a0bf-084eeaf27040",
+                              "body/recipient/channelId": "19:8c014c33c73148e78232ad83af92a2bd@thread.tacv2",
+                              "body/messageBody": "<p class=\"editor-paragraph\">Hallo zusammen</p><p class=\"editor-paragraph\"><br>es wurde folgender Kommentar zur Arbeitsrechtlichen Prüfung vom Antragsteller@{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']} des Erfassungsbogen für Verträge (EFABO) verfasst.<br><br>\"@{body('JSON_analysieren_-_AntragstellerAP_Kommentar')?['Kommentar_Antragsteller']}\"</p><p class=\"editor-paragraph\"><br>Fachbereich: @{triggerOutputs()?['body/Fachbereich/Value']}<br>Vertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>Geplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}<br><br>Hier geht es zum Formular:&nbsp;<a href=\"@{variables('varURLzuElement')}\" class=\"editor-link\">Link</a></p>",
+                              "body/subject": "@{variables('varTesting')}EFABO: Kommentar Arbeitsrechtliche Prüfung zu erfassten Vertrag vom Antragsteller (ID: @{triggerOutputs()?['body/ID']})"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams",
+                              "operationId": "PostMessageToConversation",
+                              "connectionName": "shared_teams_1"
+                            }
+                          },
+                          "runAfter": {
+                            "JSON_analysieren_-_AntragstellerAP_Kommentar": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "f02c9f37-e634-4be2-83bc-47e805e013cd"
+                          }
+                        }
+                      },
+                      "case": "AntragstellerAP"
+                    },
+                    "Kommentar_von_LegalAP_": {
+                      "actions": {
+                        "Kommentar_LegalAP_abrufen": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                              "table": "@parameters('Arbeitsrechtliche Freigabe (new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d)')",
+                              "$filter": "Title eq @{triggerOutputs()?['body/ID']}"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                              "operationId": "GetItems",
+                              "connectionName": "shared_sharepointonline_1"
+                            }
+                          },
+                          "metadata": {
+                            "operationMetadataId": "1ea84943-69fc-4d42-a752-927b69b57762"
+                          }
+                        },
+                        "JSON_analysieren_-_LegalAP_Kommentar": {
+                          "type": "ParseJson",
+                          "inputs": {
+                            "content": "@first(outputs('Kommentar_LegalAP_abrufen')?['body/value'])",
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "@@odata.etag": {
+                                  "type": "string"
+                                },
+                                "ItemInternalId": {
+                                  "type": "string"
+                                },
+                                "ID": {
+                                  "type": "integer"
+                                },
+                                "Title": {
+                                  "type": "string"
+                                },
+                                "Weisungen_des_Kreditors_von_HSE_": {
+                                  "type": "boolean"
+                                },
+                                "Weisungen_von_Kreditor_erteilt": {
+                                  "type": "boolean"
+                                },
+                                "Ausschlie_x00df_liche_Teilnahme_": {
+                                  "type": "boolean"
+                                },
+                                "Benutzt_Kreditor_ausschlie_x00df": {
+                                  "type": "boolean"
+                                },
+                                "Beautragung_des_Kreditors_in_let": {
+                                  "type": "boolean"
+                                },
+                                "Prominenter_vor_der_Kamera_Exper": {
+                                  "type": "boolean"
+                                },
+                                "Muss_Kreditor_in_HSE_Raeumlichke": {
+                                  "type": "boolean"
+                                },
+                                "Zeitraum_Leistungen_Fachbereich_": {
+                                  "type": "string"
+                                },
+                                "Arbeit_des_Kreditors_mit_mehr_al": {
+                                  "type": "boolean"
+                                },
+                                "Warum_mehr_als_eine_Person": {
+                                  "type": "string"
+                                },
+                                "Wie_viele_Tage_vor_Ort": {
+                                  "type": "string"
+                                },
+                                "Warum_keine_pauschale_Verg_x00fc": {
+                                  "type": "string"
+                                },
+                                "Kommentar_Legal": {
+                                  "type": "string"
+                                },
+                                "Kreditor_in_Dienstplaene_und_Abl": {
+                                  "type": "boolean"
+                                },
+                                "Beschaeftigung_des_Kreditors_bei": {
+                                  "type": "boolean"
+                                },
+                                "Kreditor_laenger_6_Monate_ben_x0": {
+                                  "type": "boolean"
+                                },
+                                "Kosten_groe_x00df_er_gleich_5000": {
+                                  "type": "boolean"
+                                },
+                                "Warum_muss_Kreditor_Leistung_hoe": {
+                                  "type": "string"
+                                },
+                                "Ausgleich_Kapazitaetsengpaesse": {
+                                  "type": "boolean"
+                                },
+                                "Pauschale_Verguetung_Kreditor": {
+                                  "type": "boolean"
+                                },
+                                "Best_x00e4_tigung_der_Antworten": {
+                                  "type": "boolean"
+                                },
+                                "Author": {
+                                  "type": "object",
+                                  "properties": {
+                                    "@@odata.type": {
+                                      "type": "string"
+                                    },
+                                    "Claims": {
+                                      "type": "string"
+                                    },
+                                    "DisplayName": {
+                                      "type": "string"
+                                    },
+                                    "Email": {
+                                      "type": "string"
+                                    },
+                                    "Picture": {
+                                      "type": "string"
+                                    },
+                                    "Department": {},
+                                    "JobTitle": {
+                                      "type": "string"
+                                    }
+                                  }
+                                },
+                                "Author#Claims": {
+                                  "type": "string"
+                                },
+                                "Created": {
+                                  "type": "string"
+                                },
+                                "Zugriff_des_Dienstleisters_auf_H": {
+                                  "type": "boolean"
+                                },
+                                "Beschreibung_Weisungen_von_MA": {
+                                  "type": "string"
+                                },
+                                "Beschreibung_Weisungen_Kreditor": {
+                                  "type": "string"
+                                },
+                                "Projektbescheibung_Zeitraum": {
+                                  "type": "string"
+                                },
+                                "Beschreibung_Hard_Software": {
+                                  "type": "string"
+                                },
+                                "Kommentar_Antragsteller": {
+                                  "type": "string"
+                                },
+                                "Modified": {
+                                  "type": "string"
+                                },
+                                "Editor": {
+                                  "type": "object",
+                                  "properties": {
+                                    "@@odata.type": {
+                                      "type": "string"
+                                    },
+                                    "Claims": {
+                                      "type": "string"
+                                    },
+                                    "DisplayName": {
+                                      "type": "string"
+                                    },
+                                    "Email": {
+                                      "type": "string"
+                                    },
+                                    "Picture": {
+                                      "type": "string"
+                                    },
+                                    "Department": {},
+                                    "JobTitle": {
+                                      "type": "string"
+                                    }
+                                  }
+                                },
+                                "Editor#Claims": {
+                                  "type": "string"
+                                },
+                                "{Identifier}": {
+                                  "type": "string"
+                                },
+                                "{IsFolder}": {
+                                  "type": "boolean"
+                                },
+                                "{Thumbnail}": {
+                                  "type": "object",
+                                  "properties": {
+                                    "Large": {},
+                                    "Medium": {},
+                                    "Small": {}
+                                  }
+                                },
+                                "{Link}": {
+                                  "type": "string"
+                                },
+                                "{Name}": {
+                                  "type": "string"
+                                },
+                                "{FilenameWithExtension}": {
+                                  "type": "string"
+                                },
+                                "{Path}": {
+                                  "type": "string"
+                                },
+                                "{FullPath}": {
+                                  "type": "string"
+                                },
+                                "{VersionNumber}": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Kommentar_LegalAP_abrufen": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "d865771c-ab01-47b1-b59e-2f0b13ce290b"
+                          }
+                        },
+                        "LegalAP_Kommentar_an_Antragsteller": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "emailMessage/To": "@triggerOutputs()?['body/VerantwortlicherMitarbeiter/Email']",
+                              "emailMessage/Subject": "@{variables('varTesting')}EFABO: Kommentar zu erfassten Vertrag von Legal (ID: @{triggerOutputs()?['body/ID']})",
+                              "emailMessage/Body": "<p>Hallo @{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']},<br>\n<br>\nes wurde folgender Kommentar zu dem von Dir ausgefüllten Erfassungsbogen für Verträge (EFABO) von Legal zur Arbeitsrechtlichen Prüfung verfasst.<br>\n<br>\n\"@{body('JSON_analysieren_-_LegalAP_Kommentar')?['Kommentar_Legal']}\"<br>\n<br>\nFachbereich: @{triggerOutputs()?['body/Fachbereich/Value']}<br>\nVertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>\nGeplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}<br>\n<br>\nHier geht es zum Formular:&nbsp;<a href=\"@{variables('varURLzuElement')}\">Link</a></p>"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                              "operationId": "SendEmailV2",
+                              "connectionName": "shared_office365_1"
+                            }
+                          },
+                          "runAfter": {
+                            "JSON_analysieren_-_LegalAP_Kommentar": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "ce3fbbf9-1408-40a0-89ce-4bfdd09a449b"
+                          }
+                        }
+                      },
+                      "case": "LegalAP"
+                    },
+                    "Kommentar_von_ITSec": {
+                      "actions": {
+                        "Kommentar_ITSec_abrufen": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                              "table": "@parameters('IT-Security Freigabe (hse_ITSecurityFreigabe)')",
+                              "$filter": "Title eq @{triggerOutputs()?['body/ID']}"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                              "operationId": "GetItems",
+                              "connectionName": "shared_sharepointonline_1"
+                            }
+                          },
+                          "metadata": {
+                            "operationMetadataId": "3de92119-25a0-4f23-85eb-59f9b21e0887"
+                          }
+                        },
+                        "JSON_analysieren_-_ITSec_Kommentar": {
+                          "type": "ParseJson",
+                          "inputs": {
+                            "content": "@first(outputs('Kommentar_ITSec_abrufen')?['body/value'])",
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "@@odata.etag": {
+                                  "type": "string"
+                                },
+                                "ItemInternalId": {
+                                  "type": "string"
+                                },
+                                "ID": {
+                                  "type": "integer"
+                                },
+                                "Title": {
+                                  "type": "string"
+                                },
+                                "Modified": {
+                                  "type": "string"
+                                },
+                                "Created": {
+                                  "type": "string"
+                                },
+                                "Author": {
+                                  "type": "object",
+                                  "properties": {
+                                    "@@odata.type": {
+                                      "type": "string"
+                                    },
+                                    "Claims": {
+                                      "type": "string"
+                                    },
+                                    "DisplayName": {
+                                      "type": "string"
+                                    },
+                                    "Email": {
+                                      "type": "string"
+                                    },
+                                    "Picture": {
+                                      "type": "string"
+                                    },
+                                    "Department": {},
+                                    "JobTitle": {
+                                      "type": "string"
+                                    }
+                                  }
+                                },
+                                "Author#Claims": {
+                                  "type": "string"
+                                },
+                                "Editor": {
+                                  "type": "object",
+                                  "properties": {
+                                    "@@odata.type": {
+                                      "type": "string"
+                                    },
+                                    "Claims": {
+                                      "type": "string"
+                                    },
+                                    "DisplayName": {
+                                      "type": "string"
+                                    },
+                                    "Email": {
+                                      "type": "string"
+                                    },
+                                    "Picture": {
+                                      "type": "string"
+                                    },
+                                    "Department": {},
+                                    "JobTitle": {
+                                      "type": "string"
+                                    }
+                                  }
+                                },
+                                "Editor#Claims": {
+                                  "type": "string"
+                                },
+                                "Zweck_der_Software": {
+                                  "type": "string"
+                                },
+                                "Website_des_Herstellers": {
+                                  "type": "string"
+                                },
+                                "Techn_Ansprechpartner_HSE": {
+                                  "type": "object",
+                                  "properties": {
+                                    "@@odata.type": {
+                                      "type": "string"
+                                    },
+                                    "Claims": {
+                                      "type": "string"
+                                    },
+                                    "DisplayName": {
+                                      "type": "string"
+                                    },
+                                    "Email": {
+                                      "type": "string"
+                                    },
+                                    "Picture": {
+                                      "type": "string"
+                                    },
+                                    "Department": {},
+                                    "JobTitle": {
+                                      "type": "string"
+                                    }
+                                  }
+                                },
+                                "Techn_Ansprechpartner_HSE#Claims": {
+                                  "type": "string"
+                                },
+                                "Techn_Ansprechpartner_DL": {
+                                  "type": "string"
+                                },
+                                "Techn_Ansprechpartner_Anbieter": {
+                                  "type": "string"
+                                },
+                                "Verwendung_KI": {
+                                  "type": "boolean"
+                                },
+                                "Lizenvariante": {
+                                  "type": "string"
+                                },
+                                "Anzahl_Lizenzen": {
+                                  "type": "string"
+                                },
+                                "Schutzbedarf_Verfuegbarkeit": {
+                                  "type": "object",
+                                  "properties": {
+                                    "@@odata.type": {
+                                      "type": "string"
+                                    },
+                                    "Id": {
+                                      "type": "integer"
+                                    },
+                                    "Value": {
+                                      "type": "string"
+                                    }
+                                  }
+                                },
+                                "Schutzbedarf_Verfuegbarkeit#Id": {
+                                  "type": "integer"
+                                },
+                                "Schutzbedarf_Integritaet": {
+                                  "type": "object",
+                                  "properties": {
+                                    "@@odata.type": {
+                                      "type": "string"
+                                    },
+                                    "Id": {
+                                      "type": "integer"
+                                    },
+                                    "Value": {
+                                      "type": "string"
+                                    }
+                                  }
+                                },
+                                "Schutzbedarf_Integritaet#Id": {
+                                  "type": "integer"
+                                },
+                                "Schutzbedarf_Vertraulichkeit": {
+                                  "type": "object",
+                                  "properties": {
+                                    "@@odata.type": {
+                                      "type": "string"
+                                    },
+                                    "Id": {
+                                      "type": "integer"
+                                    },
+                                    "Value": {
+                                      "type": "string"
+                                    }
+                                  }
+                                },
+                                "Schutzbedarf_Vertraulichkeit#Id": {
+                                  "type": "integer"
+                                },
+                                "Personenbezogene_Daten": {
+                                  "type": "boolean"
+                                },
+                                "Personenbezogene_Daten_mit_erhoe": {
+                                  "type": "boolean"
+                                },
+                                "Vertrauliche_Daten": {
+                                  "type": "boolean"
+                                },
+                                "Streng_Vertrauliche_Daten": {
+                                  "type": "boolean"
+                                },
+                                "Freitext_Kategorie_Daten": {
+                                  "type": "string"
+                                },
+                                "Benutzergruppe_Software": {
+                                  "type": "string"
+                                },
+                                "Anzahl_Nutzer": {
+                                  "type": "string"
+                                },
+                                "Andere_Softwareloesungen_Zugriff": {
+                                  "type": "boolean"
+                                },
+                                "Daten_von_DL_verarbeitet": {
+                                  "type": "boolean"
+                                },
+                                "DL_Zugriff_auf_Software_Daten": {
+                                  "type": "boolean"
+                                },
+                                "Welche_Systeme_Software": {
+                                  "type": "string"
+                                },
+                                "Wo_Systeme": {
+                                  "type": "string"
+                                },
+                                "Software_erreichbar_Internet": {
+                                  "type": "string"
+                                },
+                                "Betreiber_Systeme": {
+                                  "type": "string"
+                                },
+                                "Standarsierte_Schnittstellen": {
+                                  "type": "boolean"
+                                },
+                                "Transportweg_Verschluesselung": {
+                                  "type": "string"
+                                },
+                                "Genutztes_Verfahren": {
+                                  "type": "string"
+                                },
+                                "Wo_Speicherung_Authentifikations": {
+                                  "type": "string"
+                                },
+                                "Zugriff_nur_aus_HSE_Netzwerk": {
+                                  "type": "boolean"
+                                },
+                                "Kommentar_ITSec": {
+                                  "type": "string"
+                                },
+                                "Kommentar_Antragsteller": {
+                                  "type": "string"
+                                },
+                                "{Identifier}": {
+                                  "type": "string"
+                                },
+                                "{IsFolder}": {
+                                  "type": "boolean"
+                                },
+                                "{Thumbnail}": {
+                                  "type": "object",
+                                  "properties": {
+                                    "Large": {},
+                                    "Medium": {},
+                                    "Small": {}
+                                  }
+                                },
+                                "{Link}": {
+                                  "type": "string"
+                                },
+                                "{Name}": {
+                                  "type": "string"
+                                },
+                                "{FilenameWithExtension}": {
+                                  "type": "string"
+                                },
+                                "{Path}": {
+                                  "type": "string"
+                                },
+                                "{FullPath}": {
+                                  "type": "string"
+                                },
+                                "{HasAttachments}": {
+                                  "type": "boolean"
+                                },
+                                "{VersionNumber}": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Kommentar_ITSec_abrufen": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "9690b22c-3b5d-47d3-9fae-e9c05e647f4c"
+                          }
+                        },
+                        "ITSec_Kommentar_an_Antragsteller": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "emailMessage/To": "@triggerOutputs()?['body/VerantwortlicherMitarbeiter/Email']",
+                              "emailMessage/Subject": "@{variables('varTesting')}EFABO: Kommentar zu erfassten Vertrag von IT Security (ID: @{triggerOutputs()?['body/ID']})",
+                              "emailMessage/Body": "<p>Hallo @{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']},<br>\n<br>\nes wurde folgender Kommentar zu dem von Dir ausgefüllten Erfassungsbogen für Verträge (EFABO) zur IT Security Freigabe verfasst.<br>\n<br>\n\"@{triggerOutputs()?['body/KommentarITSec']}\"<br>\n<br>\nFachbereich: @{triggerOutputs()?['body/Fachbereich/Value']}<br>\nVertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>\nGeplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}<br>\n<br>\nHier geht es zum Formular:&nbsp;<a href=\"@{variables('varURLzuElement')}\">Link</a></p>",
+                              "emailMessage/Importance": "Normal"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                              "operationId": "SendEmailV2",
+                              "connectionName": "shared_office365_1"
+                            }
+                          },
+                          "runAfter": {
+                            "JSON_analysieren_-_ITSec_Kommentar": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "6923a6b2-42c7-40ef-9d03-cf701dc9a37c"
+                          }
+                        }
+                      },
+                      "case": "ITSec"
+                    },
+                    "AntragstellerITSec": {
+                      "actions": {
+                        "Kommentar_AntragstellerITSec_abrufen": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                              "table": "@parameters('IT-Security Freigabe (hse_ITSecurityFreigabe)')",
+                              "$filter": "Title eq @{triggerOutputs()?['body/ID']}"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                              "operationId": "GetItems",
+                              "connectionName": "shared_sharepointonline_1"
+                            }
+                          },
+                          "metadata": {
+                            "operationMetadataId": "6f5d6169-ac43-489b-9aa1-130d18733e15"
+                          }
+                        },
+                        "JSON_analysieren_-_AntragstellerITSec_Kommentar": {
+                          "type": "ParseJson",
+                          "inputs": {
+                            "content": "@first(outputs('Kommentar_AntragstellerITSec_abrufen')?['body/value'])",
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "@@odata.etag": {
+                                  "type": "string"
+                                },
+                                "ItemInternalId": {
+                                  "type": "string"
+                                },
+                                "ID": {
+                                  "type": "integer"
+                                },
+                                "Title": {
+                                  "type": "string"
+                                },
+                                "Modified": {
+                                  "type": "string"
+                                },
+                                "Created": {
+                                  "type": "string"
+                                },
+                                "Author": {
+                                  "type": "object",
+                                  "properties": {
+                                    "@@odata.type": {
+                                      "type": "string"
+                                    },
+                                    "Claims": {
+                                      "type": "string"
+                                    },
+                                    "DisplayName": {
+                                      "type": "string"
+                                    },
+                                    "Email": {
+                                      "type": "string"
+                                    },
+                                    "Picture": {
+                                      "type": "string"
+                                    },
+                                    "Department": {},
+                                    "JobTitle": {
+                                      "type": "string"
+                                    }
+                                  }
+                                },
+                                "Author#Claims": {
+                                  "type": "string"
+                                },
+                                "Editor": {
+                                  "type": "object",
+                                  "properties": {
+                                    "@@odata.type": {
+                                      "type": "string"
+                                    },
+                                    "Claims": {
+                                      "type": "string"
+                                    },
+                                    "DisplayName": {
+                                      "type": "string"
+                                    },
+                                    "Email": {
+                                      "type": "string"
+                                    },
+                                    "Picture": {
+                                      "type": "string"
+                                    },
+                                    "Department": {},
+                                    "JobTitle": {
+                                      "type": "string"
+                                    }
+                                  }
+                                },
+                                "Editor#Claims": {
+                                  "type": "string"
+                                },
+                                "Zweck_der_Software": {
+                                  "type": "string"
+                                },
+                                "Website_des_Herstellers": {
+                                  "type": "string"
+                                },
+                                "Techn_Ansprechpartner_HSE": {
+                                  "type": "object",
+                                  "properties": {
+                                    "@@odata.type": {
+                                      "type": "string"
+                                    },
+                                    "Claims": {
+                                      "type": "string"
+                                    },
+                                    "DisplayName": {
+                                      "type": "string"
+                                    },
+                                    "Email": {
+                                      "type": "string"
+                                    },
+                                    "Picture": {
+                                      "type": "string"
+                                    },
+                                    "Department": {},
+                                    "JobTitle": {
+                                      "type": "string"
+                                    }
+                                  }
+                                },
+                                "Techn_Ansprechpartner_HSE#Claims": {
+                                  "type": "string"
+                                },
+                                "Techn_Ansprechpartner_DL": {
+                                  "type": "string"
+                                },
+                                "Techn_Ansprechpartner_Anbieter": {
+                                  "type": "string"
+                                },
+                                "Verwendung_KI": {
+                                  "type": "boolean"
+                                },
+                                "Lizenvariante": {
+                                  "type": "string"
+                                },
+                                "Anzahl_Lizenzen": {
+                                  "type": "string"
+                                },
+                                "Schutzbedarf_Verfuegbarkeit": {
+                                  "type": "object",
+                                  "properties": {
+                                    "@@odata.type": {
+                                      "type": "string"
+                                    },
+                                    "Id": {
+                                      "type": "integer"
+                                    },
+                                    "Value": {
+                                      "type": "string"
+                                    }
+                                  }
+                                },
+                                "Schutzbedarf_Verfuegbarkeit#Id": {
+                                  "type": "integer"
+                                },
+                                "Schutzbedarf_Integritaet": {
+                                  "type": "object",
+                                  "properties": {
+                                    "@@odata.type": {
+                                      "type": "string"
+                                    },
+                                    "Id": {
+                                      "type": "integer"
+                                    },
+                                    "Value": {
+                                      "type": "string"
+                                    }
+                                  }
+                                },
+                                "Schutzbedarf_Integritaet#Id": {
+                                  "type": "integer"
+                                },
+                                "Schutzbedarf_Vertraulichkeit": {
+                                  "type": "object",
+                                  "properties": {
+                                    "@@odata.type": {
+                                      "type": "string"
+                                    },
+                                    "Id": {
+                                      "type": "integer"
+                                    },
+                                    "Value": {
+                                      "type": "string"
+                                    }
+                                  }
+                                },
+                                "Schutzbedarf_Vertraulichkeit#Id": {
+                                  "type": "integer"
+                                },
+                                "Personenbezogene_Daten": {
+                                  "type": "boolean"
+                                },
+                                "Personenbezogene_Daten_mit_erhoe": {
+                                  "type": "boolean"
+                                },
+                                "Vertrauliche_Daten": {
+                                  "type": "boolean"
+                                },
+                                "Streng_Vertrauliche_Daten": {
+                                  "type": "boolean"
+                                },
+                                "Freitext_Kategorie_Daten": {
+                                  "type": "string"
+                                },
+                                "Benutzergruppe_Software": {
+                                  "type": "string"
+                                },
+                                "Anzahl_Nutzer": {
+                                  "type": "string"
+                                },
+                                "Andere_Softwareloesungen_Zugriff": {
+                                  "type": "boolean"
+                                },
+                                "Daten_von_DL_verarbeitet": {
+                                  "type": "boolean"
+                                },
+                                "DL_Zugriff_auf_Software_Daten": {
+                                  "type": "boolean"
+                                },
+                                "Welche_Systeme_Software": {
+                                  "type": "string"
+                                },
+                                "Wo_Systeme": {
+                                  "type": "string"
+                                },
+                                "Software_erreichbar_Internet": {
+                                  "type": "string"
+                                },
+                                "Betreiber_Systeme": {
+                                  "type": "string"
+                                },
+                                "Standarsierte_Schnittstellen": {
+                                  "type": "boolean"
+                                },
+                                "Transportweg_Verschluesselung": {
+                                  "type": "string"
+                                },
+                                "Genutztes_Verfahren": {
+                                  "type": "string"
+                                },
+                                "Wo_Speicherung_Authentifikations": {
+                                  "type": "string"
+                                },
+                                "Zugriff_nur_aus_HSE_Netzwerk": {
+                                  "type": "boolean"
+                                },
+                                "Kommentar_ITSec": {
+                                  "type": "string"
+                                },
+                                "Kommentar_Antragsteller": {
+                                  "type": "string"
+                                },
+                                "{Identifier}": {
+                                  "type": "string"
+                                },
+                                "{IsFolder}": {
+                                  "type": "boolean"
+                                },
+                                "{Thumbnail}": {
+                                  "type": "object",
+                                  "properties": {
+                                    "Large": {},
+                                    "Medium": {},
+                                    "Small": {}
+                                  }
+                                },
+                                "{Link}": {
+                                  "type": "string"
+                                },
+                                "{Name}": {
+                                  "type": "string"
+                                },
+                                "{FilenameWithExtension}": {
+                                  "type": "string"
+                                },
+                                "{Path}": {
+                                  "type": "string"
+                                },
+                                "{FullPath}": {
+                                  "type": "string"
+                                },
+                                "{HasAttachments}": {
+                                  "type": "boolean"
+                                },
+                                "{VersionNumber}": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Kommentar_AntragstellerITSec_abrufen": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "df504434-a293-4db9-902e-c5244fc0d875"
+                          }
+                        },
+                        "Nachricht_in_einem_Chat_oder_Kanal_veröffentlichen_-_Kommentar_ITSec": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "poster": "User",
+                              "location": "Channel",
+                              "body/recipient/groupId": "d505f9ed-0667-4eac-a0c9-aab7b4f07378",
+                              "body/recipient/channelId": "19:234edd172f754d00b43fb9f62a8f5f69@thread.tacv2",
+                              "body/messageBody": "<p>Hallo zusammen<br>\n<br>\nes wurde folgender Kommentar zur IT Security Prüfung vom Antragsteller@{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']} des Erfassungsbogen für Verträge (EFABO) verfasst.<br>\n<br>\n\"@{body('JSON_analysieren_-_AntragstellerITSec_Kommentar')?['Kommentar_Antragsteller']}\"<br>\n<br>\nFachbereich: @{triggerOutputs()?['body/Fachbereich/Value']}<br>\nVertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>\nGeplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}<br>\n<br>\nHier geht es zum Formular:&nbsp;<a href=\"@{variables('varURLzuElement')}\">Link</a></p>",
+                              "body/subject": "@{variables('varTesting')}EFABO: Kommentar IT Security Prüfung zu erfassten Vertrag vom Antragsteller (ID: @{triggerOutputs()?['body/ID']})"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams",
+                              "operationId": "PostMessageToConversation",
+                              "connectionName": "shared_teams_1"
+                            }
+                          },
+                          "runAfter": {
+                            "JSON_analysieren_-_AntragstellerITSec_Kommentar": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "a78f6598-9e58-40fc-a6d1-9fc1eb53235a"
+                          }
+                        }
+                      },
+                      "case": "AntragstellerITSec"
+                    }
+                  },
+                  "metadata": {
+                    "operationMetadataId": "d43714c7-c562-4593-8b1b-892ecc802988"
+                  }
+                }
+              },
+              "metadata": {
+                "operationMetadataId": "d59eef31-4cb4-4baf-ae0b-62a4d45f422b"
+              }
+            }
+          },
+          "else": {
+            "actions": {}
+          },
+          "runAfter": {
+            "Variable_initialisieren_-_varURLzuElement": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a9659fae-0b87-4560-a82b-0af317f18964"
+          }
+        },
+        "Variable_initialisieren_-_AblehnungsKommentar": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "AblehnungsKommentar",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "Bedingung_-_Neuer_Kommentar_=_true": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a833d959-fd6a-41ee-bb8b-a4c9702578f8"
+          }
+        },
+        "Bedingung_-_Abfrage_nach_veränderten_Status": {
+          "type": "If",
+          "expression": {
+            "equals": [
+              "@outputs('Element_abrufen_-_erneuter_Abruf_falls_Änderung_Status')?['body/NeuerStatus']",
+              "@true"
+            ]
+          },
+          "actions": {
+            "Option_-_Abfrage_neuer_Status": {
+              "type": "Switch",
+              "expression": "@outputs('Element_abrufen_-_erneuter_Abruf_falls_Änderung_Status')?['body/Status/Value']",
+              "default": {
+                "actions": {}
+              },
+              "cases": {
+                "In_Prüfung": {
+                  "actions": {
+                    "Option_-_Abfrage_Prüfung_Recht": {
+                      "type": "Switch",
+                      "description": "Wenn der Status In Prüfung bei Recht ist, wurden die anderen Rollen bereits informiert. Recht startet bei Anlage Akte in Lecare.",
+                      "expression": "@triggerOutputs()?['body/PruefungRecht']",
+                      "default": {
+                        "actions": {}
+                      },
+                      "cases": {
+                        "Anlage_Akte_in_Lecare": {
+                          "actions": {
+                            "Bedingung_-_Abfrage_Finanzen_=_in_Prüfung": {
+                              "type": "If",
+                              "expression": {
+                                "equals": [
+                                  "@triggerOutputs()?['body/PruefungFinanzen']",
+                                  "In Prüfung"
+                                ]
+                              },
+                              "actions": {
+                                "Nachricht_in_einem_Chat_oder_Kanal_veröffentlichen_-_Neue_Prüfung_Finance": {
+                                  "type": "OpenApiConnection",
+                                  "inputs": {
+                                    "parameters": {
+                                      "poster": "User",
+                                      "location": "Channel",
+                                      "body/recipient/groupId": "56c88fa1-0984-498f-be6a-b1d2579cb6bc",
+                                      "body/recipient/channelId": "19:4fc50b4e97174b878fadd9a642853cc2@thread.tacv2",
+                                      "body/messageBody": "Hallo zusammen,<br><br>\nes wurde ein neuer Erfassungsbogen für Verträge (EFABO) erfasst und vom Leiter des Fachbereichs genehmigt. Bitte führe eine Prüfung durch. Du kannst dann den Vorgang bestätigen oder ablehnen. Für Fragen bzw. Anpassungswünsche kannst du die Option \"Zurück an Antragssteller\" auswählen.<br>\n<br>\nVertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>\nGeplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}\n<br><br>\nHier geht es zum Formular:&nbsp;<a href=\"@{variables('varURLzuElement')}\">Link</a></p>",
+                                      "body/subject": "@{variables('varTesting')}EFABO: Erfasster Vertrag zur Prüfung (ID: @{triggerOutputs()?['body/ID']})"
+                                    },
+                                    "host": {
+                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams",
+                                      "operationId": "PostMessageToConversation",
+                                      "connectionName": "shared_teams_1"
+                                    }
+                                  },
+                                  "metadata": {
+                                    "operationMetadataId": "0e43cffb-bc63-4fba-8c15-8ee8893d6970"
+                                  }
+                                }
+                              },
+                              "else": {
+                                "actions": {}
+                              },
+                              "runAfter": {
+                                "Bedingung_-_Abfrage_Einkauf_=_in_Prüfung": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "5e31448d-dede-4297-b028-3889c64b92a6"
+                              }
+                            },
+                            "Bedingung_-_Abfrage_Einkauf_=_in_Prüfung": {
+                              "type": "If",
+                              "expression": {
+                                "equals": [
+                                  "@triggerOutputs()?['body/PruefungEinkauf']",
+                                  "In Prüfung"
+                                ]
+                              },
+                              "actions": {
+                                "Nachricht_in_einem_Chat_oder_Kanal_-_neue_Prüfung_Einkauf": {
+                                  "type": "OpenApiConnection",
+                                  "inputs": {
+                                    "parameters": {
+                                      "poster": "User",
+                                      "location": "Channel",
+                                      "body/recipient/groupId": "9aaebce9-767e-48c0-b94b-a7992d7a3c8d",
+                                      "body/recipient/channelId": "19:caa7d8c4fa174da686207e4aa27a634d@thread.tacv2",
+                                      "body/messageBody": "Hallo zusammen,<br><br>\nes wurde ein neuer Erfassungsbogen für Verträge (EFABO) erfasst und vom Leiter des Fachbereichs genehmigt. Bitte führe eine Prüfung durch. Du kannst dann den Vorgang bestätigen oder ablehnen. Für Fragen bzw. Anpassungswünsche kannst du die Option \"Zurück an Antragssteller\" auswählen.<br>\n<br>\nVertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>\nGeplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}\n<br><br>\nHier geht es zum Formular:&nbsp;<a href=\"@{variables('varURLzuElement')}\">Link</a></p>",
+                                      "body/subject": "@{variables('varTesting')}EFABO: Erfasster Vertrag zur Prüfung (ID: @{triggerOutputs()?['body/ID']})"
+                                    },
+                                    "host": {
+                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams",
+                                      "operationId": "PostMessageToConversation",
+                                      "connectionName": "shared_teams_1"
+                                    }
+                                  },
+                                  "metadata": {
+                                    "operationMetadataId": "df850902-2e5a-4678-a8b7-5d2b662b493f"
+                                  }
+                                }
+                              },
+                              "else": {
+                                "actions": {}
+                              },
+                              "runAfter": {
+                                "Nachricht_in_einem_Chat_oder_Kanal_veröffentlichen_-_Legal_Neuer_Antrag": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "f1eda462-45c3-4bad-adab-7e89ddc6e1c3"
+                              }
+                            },
+                            "Nachricht_in_einem_Chat_oder_Kanal_veröffentlichen_-_Legal_Neuer_Antrag": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "parameters": {
+                                  "poster": "User",
+                                  "location": "Channel",
+                                  "body/recipient/groupId": "c6b6d561-512d-4925-a0bf-084eeaf27040",
+                                  "body/recipient/channelId": "19:8c014c33c73148e78232ad83af92a2bd@thread.tacv2",
+                                  "body/messageBody": "<p class=\"editor-paragraph\">Hallo zusammen,<br><br>es wurde ein neuer Erfassungsbogen für Verträge (EFABO) erfasst und vom Genehmiger freigegeben. Bitte prüfe die Angaben, lege eine Akte in Lecare an und gebe den prüfenden Rechtsanwalt an.<br><br><br>Fachbereich: @{triggerOutputs()?['body/Fachbereich/Value']}<br>Vertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>Geplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}<br><br>Hier geht es zum Formular: <a href=\"@{variables('varURLzuElement')}\" class=\"editor-link\">Link</a></p><br>",
+                                  "body/subject": "@{variables('varTesting')}Erfasster Vertrag zur Aktenanlage (ID: @{triggerOutputs()?['body/ID']})"
+                                },
+                                "host": {
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams",
+                                  "operationId": "PostMessageToConversation",
+                                  "connectionName": "shared_teams_1"
+                                }
+                              },
+                              "metadata": {
+                                "operationMetadataId": "e61c5667-a457-4746-8b77-ad3123711f00"
+                              }
+                            },
+                            "Bedingung_-_Abfrage_ITSec_=_in_Prüfung": {
+                              "type": "If",
+                              "expression": {
+                                "equals": [
+                                  "@outputs('Element_abrufen_-_erneuter_Abruf_falls_Änderung_Status')?['body/PruefungITSec']",
+                                  "In Prüfung"
+                                ]
+                              },
+                              "actions": {
+                                "Nachricht_in_einem_Chat_oder_Kanal_veröffentlichen_-_Neue_Prüfung_ITSec": {
+                                  "type": "OpenApiConnection",
+                                  "inputs": {
+                                    "parameters": {
+                                      "poster": "User",
+                                      "location": "Channel",
+                                      "body/recipient/groupId": "d505f9ed-0667-4eac-a0c9-aab7b4f07378",
+                                      "body/recipient/channelId": "19:234edd172f754d00b43fb9f62a8f5f69@thread.tacv2",
+                                      "body/messageBody": "Hallo zusammen,<br><br>\nes wurde ein neuer Erfassungsbogen für Verträge (EFABO) erfasst und vom Leiter des Fachbereichs genehmigt. Bitte führe eine Prüfung durch. Du kannst dann den Vorgang bestätigen oder ablehnen. Für Fragen bzw. Anpassungswünsche kannst du die Option \"Zurück an Antragssteller\" auswählen.<br>\n<br>\nVertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>\nGeplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}\n<br><br>\nHier geht es zum Formular:&nbsp;<a href=\"@{variables('varURLzuElement')}\">Link</a></p>"
+                                    },
+                                    "host": {
+                                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams",
+                                      "operationId": "PostMessageToConversation",
+                                      "connectionName": "shared_teams_1"
+                                    }
+                                  },
+                                  "metadata": {
+                                    "operationMetadataId": "04606201-b66f-43aa-bf41-68876cd94247"
+                                  }
+                                }
+                              },
+                              "else": {
+                                "actions": {}
+                              },
+                              "runAfter": {
+                                "Bedingung_-_Abfrage_Finanzen_=_in_Prüfung": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "cf7b37d6-f95b-488f-8b13-a4c0a74bd5c6"
+                              }
+                            }
+                          },
+                          "case": "Anlage Akte in Lecare"
+                        },
+                        "In_Prüfung-1": {
+                          "actions": {
+                            "E-Mail_senden_(V2)_-_Neue_Prüfung_Rechtsanwalt": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "parameters": {
+                                  "emailMessage/To": "@triggerOutputs()?['body/PruefenderRechtsanwalt/Email']",
+                                  "emailMessage/Subject": "@{variables('varTesting')}EFABO: Erfasster Vertrag zur Prüfung (ID: @{triggerOutputs()?['body/ID']})",
+                                  "emailMessage/Body": "<p>Hallo @{triggerOutputs()?['body/PruefenderRechtsanwalt/DisplayName']},<br>\n<br>\nes wurde ein neuer Erfassungsbogen für Verträge (EFABO) eingestellt und dir zur inhaltlichen Überprüfung vorgelegt. Du kannst dann den Vorgang bestätigen oder ablehnen. Für Fragen bzw. Anpassungswünsche kannst du die Option \"Zurück an Antragssteller\" auswählen.<br> \n<br>\n<br>\nFachbereich: @{triggerOutputs()?['body/Fachbereich/Value']}<br>\nVertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>\nGeplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}\n<br><br>\nHier geht es zum Formular:&nbsp;<a href=\"@{variables('varURLzuElement')}\">Link</a></p>"
+                                },
+                                "host": {
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                                  "operationId": "SendEmailV2",
+                                  "connectionName": "shared_office365_1"
+                                }
+                              },
+                              "metadata": {
+                                "operationMetadataId": "7a46b906-78fd-40d1-96c4-f4326d532221"
+                              }
+                            }
+                          },
+                          "case": "In Prüfung"
+                        }
+                      },
+                      "metadata": {
+                        "operationMetadataId": "e739ded0-bf3d-4627-bed3-ce87e59982e1"
+                      }
+                    }
+                  },
+                  "case": "In Prüfung"
+                },
+                "Abgelehnt": {
+                  "actions": {
+                    "Option_-_setzen_Kommentar_zur_Ablehnung": {
+                      "type": "Switch",
+                      "expression": "@triggerOutputs()?['body/AbgelehntDurch/Value']",
+                      "default": {
+                        "actions": {}
+                      },
+                      "cases": {
+                        "LegalAP_-_Veraltet": {
+                          "actions": {
+                            "Get_Arbeitsrechtliche_Prüfung_-_Ablehnung_Legal": {
+                              "type": "OpenApiConnection",
+                              "inputs": {
+                                "parameters": {
+                                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                                  "table": "@parameters('Arbeitsrechtliche Freigabe (new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d)')",
+                                  "$filter": "Title eq @{triggerOutputs()?['body/ID']}"
+                                },
+                                "host": {
+                                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                  "operationId": "GetItems",
+                                  "connectionName": "shared_sharepointonline_1"
+                                }
+                              },
+                              "metadata": {
+                                "operationMetadataId": "c9297db6-f4b3-4165-b0b6-7c20fe5ef051"
+                              }
+                            },
+                            "Variable_festlegen_-_AblehnungsKommentar_auf_Kommentar_Recht_AP": {
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "AblehnungsKommentar",
+                                "value": "@body('JSON_analysieren_-_Ablehnung_Legal')?['Kommentar_Legal']"
+                              },
+                              "runAfter": {
+                                "JSON_analysieren_-_Ablehnung_Legal": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "9b0fd686-b394-49ba-8776-de0f1367f31e"
+                              }
+                            },
+                            "JSON_analysieren_-_Ablehnung_Legal": {
+                              "type": "ParseJson",
+                              "inputs": {
+                                "content": "@first(outputs('Get_Arbeitsrechtliche_Prüfung_-_Ablehnung_Legal')?['body/value'])",
+                                "schema": {
+                                  "type": "object",
+                                  "properties": {
+                                    "@@odata.etag": {
+                                      "type": "string"
+                                    },
+                                    "ItemInternalId": {
+                                      "type": "string"
+                                    },
+                                    "ID": {
+                                      "type": "integer"
+                                    },
+                                    "Title": {
+                                      "type": "string"
+                                    },
+                                    "Weisungen_des_Kreditors_von_HSE_": {
+                                      "type": "boolean"
+                                    },
+                                    "Weisungen_von_Kreditor_erteilt": {
+                                      "type": "boolean"
+                                    },
+                                    "Ausschlie_x00df_liche_Teilnahme_": {
+                                      "type": "boolean"
+                                    },
+                                    "Benutzt_Kreditor_ausschlie_x00df": {
+                                      "type": "boolean"
+                                    },
+                                    "Beautragung_des_Kreditors_in_let": {
+                                      "type": "boolean"
+                                    },
+                                    "Prominenter_vor_der_Kamera_Exper": {
+                                      "type": "boolean"
+                                    },
+                                    "Muss_Kreditor_in_HSE_Raeumlichke": {
+                                      "type": "boolean"
+                                    },
+                                    "Zeitraum_Leistungen_Fachbereich_": {
+                                      "type": "string"
+                                    },
+                                    "Arbeit_des_Kreditors_mit_mehr_al": {
+                                      "type": "boolean"
+                                    },
+                                    "Warum_mehr_als_eine_Person": {
+                                      "type": "string"
+                                    },
+                                    "Wie_viele_Tage_vor_Ort": {
+                                      "type": "string"
+                                    },
+                                    "Warum_keine_pauschale_Verg_x00fc": {
+                                      "type": "string"
+                                    },
+                                    "Kommentar_Legal": {
+                                      "type": "string"
+                                    },
+                                    "Kreditor_in_Dienstplaene_und_Abl": {
+                                      "type": "boolean"
+                                    },
+                                    "Beschaeftigung_des_Kreditors_bei": {
+                                      "type": "boolean"
+                                    },
+                                    "Kreditor_laenger_6_Monate_ben_x0": {
+                                      "type": "boolean"
+                                    },
+                                    "Kosten_groe_x00df_er_gleich_5000": {
+                                      "type": "boolean"
+                                    },
+                                    "Warum_muss_Kreditor_Leistung_hoe": {
+                                      "type": "string"
+                                    },
+                                    "Ausgleich_Kapazitaetsengpaesse": {
+                                      "type": "boolean"
+                                    },
+                                    "Pauschale_Verguetung_Kreditor": {
+                                      "type": "boolean"
+                                    },
+                                    "Best_x00e4_tigung_der_Antworten": {
+                                      "type": "boolean"
+                                    },
+                                    "Author": {
+                                      "type": "object",
+                                      "properties": {
+                                        "@@odata.type": {
+                                          "type": "string"
+                                        },
+                                        "Claims": {
+                                          "type": "string"
+                                        },
+                                        "DisplayName": {
+                                          "type": "string"
+                                        },
+                                        "Email": {
+                                          "type": "string"
+                                        },
+                                        "Picture": {
+                                          "type": "string"
+                                        },
+                                        "Department": {},
+                                        "JobTitle": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "Author#Claims": {
+                                      "type": "string"
+                                    },
+                                    "Created": {
+                                      "type": "string"
+                                    },
+                                    "Zugriff_des_Dienstleisters_auf_H": {
+                                      "type": "boolean"
+                                    },
+                                    "Beschreibung_Weisungen_von_MA": {
+                                      "type": "string"
+                                    },
+                                    "Beschreibung_Weisungen_Kreditor": {
+                                      "type": "string"
+                                    },
+                                    "Projektbescheibung_Zeitraum": {
+                                      "type": "string"
+                                    },
+                                    "Beschreibung_Hard_Software": {
+                                      "type": "string"
+                                    },
+                                    "Kommentar_Antragsteller": {
+                                      "type": "string"
+                                    },
+                                    "Modified": {
+                                      "type": "string"
+                                    },
+                                    "Editor": {
+                                      "type": "object",
+                                      "properties": {
+                                        "@@odata.type": {
+                                          "type": "string"
+                                        },
+                                        "Claims": {
+                                          "type": "string"
+                                        },
+                                        "DisplayName": {
+                                          "type": "string"
+                                        },
+                                        "Email": {
+                                          "type": "string"
+                                        },
+                                        "Picture": {
+                                          "type": "string"
+                                        },
+                                        "Department": {},
+                                        "JobTitle": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    },
+                                    "Editor#Claims": {
+                                      "type": "string"
+                                    },
+                                    "{Identifier}": {
+                                      "type": "string"
+                                    },
+                                    "{IsFolder}": {
+                                      "type": "boolean"
+                                    },
+                                    "{Thumbnail}": {
+                                      "type": "object",
+                                      "properties": {
+                                        "Large": {},
+                                        "Medium": {},
+                                        "Small": {}
+                                      }
+                                    },
+                                    "{Link}": {
+                                      "type": "string"
+                                    },
+                                    "{Name}": {
+                                      "type": "string"
+                                    },
+                                    "{FilenameWithExtension}": {
+                                      "type": "string"
+                                    },
+                                    "{Path}": {
+                                      "type": "string"
+                                    },
+                                    "{FullPath}": {
+                                      "type": "string"
+                                    },
+                                    "{VersionNumber}": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              },
+                              "runAfter": {
+                                "Get_Arbeitsrechtliche_Prüfung_-_Ablehnung_Legal": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "metadata": {
+                                "operationMetadataId": "1d3a8cd1-e0d8-4b5e-a229-5062d1f24de4"
+                              }
+                            }
+                          },
+                          "case": "LegalAP"
+                        },
+                        "Genehmiger-1": {
+                          "actions": {
+                            "Variable_festlegen_-_AblehnungsKommentar_auf_Kommentar_Genehmiger": {
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "AblehnungsKommentar",
+                                "value": "@triggerOutputs()?['body/Kommentar_x0020_Genehmiger']"
+                              },
+                              "metadata": {
+                                "operationMetadataId": "cd2123e2-d331-4521-9c08-8aecc8bcfd5e"
+                              }
+                            }
+                          },
+                          "case": "Genehmiger"
+                        },
+                        "Finance-1": {
+                          "actions": {
+                            "Variable_festlegen_-_AblehnungsKommentar_auf_Kommentar_Finanzen": {
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "AblehnungsKommentar",
+                                "value": "@triggerOutputs()?['body/Kommentar_x0020_Finanzen']"
+                              },
+                              "metadata": {
+                                "operationMetadataId": "62de0810-ca69-4924-8739-c568b612c79c"
+                              }
+                            }
+                          },
+                          "case": "Finance"
+                        },
+                        "Indirect_Sourcing-1": {
+                          "actions": {
+                            "Variable_festlegen_-_AblehnungsKommentar_auf_Kommentar_Einkauf": {
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "AblehnungsKommentar",
+                                "value": "@triggerOutputs()?['body/KommentarEinkauf']"
+                              },
+                              "metadata": {
+                                "operationMetadataId": "6b599667-a5cb-4b2f-8e27-1d83d76586d0"
+                              }
+                            }
+                          },
+                          "case": "Indirect Sourcing"
+                        },
+                        "Legal-1": {
+                          "actions": {
+                            "Variable_festlegen_-_AblehnungsKommentar_auf_Kommentar_Recht": {
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "AblehnungsKommentar",
+                                "value": "@triggerOutputs()?['body/Kommentar_x0020_Recht']"
+                              },
+                              "metadata": {
+                                "operationMetadataId": "5a0efefd-ff2d-4d6f-8e8a-5f7be76ae260"
+                              }
+                            }
+                          },
+                          "case": "Legal"
+                        },
+                        "ITSec-1": {
+                          "actions": {
+                            "Variable_festlegen_-_AblehnungsKommentar_auf_Kommentar_ITSec": {
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "AblehnungsKommentar",
+                                "value": "@triggerBody()?['KommentarITSec']"
+                              },
+                              "metadata": {
+                                "operationMetadataId": "5a0efefd-ff2d-4d6f-8e8a-5f7be76ae260"
+                              }
+                            }
+                          },
+                          "case": "ITSec"
+                        }
+                      },
+                      "metadata": {
+                        "operationMetadataId": "393179b3-7d76-49a5-be7f-974febde524b"
+                      }
+                    },
+                    "E-Mail_senden_(V2)_-_Ablehnung_an_Verantwortlichen": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "emailMessage/To": "@triggerOutputs()?['body/VerantwortlicherMitarbeiter/Email']",
+                          "emailMessage/Subject": "@{variables('varTesting')}EFABO: Erfasster Vertrag wurde abgelehnt (ID: @{triggerOutputs()?['body/ID']})",
+                          "emailMessage/Body": "<p>Hallo @{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']},<br>\n<br>\n<br>\ndein beantragter Vertrag wurde von @{triggerOutputs()?['body/AbgelehntDurch/Value']} abgelehnt. Dabei wurde folgender Kommentar angegeben:<br>\n\"@{variables('AblehnungsKommentar')}\"<br>\n<br>\n<br>\nFachbereich: @{triggerOutputs()?['body/Fachbereich/Value']}<br>\nVertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>\nGeplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}<br>\n<br>\nHier geht es zum Formular:&nbsp;<a href=\"@{variables('varURLzuElement')}\">Link</a></p>\n<hr>\n<p>English Version:<p>\n<p>Hello @{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']},<br>\n<br>\n<br>\nYour requested contract was rejected by @{triggerOutputs()?['body/AbgelehntDurch/Value']}. The following comment was given:<br>\n\"@{variables('AblehnungsKommentar')}\"<br>\n<br>\n<br>\nDepartment: @{triggerOutputs()?['body/Fachbereich/Value']}<br>\nContracting Company: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>\nPlanned content of the contract: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}<br>\n<br>\nClick here for the form&nbsp;<a href=\"@{variables('varURLzuElement')}\">Link</a></p>"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                          "operationId": "SendEmailV2",
+                          "connectionName": "shared_office365_1"
+                        }
+                      },
+                      "runAfter": {
+                        "Option_-_setzen_Kommentar_zur_Ablehnung": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "1fc300ce-6428-4b63-ad92-4d281d749060"
+                      }
+                    }
+                  },
+                  "case": "Abgelehnt"
+                },
+                "Abgeschlossen": {
+                  "actions": {
+                    "Bedingung_-_Whitelistprüfung_wird_benötigt": {
+                      "type": "If",
+                      "expression": {
+                        "and": [
+                          {
+                            "equals": [
+                              "@triggerOutputs()?['body/AufwandsbezogeneVerguetung']",
+                              "@true"
+                            ]
+                          },
+                          {
+                            "not": {
+                              "equals": [
+                                "@triggerOutputs()?['body/Whitelist']",
+                                "@true"
+                              ]
+                            }
+                          },
+                          {
+                            "not": {
+                              "equals": [
+                                "@triggerOutputs()?['body/Generalfreigabe']",
+                                "@true"
+                              ]
+                            }
+                          }
+                        ]
+                      },
+                      "actions": {
+                        "Get_Arbeitsrechtliche_Prüfung": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                              "table": "@parameters('Arbeitsrechtliche Freigabe (new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d)')",
+                              "$filter": "Title eq @{triggerOutputs()?['body/ID']}",
+                              "$top": 1
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                              "operationId": "GetItems",
+                              "connectionName": "shared_sharepointonline"
+                            }
+                          },
+                          "metadata": {
+                            "operationMetadataId": "c6b184b2-2641-494e-a44a-f143cad458cd"
+                          }
+                        },
+                        "Auf_alle_anwenden_-_AP": {
+                          "type": "Foreach",
+                          "foreach": "@outputs('Get_Arbeitsrechtliche_Prüfung')?['body/value']",
+                          "actions": {
+                            "Variable_festlegen_-_KommentarAP": {
+                              "type": "SetVariable",
+                              "inputs": {
+                                "name": "varKommentarAP",
+                                "value": "@items('Auf_alle_anwenden_-_AP')?['Kommentar_Legal']"
+                              },
+                              "metadata": {
+                                "operationMetadataId": "9c517fd5-62ab-46b1-84e9-a25fce58bddd"
+                              }
+                            }
+                          },
+                          "runAfter": {
+                            "Get_Arbeitsrechtliche_Prüfung": [
+                              "Succeeded"
+                            ]
+                          },
+                          "metadata": {
+                            "operationMetadataId": "8535047a-d998-418f-acc6-f011eb3862df"
+                          }
+                        }
+                      },
+                      "else": {
+                        "actions": {}
+                      },
+                      "metadata": {
+                        "operationMetadataId": "2c999686-f70b-4e98-ad9e-2b27cfb15042"
+                      }
+                    },
+                    "E-Mail_senden_(V2)_-_Info_über_Abschluss_an_Verwantwortlichen": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "emailMessage/To": "@triggerOutputs()?['body/VerantwortlicherMitarbeiter/Email']",
+                          "emailMessage/Subject": "@{variables('varTesting')}EFABO: Prüfung des Vertrags wurde abgeschlossen (ID: @{triggerOutputs()?['body/ID']})",
+                          "emailMessage/Body": "<p>Hallo @{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']},\n<br><br>\ndein eingereichter Vertrag wurde von den Abteilungen Finance, Indirect Sourcing und Legal erfolgreich geprüft. Der Vertrag kann, unter Beachtung der nachfolgend aufgelisteten Freigabebedingungen beauftragt/unterzeichnet werden. Bitte lass der Abteilung Legal ein unterzeichnetes Exemplar zukommen. Die EFABO-ID muss bei der Beantragung weiterer Services zum Vertrag im HSE Service Center mit angegeben werden.\n<br><br>\nBitte beachte folgende Freigabebedingungen:\n<br><br>\n@{if(equals(triggerOutputs()?['body/Kommentar_x0020_Recht'],null),'',concat('<b>Legal</b><br>','<i>',triggerOutputs()?['body/Kommentar_x0020_Recht'],'</i><br>'))}\n@{if(equals(variables('varKommentarAP'),null),'',concat('<b>Legal Arbeitsrechtliche Prüfung</b><br>','<i>',variables('varKommentarAP'),'</i><br>'))}\n@{if(equals(triggerOutputs()?['body/Kommentar_x0020_Finanzen'],null),'',concat('<b>Finance</b><br>','<i>',triggerOutputs()?['body/Kommentar_x0020_Finanzen'],'</i><br>'))}\n@{if(equals(triggerOutputs()?['body/KommentarEinkauf'],null),'',concat('<b>Indirect Sourcing</b><br>','<i>',triggerOutputs()?['body/KommentarEinkauf'],'</i><br>'))}\n@{if(equals(triggerOutputs()?['body/KommentarITSec'],null),'',concat('<b>IT Security</b><br>','<i>',triggerOutputs()?['body/KommentarITSec'],'</i><br>'))}\n<b>Fachbereich</b><br>@{triggerOutputs()?['body/Fachbereich/Value']}\n<b>Vertragspartner</b><br>@{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}\n<b>Geplanter Vertragsinhalt</b><br>@{triggerOutputs()?['body/GeplanterVertragsinhalt']}\n<br><br>\nHier geht es zum Formular: <a href=\"@{variables('varURLzuElement')}\">Link</a></p>\n<hr>\n<p>English Version:</p><p>\n</p><p>Hello @{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']},\n<br><br>\nYour requested contract has been successfully reviewed by Finance, Purchasing and Legal. The offer can be commissioned. Please send a signed copy to Legal. The EFABO ID must be included when requesting further services for the contract.\n<br><br>\nPlease note the following release conditions:\n<br><br>\n@{if(equals(triggerOutputs()?['body/Kommentar_x0020_Recht'],null),'',concat('Legal<br>','<i>',triggerOutputs()?['body/Kommentar_x0020_Recht'],'</i><br>'))}\n@{if(equals(variables('varKommentarAP'),null),'',concat('Legal Release on Labour Law<br>','<i>',variables('varKommentarAP'),'</i><br>'))}\n@{if(equals(triggerOutputs()?['body/Kommentar_x0020_Finanzen'],null),'',concat('Finance<br>','<i>',triggerOutputs()?['body/Kommentar_x0020_Finanzen'],'</i><br>'))}\n@{if(equals(triggerOutputs()?['body/KommentarEinkauf'],null),'',concat('Indirect Sourcing<br>','<i>',triggerOutputs()?['body/KommentarEinkauf'],'</i><br>'))}\n@{if(equals(triggerOutputs()?['body/KommentarITSec'],null),'',concat('<b>IT Security</b><br>','<i>',triggerOutputs()?['body/KommentarITSec'],'</i><br>'))}\n<b>Department</b><br>@{triggerOutputs()?['body/Fachbereich/Value']}\n<b>Contracting Company</b><br>@{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}\n<b>Planned content of the contract</b><br>@{triggerOutputs()?['body/GeplanterVertragsinhalt']}\n<br><br>\nClick here for the form:&nbsp;<a href=\"@{variables('varURLzuElement')}\">Link</a></p>"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                          "operationId": "SendEmailV2",
+                          "connectionName": "shared_office365_1"
+                        }
+                      },
+                      "runAfter": {
+                        "Bedingung_-_Whitelistprüfung_wird_benötigt": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "be4add7a-043e-4f09-b723-c0ee1415a5bb"
+                      }
+                    }
+                  },
+                  "case": "Abgeschlossen"
+                },
+                "Zurückgezogen": {
+                  "actions": {
+                    "Nachricht_in_einem_Chat_oder_Kanal_veröffentlichen_-_Zurückgezogen_Legal": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "poster": "User",
+                          "location": "Channel",
+                          "body/recipient/groupId": "c6b6d561-512d-4925-a0bf-084eeaf27040",
+                          "body/recipient/channelId": "19:8c014c33c73148e78232ad83af92a2bd@thread.tacv2",
+                          "body/messageBody": "Hallo zusammen,<br><br>\nes wurde ein Erfassungsbogen für Verträge (EFABO) vom Verantwortlichen @{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']} zurückgezogen.<br>\n<br>\n<br>\nFachbereich: @{triggerOutputs()?['body/Fachbereich/Value']}<br>\nVertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>\nGeplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}\n<br><br>\nHier geht es zum Formular:&nbsp;<a href=\"@{variables('varURLzuElement')}\">Link</a></p>",
+                          "body/subject": "@{variables('varTesting')}Erfasster Vertrag zurückgezogen (ID: @{triggerOutputs()?['body/ID']})"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams",
+                          "operationId": "PostMessageToConversation",
+                          "connectionName": "shared_teams_1"
+                        }
+                      },
+                      "metadata": {
+                        "operationMetadataId": "2fec8757-cb44-47ec-82ad-e70a32f7937f"
+                      }
+                    },
+                    "Nachricht_in_einem_Chat_oder_Kanal_veröffentlichen_-_Zurückgezogen_Finance": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "poster": "User",
+                          "location": "Channel",
+                          "body/recipient/groupId": "56c88fa1-0984-498f-be6a-b1d2579cb6bc",
+                          "body/recipient/channelId": "19:4fc50b4e97174b878fadd9a642853cc2@thread.tacv2",
+                          "body/messageBody": "Hallo zusammen,<br><br>\nes wurde ein Erfassungsbogen für Verträge (EFABO) vom Verantwortlichen @{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']} zurückgezogen.<br>\n<br>\n<br>\nFachbereich: @{triggerOutputs()?['body/Fachbereich/Value']}<br>\nVertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>\nGeplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}\n<br><br>\nHier geht es zum Formular:&nbsp;<a href=\"@{variables('varURLzuElement')}\">Link</a></p>",
+                          "body/subject": "@{variables('varTesting')}Erfasster Vertrag zurückgezogen (ID: @{triggerOutputs()?['body/ID']})"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams",
+                          "operationId": "PostMessageToConversation",
+                          "connectionName": "shared_teams_1"
+                        }
+                      },
+                      "runAfter": {
+                        "Nachricht_in_einem_Chat_oder_Kanal_veröffentlichen_-_Zurückgezogen_Legal": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "09216a1c-525f-46f1-b96b-a722eecd06b7"
+                      }
+                    },
+                    "Bedingung_-_Check_ob_prüfender_Anwalt_involviert": {
+                      "type": "If",
+                      "expression": {
+                        "not": {
+                          "equals": [
+                            "@empty(triggerOutputs()?['body/PruefenderRechtsanwalt'])",
+                            "@true"
+                          ]
+                        }
+                      },
+                      "actions": {
+                        "E-Mail_senden_(V2)_-_Zurückgezogen_Prüfender_Anwalt": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "emailMessage/To": "@triggerOutputs()?['body/PruefenderRechtsanwalt/Email']",
+                              "emailMessage/Subject": "@{variables('varTesting')}Erfasster Vertrag zurückgezogen (ID: @{triggerOutputs()?['body/ID']})",
+                              "emailMessage/Body": "Hallo @{triggerOutputs()?['body/PruefenderRechtsanwalt/DisplayName']},<br><br>\nes wurde ein Erfassungsbogen für Verträge (EFABO) vom Verantwortlichen @{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']} zurückgezogen.<br>\n<br>\n<br>\nFachbereich: @{triggerOutputs()?['body/Fachbereich/Value']}<br>\nVertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>\nGeplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}\n<br><br>\nHier geht es zum Formular:&nbsp;<a href=\"@{variables('varURLzuElement')}\">Link</a></p>"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                              "operationId": "SendEmailV2",
+                              "connectionName": "shared_office365_1"
+                            }
+                          },
+                          "metadata": {
+                            "operationMetadataId": "387b3da1-b75b-43c9-a99a-a3e1253d572d"
+                          }
+                        }
+                      },
+                      "else": {
+                        "actions": {}
+                      },
+                      "runAfter": {
+                        "Nachricht_in_einem_Chat_oder_Kanal_-_Zurückgezogen_Indirect_Sourcing": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "40f770b1-5914-4b35-9188-31cc6ce8a10f"
+                      }
+                    },
+                    "Nachricht_in_einem_Chat_oder_Kanal_-_Zurückgezogen_Indirect_Sourcing": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "poster": "User",
+                          "location": "Channel",
+                          "body/recipient/groupId": "9aaebce9-767e-48c0-b94b-a7992d7a3c8d",
+                          "body/recipient/channelId": "19:caa7d8c4fa174da686207e4aa27a634d@thread.tacv2",
+                          "body/messageBody": "Hallo zusammen,<br><br>\nes wurde ein Erfassungsbogen für Verträge (EFABO) vom Verantwortlichen @{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']} zurückgezogen.<br>\n<br>\n<br>\nFachbereich: @{triggerOutputs()?['body/Fachbereich/Value']}<br>\nVertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>\nGeplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}\n<br><br>\nHier geht es zum Formular:&nbsp;<a href=\"@{variables('varURLzuElement')}\">Link</a></p>",
+                          "body/subject": "@{variables('varTesting')}Erfasster Vertrag zurückgezogen (ID: @{triggerOutputs()?['body/ID']})"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams",
+                          "operationId": "PostMessageToConversation",
+                          "connectionName": "shared_teams_1"
+                        }
+                      },
+                      "runAfter": {
+                        "Nachricht_in_einem_Chat_oder_Kanal_veröffentlichen_-_Zurückgezogen_Finance": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "2e2fb887-49e1-4621-9ec8-7f7c17ffda89"
+                      }
+                    },
+                    "Condition_-_Check_ob_IT_Sec_Prüfung": {
+                      "type": "If",
+                      "expression": {
+                        "not": {
+                          "equals": [
+                            "@empty(outputs('Element_abrufen_-_erneuter_Abruf_falls_Änderung_Status')?['body/PruefungITSec'])",
+                            "@true"
+                          ]
+                        }
+                      },
+                      "actions": {
+                        "Nachricht_in_einem_Chat_oder_Kanal_-_Zurückgezogen_IT_Sec": {
+                          "type": "OpenApiConnection",
+                          "inputs": {
+                            "parameters": {
+                              "poster": "User",
+                              "location": "Channel",
+                              "body/recipient/groupId": "d505f9ed-0667-4eac-a0c9-aab7b4f07378",
+                              "body/recipient/channelId": "19:234edd172f754d00b43fb9f62a8f5f69@thread.tacv2",
+                              "body/messageBody": "Hallo zusammen,<br><br>\nes wurde ein Erfassungsbogen für Verträge (EFABO) vom Verantwortlichen @{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']} zurückgezogen.<br>\n<br>\n<br>\nFachbereich: @{triggerOutputs()?['body/Fachbereich/Value']}<br>\nVertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>\nGeplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}\n<br><br>\nHier geht es zum Formular:&nbsp;<a href=\"@{variables('varURLzuElement')}\">Link</a></p>",
+                              "body/subject": "@{variables('varTesting')}Erfasster Vertrag zurückgezogen (ID: @{triggerOutputs()?['body/ID']})"
+                            },
+                            "host": {
+                              "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams",
+                              "operationId": "PostMessageToConversation",
+                              "connectionName": "shared_teams_1"
+                            }
+                          },
+                          "metadata": {
+                            "operationMetadataId": "2e2fb887-49e1-4621-9ec8-7f7c17ffda89"
+                          }
+                        }
+                      },
+                      "else": {
+                        "actions": {}
+                      },
+                      "runAfter": {
+                        "Bedingung_-_Check_ob_prüfender_Anwalt_involviert": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "aff5030b-35de-40ba-bcc2-eb6eba68f026"
+                      }
+                    }
+                  },
+                  "case": "Zurückgezogen"
+                },
+                "Verlängerung_beantragt": {
+                  "actions": {
+                    "Nachricht_in_einem_Chat_oder_Kanal_veröffentlichen_-_Legal_Verlängerung": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "poster": "User",
+                          "location": "Channel",
+                          "body/recipient/groupId": "c6b6d561-512d-4925-a0bf-084eeaf27040",
+                          "body/recipient/channelId": "19:8c014c33c73148e78232ad83af92a2bd@thread.tacv2",
+                          "body/messageBody": "<p>Hallo zusammen,<br>\n<br>\nes wurde für einen bereits genehmigten Erfassungsbogen für Verträge (EFABO) eine Verlängerung für die arbeitsrechtliche Freigabe beantragt.<br>\n<br>\n<br>\nFachbereich: @{triggerOutputs()?['body/Fachbereich/Value']}<br>\nVertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>\n<br>\nHier geht es zum Formular: <a href=\"@{variables('varURLzuElement')}\">Link</a></p>",
+                          "body/subject": "@{variables('varTesting')}EFABO: Beantragung Verlängerung arbeitsrechtliche Freigabe (ID: @{triggerOutputs()?['body/ID']})"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_teams",
+                          "operationId": "PostMessageToConversation",
+                          "connectionName": "shared_teams_1"
+                        }
+                      },
+                      "metadata": {
+                        "operationMetadataId": "9dc69709-e7f9-4290-8328-f2f584910a66"
+                      }
+                    },
+                    "E-Mail_senden_(V2)_-_Anwalt_Verlängerung": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "emailMessage/To": "@outputs('Element_abrufen_-_erneuter_Abruf_falls_Änderung_Status')?['body/PruefenderRechtsanwalt/Email']",
+                          "emailMessage/Subject": "@{variables('varTesting')}EFABO: Beantragung Verlängerung arbeitsrechtliche Freigabe (ID: @{triggerOutputs()?['body/ID']})",
+                          "emailMessage/Body": "<p class=\"editor-paragraph\">Hallo @{triggerOutputs()?['body/PruefenderRechtsanwalt/DisplayName']},<br><br>es wurde für einen bereits genehmigten Erfassungsbogen für Verträge (EFABO) eine Verlängerung für die arbeitsrechtliche Freigabe beantragt. Du kannst dann den Vorgang bestätigen oder ablehnen. Für Fragen bzw. Anpassungswünsche kannst du die Option \"Zurück an Antragssteller\" auswählen.<br><br><br>Fachbereich: @{triggerOutputs()?['body/Fachbereich/Value']}<br>Vertragspartner: @{triggerOutputs()?['body/Vertragspartnervollst_x00e4_ndig']}<br>Geplanter Vertragsinhalt: @{triggerOutputs()?['body/GeplanterVertragsinhalt']}<br><br>Hier geht es zum Formular:&nbsp;<a href=\"@{variables('varURLzuElement')}\" class=\"editor-link\">Link</a></p>",
+                          "emailMessage/Importance": "Normal"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                          "operationId": "SendEmailV2",
+                          "connectionName": "shared_office365_1"
+                        }
+                      },
+                      "runAfter": {
+                        "Nachricht_in_einem_Chat_oder_Kanal_veröffentlichen_-_Legal_Verlängerung": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "29d4c886-ab27-4399-9adb-5df81ba007b5"
+                      }
+                    }
+                  },
+                  "case": "Verlängerung beantragt"
+                },
+                "Verlängerung_abgelehnt": {
+                  "actions": {
+                    "E-Mail_senden_(V2)_-_Verlängerung_abgelehnt": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "emailMessage/To": "@outputs('Element_abrufen_-_erneuter_Abruf_falls_Änderung_Status')?['body/VerantwortlicherMitarbeiter/Email']",
+                          "emailMessage/Subject": "@{variables('varTesting')}EFABO: Verlängerung arbeitsrechtliche Freigabe wurde abgelehnt (ID: @{triggerOutputs()?['body/ID']})",
+                          "emailMessage/Body": "<p>&lt;p&gt;Hallo @{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']},&lt;br&gt;<br>\n&lt;br&gt;<br>\n&lt;br&gt;<br>\ndein Antrag die arbeitsrechtliche Freigabe zu verlängern wurde von der Rechtsabteilung abgelehnt. Die Beauftragung darf ohne arbeitsrechtliche Freigabe nicht weitergeführt werden. Bei weiteren Fragen wende Dich bitte gerne an das Legal-Team.&lt;br&gt;<br>\n&lt;br&gt;<br>\n&lt;br&gt;<br>\nHier geht es zum Formular:&amp;nbsp;&lt;a href=\"@{variables('varURLzuElement')}\"&gt;Link&lt;/a&gt;&lt;/p&gt;<br>\n&lt;hr&gt;<br>\n&lt;p&gt;English Version:&lt;p&gt;<br>\n&lt;p&gt;Hello @{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']},&lt;br&gt;<br>\n&lt;br&gt;<br>\n&lt;br&gt;<br>\nYour requested extension of the release on labor law was rejected by the legal department. The assignment may not be continued without approval under labor law. If you have any further questions, please contact the legal team.&lt;br&gt;<br>\nClick here for the form&amp;nbsp;&lt;a href=\"@{variables('varURLzuElement')}\"&gt;Link&lt;/a&gt;&lt;/p&gt;</p>",
+                          "emailMessage/Importance": "Normal"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                          "operationId": "SendEmailV2",
+                          "connectionName": "shared_office365_1"
+                        }
+                      },
+                      "metadata": {
+                        "operationMetadataId": "352b0aa2-36c7-4e93-85c0-014e13c5e757"
+                      }
+                    }
+                  },
+                  "case": "Verlängerung abgelehnt"
+                },
+                "Verlängert": {
+                  "actions": {
+                    "E-Mail_senden_(V2)_-_Verlängert": {
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "parameters": {
+                          "emailMessage/To": "@outputs('Element_abrufen_-_erneuter_Abruf_falls_Änderung_Status')?['body/VerantwortlicherMitarbeiter/Email']",
+                          "emailMessage/Subject": "@{variables('varTesting')}EFABO: Verlängerung arbeitsrechtliche Freigabe wurde genehmigt (ID: @{triggerOutputs()?['body/ID']})",
+                          "emailMessage/Body": "<p>&lt;p&gt;Hallo @{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']},&lt;br&gt;<br>\n&lt;br&gt;<br>\n&lt;br&gt;<br>\ndein Antrag die arbeitsrechtliche Freigabe zu verlängern wurde von der Rechtsabteilung genehmigt. Bitte beachte, dass Du die arbeitsrechtliche Freigabe erneut verlängern musst, wenn diese wieder auslaufen sollte, ohne dass die Beauftragung beendet ist. Eine neue Beauftragung benötigt einen neuen EFABO.&lt;br&gt;<br>\n&lt;br&gt;<br>\n&lt;br&gt;<br>\nHier geht es zum Formular:&amp;nbsp;&lt;a href=\"@{variables('varURLzuElement')}\"&gt;Link&lt;/a&gt;&lt;/p&gt;<br>\n&lt;hr&gt;<br>\n&lt;p&gt;English Version:&lt;p&gt;<br>\n&lt;p&gt;Hello @{triggerOutputs()?['body/VerantwortlicherMitarbeiter/DisplayName']},&lt;br&gt;<br>\n&lt;br&gt;<br>\n&lt;br&gt;<br>\nYour requested extension of the release on labor law was approved by the legal department. Please note that you will have to extend the labor law approval again if it expires without the assignment having been completed. A new assignment requires a new EFABO.&lt;br&gt;<br>\nClick here for the form&amp;nbsp;&lt;a href=\"@{variables('varURLzuElement')}\"&gt;Link&lt;/a&gt;&lt;/p&gt;</p>",
+                          "emailMessage/Importance": "Normal"
+                        },
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                          "operationId": "SendEmailV2",
+                          "connectionName": "shared_office365_1"
+                        }
+                      },
+                      "metadata": {
+                        "operationMetadataId": "679e753a-8bf4-4ceb-b607-572690b98d54"
+                      }
+                    }
+                  },
+                  "case": "Verlängert"
+                }
+              },
+              "metadata": {
+                "operationMetadataId": "d7ca3988-80b8-4b27-839e-fe1cd58f6f01"
+              }
+            }
+          },
+          "else": {
+            "actions": {}
+          },
+          "runAfter": {
+            "Element_abrufen_-_erneuter_Abruf_falls_Änderung_Status": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "9d9fc3de-6c1e-48f9-8a11-4637352bfac6"
+          }
+        },
+        "Element_aktualisieren_-_Neuer_Kommentar_und_Neuer_Status_zurücksetzen": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "table": "@parameters('EFABO Anträge (hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5)')",
+              "id": "@triggerOutputs()?['body/ID']",
+              "item/Fachbereich/Value": "@triggerOutputs()?['body/Fachbereich/Value']",
+              "item/Vertragsart/Value": "@triggerOutputs()?['body/Vertragsart/Value']",
+              "item/AbgelehntDurch/Value": "@triggerOutputs()?['body/AbgelehntDurch/Value']",
+              "item/KommentarVon": [
+                {
+                  "Value": "Kein neuer Kommentar"
+                }
+              ],
+              "item/NeuerKommentar": false,
+              "item/NeuerStatus": false,
+              "item/KommentarAn": [
+                {
+                  "Value": "@variables('EmptyString')"
+                }
+              ],
+              "item/VerwendungpersonenbezogeneDaten": "@triggerOutputs()?['body/VerwendungpersonenbezogeneDaten']",
+              "item/K_x00fc_ndigungsfristTyp/Value": "@triggerOutputs()?['body/K_x00fc_ndigungsfristTyp/Value']",
+              "item/K_x00fc_ndigungsfristArt/Value": "@triggerOutputs()?['body/K_x00fc_ndigungsfristArt/Value']",
+              "item/Evtl_x002e_Sonderk_x00fc_ndigung": "@triggerOutputs()?['body/Evtl_x002e_Sonderk_x00fc_ndigung']",
+              "item/Ma_x00df_nahmebudgetiert": "@triggerOutputs()?['body/Ma_x00df_nahmebudgetiert']",
+              "item/Beiratspflicht": "@triggerOutputs()?['body/Beiratspflicht']",
+              "item/ChangeofControl": "@triggerOutputs()?['body/ChangeofControl']",
+              "item/Angebotvorhanden": "@triggerOutputs()?['body/Angebotvorhanden']",
+              "item/Zur_x00fc_ckanAntragssteller": "@triggerOutputs()?['body/Zur_x00fc_ckanAntragssteller']",
+              "item/VertragspartnerAlsKreditorAngele": "@triggerOutputs()?['body/VertragspartnerAlsKreditorAngele']"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "PatchItem",
+              "connectionName": "shared_sharepointonline_1"
+            }
+          },
+          "runAfter": {
+            "Variable_initialisieren_-_EmptyString": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0288bce5-2bc3-4f37-88b9-6ccc6897ecc7"
+          }
+        },
+        "Variable_initialisieren_-_EmptyString": {
+          "type": "InitializeVariable",
+          "description": "Wird benötigt, um das Multiselect Feld Kommentar an zurückzusetzen.",
+          "inputs": {
+            "variables": [
+              {
+                "name": "EmptyString",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "Bedingung_-_Abfrage_nach_veränderten_Status": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3e7aac02-c472-4b2f-8947-ca2658953d32"
+          }
+        },
+        "Variable_initialisieren_-_varTestingBool": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varTestingBool",
+                "type": "boolean",
+                "value": "@parameters('EFABO Testing (hse_EFABOTesting)')"
+              }
+            ]
+          },
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "9895f730-497d-4fe0-82e2-51fa4f88609e"
+          }
+        },
+        "Variable_initialisieren_-_varTesting": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varTesting",
+                "type": "string",
+                "value": "@{if(variables('varTestingBool'),'TEST: ','')}"
+              }
+            ]
+          },
+          "runAfter": {
+            "Variable_initialisieren_-_varTestingBool": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "525b3bf7-00b7-46ad-869c-534c774a3ca8"
+          }
+        },
+        "Variable_initialisieren_-_varURLzuElement": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varURLzuElement",
+                "type": "string",
+                "value": "https://apps.powerapps.com/play/@{parameters('AppID (hse_AppID)')}?tenantId=1d0f52d7-4151-4a31-ad92-b176d150d4e6&ID=@{triggerOutputs()?['body/ID']}"
+              }
+            ]
+          },
+          "runAfter": {
+            "Variable_initialisieren_-_varTesting": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "aa00f6c0-a61c-4db7-a064-68d0f888408a"
+          }
+        },
+        "Variable_initialisieren_-_varKommentarAP": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varKommentarAP",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "Variable_initialisieren_-_AblehnungsKommentar": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "98ab5c16-1a39-4b52-b828-df769cabba50"
+          }
+        },
+        "Variable_initialisieren_-_varKommentarAPEN": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varKommentarAPEN",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "Variable_initialisieren_-_varKommentarAP": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "9dd6e688-2b78-4286-9a8f-e0cddecbbd27"
+          }
+        },
+        "Element_abrufen_-_erneuter_Abruf_falls_Änderung_Status": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "table": "@parameters('EFABO Anträge (hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5)')",
+              "id": "@triggerOutputs()?['body/ID']"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "GetItem",
+              "connectionName": "shared_sharepointonline_1"
+            }
+          },
+          "runAfter": {
+            "Variable_initialisieren_-_varKommentarAPEN": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "1deb925e-b16c-41a3-be18-4206a89ac7e1"
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ImportExportXml version="9.2.26071.167" SolutionPackageVersion="9.2" languagecode="1031" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" OrganizationVersion="9.2.26071.167" OrganizationSchemaType="Standard" CRMServerServiceabilityVersion="9.2.26071.00167">
+  <SolutionManifest>
+    <UniqueName>EFABO</UniqueName>
+    <LocalizedNames>
+      <LocalizedName description="EFABO" languagecode="1031" />
+    </LocalizedNames>
+    <Descriptions />
+    <Version>1.0.1.5</Version>
+    <Managed>0</Managed>
+    <Publisher>
+      <UniqueName>HSE</UniqueName>
+      <LocalizedNames>
+        <LocalizedName description="HSE" languagecode="1031" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description description="HSE Default Publisher" languagecode="1031" />
+      </Descriptions>
+      <EMailAddress xsi:nil="true"></EMailAddress>
+      <SupportingWebsiteUrl xsi:nil="true"></SupportingWebsiteUrl>
+      <CustomizationPrefix>hse</CustomizationPrefix>
+      <CustomizationOptionValuePrefix>81834</CustomizationOptionValuePrefix>
+      <Addresses>
+        <Address>
+          <AddressNumber>1</AddressNumber>
+          <AddressTypeCode>1</AddressTypeCode>
+          <City xsi:nil="true"></City>
+          <County xsi:nil="true"></County>
+          <Country xsi:nil="true"></Country>
+          <Fax xsi:nil="true"></Fax>
+          <FreightTermsCode xsi:nil="true"></FreightTermsCode>
+          <ImportSequenceNumber xsi:nil="true"></ImportSequenceNumber>
+          <Latitude xsi:nil="true"></Latitude>
+          <Line1 xsi:nil="true"></Line1>
+          <Line2 xsi:nil="true"></Line2>
+          <Line3 xsi:nil="true"></Line3>
+          <Longitude xsi:nil="true"></Longitude>
+          <Name xsi:nil="true"></Name>
+          <PostalCode xsi:nil="true"></PostalCode>
+          <PostOfficeBox xsi:nil="true"></PostOfficeBox>
+          <PrimaryContactName xsi:nil="true"></PrimaryContactName>
+          <ShippingMethodCode>1</ShippingMethodCode>
+          <StateOrProvince xsi:nil="true"></StateOrProvince>
+          <Telephone1 xsi:nil="true"></Telephone1>
+          <Telephone2 xsi:nil="true"></Telephone2>
+          <Telephone3 xsi:nil="true"></Telephone3>
+          <TimeZoneRuleVersionNumber xsi:nil="true"></TimeZoneRuleVersionNumber>
+          <UPSZone xsi:nil="true"></UPSZone>
+          <UTCOffset xsi:nil="true"></UTCOffset>
+          <UTCConversionTimeZoneCode xsi:nil="true"></UTCConversionTimeZoneCode>
+        </Address>
+        <Address>
+          <AddressNumber>2</AddressNumber>
+          <AddressTypeCode>1</AddressTypeCode>
+          <City xsi:nil="true"></City>
+          <County xsi:nil="true"></County>
+          <Country xsi:nil="true"></Country>
+          <Fax xsi:nil="true"></Fax>
+          <FreightTermsCode xsi:nil="true"></FreightTermsCode>
+          <ImportSequenceNumber xsi:nil="true"></ImportSequenceNumber>
+          <Latitude xsi:nil="true"></Latitude>
+          <Line1 xsi:nil="true"></Line1>
+          <Line2 xsi:nil="true"></Line2>
+          <Line3 xsi:nil="true"></Line3>
+          <Longitude xsi:nil="true"></Longitude>
+          <Name xsi:nil="true"></Name>
+          <PostalCode xsi:nil="true"></PostalCode>
+          <PostOfficeBox xsi:nil="true"></PostOfficeBox>
+          <PrimaryContactName xsi:nil="true"></PrimaryContactName>
+          <ShippingMethodCode>1</ShippingMethodCode>
+          <StateOrProvince xsi:nil="true"></StateOrProvince>
+          <Telephone1 xsi:nil="true"></Telephone1>
+          <Telephone2 xsi:nil="true"></Telephone2>
+          <Telephone3 xsi:nil="true"></Telephone3>
+          <TimeZoneRuleVersionNumber xsi:nil="true"></TimeZoneRuleVersionNumber>
+          <UPSZone xsi:nil="true"></UPSZone>
+          <UTCOffset xsi:nil="true"></UTCOffset>
+          <UTCConversionTimeZoneCode xsi:nil="true"></UTCConversionTimeZoneCode>
+        </Address>
+      </Addresses>
+    </Publisher>
+    <RootComponents>
+      <RootComponent type="29" id="{1249cf9f-faf2-ef11-be20-6045bd909f2f}" behavior="0" />
+      <RootComponent type="29" id="{1fce0777-4b6a-ed11-9560-6045bd918ca0}" behavior="0" />
+      <RootComponent type="29" id="{221ba113-d6b6-ef11-b8e8-6045bd916686}" behavior="0" />
+      <RootComponent type="29" id="{4fd67657-8c74-ec11-8943-6045bd943d2b}" behavior="0" />
+      <RootComponent type="29" id="{58f29c0b-7e48-ec11-8c62-000d3a4426c1}" behavior="0" />
+      <RootComponent type="29" id="{79b669e9-7d48-ec11-8c62-000d3a4424d4}" behavior="0" />
+      <RootComponent type="29" id="{93156a01-ab6a-ed11-9561-000d3a2e4c11}" behavior="0" />
+      <RootComponent type="29" id="{95854567-1a49-ec11-8c62-000d3a442ccc}" behavior="0" />
+      <RootComponent type="29" id="{b4019f00-1379-ec11-8d21-6045bd8d1fa4}" behavior="0" />
+      <RootComponent type="29" id="{c4ec8987-5ebe-ed11-83fe-6045bd8f651f}" behavior="0" />
+      <RootComponent type="29" id="{d6fa9f3c-1e49-ec11-8c62-000d3a442abd}" behavior="0" />
+      <RootComponent type="29" id="{da31cadf-4375-ec11-8943-6045bd943f26}" behavior="0" />
+      <RootComponent type="29" id="{e7b63977-2fd1-ef11-a72e-6045bd932588}" behavior="0" />
+      <RootComponent type="300" schemaName="hse_erfassungsbogenvertrge_f6658" behavior="0" />
+    </RootComponents>
+    <MissingDependencies />
+  </SolutionManifest>
+</ImportExportXml>

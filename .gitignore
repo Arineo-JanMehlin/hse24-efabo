@@ -1,0 +1,3 @@
+export/
+*.msg
+.claude/settings.local.json

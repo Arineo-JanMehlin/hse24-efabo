@@ -1,0 +1,267 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_onedriveforbusiness": {
+        "api": {
+          "name": "shared_onedriveforbusiness"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "hse_sharedonedriveforbusiness_96b42"
+        },
+        "runtimeSource": "invoker"
+      },
+      "shared_office365": {
+        "api": {
+          "name": "shared_office365"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "hse_sharedoffice365_44daf"
+        },
+        "runtimeSource": "invoker"
+      },
+      "shared_sharepointonline_1": {
+        "api": {
+          "name": "shared_sharepointonline"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "hse_EFABOSharePoint"
+        },
+        "runtimeSource": "invoker"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)": {
+          "defaultValue": "https://homeshoppingeurope24.sharepoint.com/sites/EFABO_DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62"
+          }
+        },
+        "IT-Security Freigabe (hse_ITSecurityFreigabe)": {
+          "defaultValue": "15e4a9aa-67e1-46a3-b61e-8d713d4c32f5",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_ITSecurityFreigabe"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "PowerAppV2",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "title": "UserMail",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Please enter your input",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "number": {
+                  "title": "ID",
+                  "type": "number",
+                  "x-ms-dynamically-added": true,
+                  "description": "Please enter a number",
+                  "x-ms-content-hint": "NUMBER"
+                }
+              },
+              "required": [
+                "text",
+                "number"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "31df53b8-f172-4a05-af19-3b292c413a0f"
+          }
+        }
+      },
+      "actions": {
+        "Create_file_-_HTML": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "folderPath": "/Downloads",
+              "name": "input.html",
+              "body": "@outputs('Compose_-_HTML_structure')"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_onedriveforbusiness",
+              "operationId": "CreateFile",
+              "connectionName": "shared_onedriveforbusiness"
+            }
+          },
+          "runAfter": {
+            "Compose_-_HTML_structure": [
+              "Succeeded"
+            ]
+          },
+          "runtimeConfiguration": {
+            "contentTransfer": {
+              "transferMode": "Chunked"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "fc5ddb7f-b630-45f7-9b16-2cc542e42834"
+          }
+        },
+        "Convert_file_using_path_-_to_PDF": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "path": "@outputs('Create_file_-_HTML')?['body/Path']",
+              "type": "PDF"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_onedriveforbusiness",
+              "operationId": "ConvertFileByPath",
+              "connectionName": "shared_onedriveforbusiness"
+            }
+          },
+          "runAfter": {
+            "Create_file_-_HTML": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f5b5654f-e1e4-4314-9308-5f93aa4dc6c8"
+          }
+        },
+        "Create_file_-_PDF": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "folderPath": "/Downloads",
+              "name": "Export IT-Security Fragen für EFABO (@{outputs('Get_item_-_ITSec_Fragen')?['body/Title']}).pdf",
+              "body": "@body('Convert_file_using_path_-_to_PDF')"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_onedriveforbusiness",
+              "operationId": "CreateFile",
+              "connectionName": "shared_onedriveforbusiness"
+            }
+          },
+          "runAfter": {
+            "Convert_file_using_path_-_to_PDF": [
+              "Succeeded"
+            ]
+          },
+          "runtimeConfiguration": {
+            "contentTransfer": {
+              "transferMode": "Chunked"
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "5c8f50d7-6e2b-40b3-b0ca-d52ffbd704da"
+          }
+        },
+        "Send_an_email_(V2)": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "emailMessage/To": "@triggerBody()['text']",
+              "emailMessage/Subject": "@outputs('Create_file_-_PDF')?['body/Name']",
+              "emailMessage/Body": "<p>Siehe angehängte PDF-Datei.</p>",
+              "emailMessage/Attachments": [
+                {
+                  "Name": "@outputs('Create_file_-_PDF')?['body/Name']",
+                  "ContentBytes": "@body('Convert_file_using_path_-_to_PDF')"
+                }
+              ],
+              "emailMessage/Importance": "Normal"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+              "operationId": "SendEmailV2",
+              "connectionName": "shared_office365"
+            }
+          },
+          "runAfter": {
+            "Create_file_-_PDF": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "33960eb0-852b-4c05-9dcd-062add37c583"
+          }
+        },
+        "Respond_to_a_PowerApp_or_flow": {
+          "type": "Response",
+          "kind": "PowerApp",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "title": "Message",
+                  "x-ms-dynamically-added": true,
+                  "type": "string"
+                }
+              },
+              "additionalProperties": {}
+            },
+            "statusCode": 200,
+            "body": {
+              "message": "Ihr angeforderter Export wurde Ihnen erfolgreich per Mail gesendet."
+            }
+          },
+          "runAfter": {
+            "Send_an_email_(V2)": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2bbe7499-872f-4af1-b010-d2cee22284bf"
+          }
+        },
+        "Get_item_-_ITSec_Fragen": {
+          "type": "OpenApiConnection",
+          "inputs": {
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "table": "@parameters('IT-Security Freigabe (hse_ITSecurityFreigabe)')",
+              "id": "@triggerBody()['number']"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "operationId": "GetItem",
+              "connectionName": "shared_sharepointonline_1"
+            }
+          },
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "0dc53256-afc3-4871-8786-303476c65dcd"
+          }
+        },
+        "Compose_-_HTML_structure": {
+          "type": "Compose",
+          "inputs": "<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>Title</title>\n</head>\n<body>\n<style>\n    * {\n        font-family: Arial;\n        font-size: 11px;\n    }\n    th,td {\n        padding:6px;\n        text-align: start;\n        vertical-align: text-top;\n    }\n\n    th{\n        max-width: 100px;\n        min-width: 100px;\n    }\n    td{\n        max-width: 340px;\n        min-width: 340px;\n    }\n    h3{\n        font-size: 20px;\n        font-weight: bolder;\n        padding-bottom: 4px;\n        margin-bottom: 0px;\n    }\n   td{\n        background-color:#f3f3f3;\n    }\n    th{\n        min-width: 150px;\n    }\n</style>\n <h3>Export IT Security Fragen für EFABO (@{outputs('Get_item_-_ITSec_Fragen')?['body/Title']})</h3>\n<table>\n    <tr>\n        <th colspan=\"2\">IT-Security Prüfung</th>\n    </tr>\n    <tr>\n        <th>Für welchen Zweck wird die Software eingesetzt?</th>\n        <td>@{outputs('Get_item_-_ITSec_Fragen')?['body/Zweck_der_Software']}</td>\n    </tr>\n\t<tr>\n\t    <th>Wie lautet die Website des Herstellers, auf der weitere Informationen zu dem Softwareprodukt zu finden sind?</th>\n        <td>@{outputs('Get_item_-_ITSec_Fragen')?['body/Website_des_Herstellers']}</td>\n\t</tr>\n    <tr>\n        <th colspan=\"2\">Wer ist der technische Ansprechpartner inkl. Kontaktdaten:</th>\n    </tr>\n\t<tr>\n\t\t<th>bei HSE</th>\n        <td>@{outputs('Get_item_-_ITSec_Fragen')?['body/Techn_Ansprechpartner_HSE/DisplayName']}</td>\n    </tr>\n    <tr>\n\t\t<th>beim zuständigen Dienstleister von HSE</th>\n        <td>@{outputs('Get_item_-_ITSec_Fragen')?['body/Techn_Ansprechpartner_DL']}</td>\n    </tr>\n    <tr>\n        <th>beim Softwareanbieter</th>\n        <td>@{outputs('Get_item_-_ITSec_Fragen')?['body/Techn_Ansprechpartner_Anbieter']}</td>\n    </tr>\n    <tr>\n        <th colspan=\"2\">Verwendet die Software Künstliche Intelligenz?</th>\n    </tr>\n    <tr>\n        <th>Verwendet die Software Künstliche Intelligenz?</th>\n        <td>@{if(equals(outputs('Get_item_-_ITSec_Fragen')?['body/Verwendung_KI'],false),'Nein','Ja')}</td>\n    </tr>\n    <tr>\n        <th colspan=\"2\">Lizenz</th>\n    </tr>\n\t<tr>\n        <th>Welche Lizenzvariante soll eingesetzt werden?</th>\n        <td>@{outputs('Get_item_-_ITSec_Fragen')?['body/Lizenvariante']}</td>\n    </tr>\n\t<tr>\n        <th>Wie viele Lizenzen werden benötigt? .</th>\n        <td>@{outputs('Get_item_-_ITSec_Fragen')?['body/Anzahl_Lizenzen']}</td>\n    </tr>\n    <tr>\n        <th colspan=\"2\">Wie ist der Schutzbedarf der mit der Software verarbeiteten Daten in Bezug auf:</th>\n    </tr>\n\t<tr>\n        <th>Verfügbarkeit</th>\n        <td>@{outputs('Get_item_-_ITSec_Fragen')?['body/Schutzbedarf_Verfuegbarkeit/Value']}</td>\n    </tr>\n\t<tr>\n        <th>Integrität</th>\n        <td>@{outputs('Get_item_-_ITSec_Fragen')?['body/Schutzbedarf_Integritaet/Value']}</td>\n    </tr>\n\t<tr>\n        <th>Vertraulichkeit</th>\n        <td>@{outputs('Get_item_-_ITSec_Fragen')?['body/Schutzbedarf_Vertraulichkeit/Value']}</td>\n    </tr>\n    <tr>\n        <th colspan=\"2\">Welche Art von Daten werden verarbeitet? (Es kann mehreres ausgewählt werden.)</th>\n    </tr>\n\t<tr>\n        <th>Personenbezogene Daten</th>\n        <td>@{if(equals(outputs('Get_item_-_ITSec_Fragen')?['body/Personenbezogene_Daten'],false),'Nein','Ja')}</td>\n    </tr>\n\t<tr>\n        <th>Personenbezogene Daten mit erhöhtem Risiko nach DSGVO (z. B. Gesundheitsdaten, biometrische Daten)</th>\n        <td>@{if(equals(outputs('Get_item_-_ITSec_Fragen')?['body/Personenbezogene_Daten_mit_erhoe'],false),'Nein','Ja')}</td>\n    </tr>\n\t<tr>\n        <th>Vertrauliche Daten</th>\n        <td>@{if(equals(outputs('Get_item_-_ITSec_Fragen')?['body/Vertrauliche_Daten'],false),'Nein','Ja')}</td>\n    </tr>\n\t<tr>\n        <th>Streng Vertrauliche Daten</th>\n        <td>@{if(equals(outputs('Get_item_-_ITSec_Fragen')?['body/Streng_Vertrauliche_Daten'],false),'Nein','Ja')}</td>\n    </tr>\n\t<tr>\n        <th>Freitextfeld für die Kategorie der Daten die verarbeitet werden (z.B. Vertriebsdaten, Mitarbeiterdaten, Vertragsdaten, Warenbestände, Adressdaten, usw.)</th>\n        <td>@{outputs('Get_item_-_ITSec_Fragen')?['body/Freitext_Kategorie_Daten']}</td>\n    </tr>\n    <tr>\n        <th colspan=\"2\">Verwendung der Software</th>\n    </tr>\n\t<tr>\n        <th>Welche Benutzergruppe soll die Software Nutzen bzw. Zugriff auf darin verarbeiteten Daten erhalten?</th>\n        <td>@{outputs('Get_item_-_ITSec_Fragen')?['body/Benutzergruppe_Software']}</td>\n    </tr>\n\t<tr>\n        <th>Wie viele Personen/Mitarbeiter sollen die Software verwenden? </th>\n        <td>@{outputs('Get_item_-_ITSec_Fragen')?['body/Anzahl_Nutzer']}</td>\n    </tr>\n\t<tr>\n        <th>Erhalten andere Softwarelösungen direkten/indirekten Zugriff auf die dort gespeicherten Daten?</th>\n        <td>@{if(equals(outputs('Get_item_-_ITSec_Fragen')?['body/Andere_Softwareloesungen_Zugriff'],false),'Nein','Ja')}</td>\n    </tr>\n\t<tr>\n        <th>Werden Daten von Dienstleister verarbeitet?</th>\n        <td>@{if(equals(outputs('Get_item_-_ITSec_Fragen')?['body/Daten_von_DL_verarbeitet'],false),'Nein','Ja')}</td>\n    </tr>\n\t<tr>\n        <th>Haben Dienstleister Zugriff auf die Software oder verarbeitete Daten?</th>\n        <td>@{if(equals(outputs('Get_item_-_ITSec_Fragen')?['body/Andere_Softwareloesungen_Zugriff'],false),'Nein','Ja')}</td>\n    </tr>\n    <tr>\n        <th colspan=\"2\">Bereitstellung der Software</th>\n    </tr>\n\t<tr>\n        <th>Auf welchen Systemen wird die Software bereitgestellt?</th>\n        <td>@{outputs('Get_item_-_ITSec_Fragen')?['body/Welche_Systeme_Software']}</td>\n    </tr>\n\t<tr>\n        <th>Wo befinden sich die Systeme?</th>\n        <td>@{outputs('Get_item_-_ITSec_Fragen')?['body/Wo_Systeme']}</td>\n    </tr>\n\t<tr>\n        <th>Soll die Software ausschließlich von geschütztem Bereich (z.B. Firmennetzwerk) oder z.B. aus dem Internet erreichbar sein?</th>\n        <td>@{outputs('Get_item_-_ITSec_Fragen')?['body/Software_erreichbar_Internet']}</td>\n    </tr>\n\t<tr>\n        <th>Wer betreibt die Systeme? (Bei SaaS bitte Differenzierung zwischen Software und darunterliegender Hardware berücksichtigen.)</th>\n        <td>@{outputs('Get_item_-_ITSec_Fragen')?['body/Betreiber_Systeme']}</td>\n    </tr>\n    <tr>\n        <th colspan=\"2\">Welche Kommunikationsschnittstellen gibt es?</th>\n    </tr>\n\t<tr>\n        <th>Kommunizieren die Systeme über standardisierte Schnittstellen?</th>\n        <td>@{if(equals(outputs('Get_item_-_ITSec_Fragen')?['body/Standarsierte_Schnittstellen'],false),'Nein','Ja')}</td>\n    </tr>\n\t<tr>\n        <th>Wird der Transportweg verschlüsselt und wenn ja, mit welchen Verfahren?</th>\n        <td>@{outputs('Get_item_-_ITSec_Fragen')?['body/Transportweg_Verschluesselung']}</td>\n    </tr>\n    <tr>\n        <th colspan=\"2\">Wie erfolgt die Authentifikation?</th>\n    </tr>\n\t<tr>\n        <th>Genutztes Verfahren? (z. B. Single-Sign-On über Active Directory)</th>\n        <td>@{outputs('Get_item_-_ITSec_Fragen')?['body/Genutztes_Verfahren']}</td>\n    </tr>\n\t<tr>\n        <th>Wenn sich Systeme automatisiert an anderen Systemen Authentifizieren: Wo und wie werden die Authentifikationsdaten sicher gespeichert?</th>\n        <td>@{outputs('Get_item_-_ITSec_Fragen')?['body/Wo_Speicherung_Authentifikations']}</td>\n    </tr>\n\t<tr>\n        <th>Wenn Personen sich manuell am System anmelden: Erfolgt der Zugriff ausschließlich aus dem HSE-Netzwerk?</th>\n        <td>@{outputs('Get_item_-_ITSec_Fragen')?['body/Zugriff_nur_aus_HSE_Netzwerk']}</td>\n    </tr>\n\t<tr>\n        <th>Kommentar Antragsteller</th>\n        <td>@{outputs('Get_item_-_ITSec_Fragen')?['body/Kommentar_Antragsteller']}</td>\n    </tr>\n</table>\n</body>\n</html>",
+          "runAfter": {
+            "Get_item_-_ITSec_Fragen": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "951c9727-67ff-4ebd-8176-4f14f9bfb651"
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

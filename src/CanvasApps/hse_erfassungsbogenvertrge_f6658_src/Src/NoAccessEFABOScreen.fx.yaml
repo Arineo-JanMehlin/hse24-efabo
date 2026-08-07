@@ -1,0 +1,132 @@
+NoAccessEFABOScreen As screen:
+
+    Circle1_1 As circle:
+        Fill: =varHSEBranding.HSEOrange
+        X: =633
+        Y: =201
+        ZIndex: =5
+
+    Header_Group_6 As group:
+        Height: =5
+        Width: =5
+        X: =40
+        Y: =40
+        ZIndex: =5
+
+        Logo_Image_6 As image:
+            Height: =103
+            Image: =HSE_logo_S_P_RGB
+            ImagePosition: =ImagePosition.Fill
+            Width: =177
+            X: =1182
+            ZIndex: =1
+
+        Header_Label_6 As label:
+            FontWeight: =FontWeight.Semibold
+            Height: =61
+            Size: =20
+            Text: =LookUp(colRessource,Title = "Header_Label" && Sprache.Value = varSelectedCulture,Text) 
+            Width: =569
+            X: =30
+            Y: =14
+            ZIndex: =2
+
+        Highlight_Rectangle_6 As rectangle:
+            Fill: =varHSEBranding.HSEOrange
+            Height: =12
+            Width: =230
+            X: =30
+            Y: =75
+            ZIndex: =3
+
+        Seperation_Rectangle_6 As rectangle:
+            Fill: =RGBA(237, 237, 237, 1)
+            Height: =8
+            Width: =1366
+            Y: =87
+            ZIndex: =4
+
+    Icon1_1 As icon.Check:
+        Color: =RGBA(255, 255, 255, 1)
+        Height: =50
+        Icon: =Icon.Cancel
+        Width: =50
+        X: =658
+        Y: =226
+        ZIndex: =6
+
+    lbl_Zugriff As label:
+        Align: =Align.Center
+        Text: =LookUp(colRessource,Title = "lbl_Zugriff" && Sprache.Value = varSelectedCulture,Text) 
+        X: =608
+        Y: =316
+        ZIndex: =7
+
+    lbl_AntragMeldung As label:
+        Align: =Align.Center
+        FontWeight: =FontWeight.Semibold
+        Height: =37
+        Text: =LookUp(colRessource,Title = "lbl_AntragMeldung" && Sprache.Value = varSelectedCulture,Text) 
+        Width: =736
+        X: =315
+        Y: =405
+        ZIndex: =11
+
+    Icon2_4 As icon.Cancel:
+        Color: =varHSEBranding.Black
+        Height: =20
+        Icon: =Icon.Cancel
+        OnSelect: |-
+            =Launch("https://homeshoppingeurope24.sharepoint.com/sites/EFABO",{},LaunchTarget.Replace)
+        Width: =20
+        X: =1344
+        Y: =2
+        ZIndex: =12
+
+    gal_languages_6 As gallery.galleryHorizontal:
+        '#CopilotOverlayLabel': ="Gefiltert"
+        Default: |-
+            =/*
+            LookUp(
+                LanguagesCol;
+                culture = "DE";
+                ThisRecord
+            )
+            */
+        Height: =70
+        Items: =colLanguages
+        ShowScrollbar: =false
+        TemplateSize: =55
+        Width: =130
+        X: =1052
+        Y: =14
+        ZIndex: =13
+
+        img_flag_6 As image:
+            BorderColor: =varHSEBranding.HSEOrange
+            BorderThickness: =If(ThisItem.IsSelected, 4, 0)
+            Height: =50
+            Image: =ThisItem.Image
+            ImagePosition: =ImagePosition.Fill
+            OnSelect: =Set(varSelectedCulture,ThisItem.Language)
+            RadiusBottomLeft: =50
+            RadiusBottomRight: =50
+            RadiusTopLeft: =50
+            RadiusTopRight: =50
+            Width: =50
+            X: =4
+            Y: =4
+            ZIndex: =1
+
+        Button5_6 As button:
+            Color: =RGBA(0, 0, 0, 0)
+            Fill: =RGBA(0, 0, 0, 0)
+            Height: =56
+            HoverColor: =RGBA(0, 0, 0, 0)
+            HoverFill: =
+            OnSelect: =Select(img_flag_6)
+            Text: ="Button"
+            Width: =55
+            Y: =4
+            ZIndex: =2
+

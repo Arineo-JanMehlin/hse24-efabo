@@ -1,0 +1,425 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "hse_EFABOSharePoint"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)": {
+          "defaultValue": "https://homeshoppingeurope24.sharepoint.com/sites/EFABO_DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62"
+          }
+        },
+        "Role Def Id Erstellen (hse_RoleDefIdErstellen)": {
+          "defaultValue": "1073741926",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_RoleDefIdErstellen"
+          }
+        },
+        "Role Def Id Pruefen (hse_RoleDefIdPruefen)": {
+          "defaultValue": "1073741927",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_RoleDefIdPruefen"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "ba809cd7-d581-4b1f-b002-f7002bfec95a"
+          },
+          "type": "Request",
+          "kind": "Button",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "text": {
+                  "title": "NewUserMail",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "NewUserMail",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "text_1": {
+                  "title": "RemoveUserMail",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "RemoveUserMail",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "text_2": {
+                  "title": "Role",
+                  "type": "string",
+                  "x-ms-dynamically-added": true,
+                  "description": "Role",
+                  "x-ms-content-hint": "TEXT"
+                },
+                "number": {
+                  "title": "EfaboID",
+                  "type": "number",
+                  "x-ms-dynamically-added": true,
+                  "description": "EfaboID",
+                  "x-ms-content-hint": "NUMBER"
+                }
+              },
+              "required": [
+                "text",
+                "text_1",
+                "text_2",
+                "number"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "User_Delete_Empty": {
+          "actions": {},
+          "runAfter": {
+            "Set_Genehmiger_mit_Prüfer_(ohne_Löschen)": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Get_UserPrincipalId_-_Alt": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "62124368-bad4-46be-b537-85c82e3a2a66"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                    "connectionName": "shared_sharepointonline_1",
+                    "operationId": "HttpRequest"
+                  },
+                  "parameters": {
+                    "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                    "parameters/method": "POST",
+                    "parameters/uri": "_api/web/SiteUsers/getbyemail('@{variables('RemoveUserMail')}')",
+                    "parameters/headers": {
+                      "accept": "application/json;odata=verbose",
+                      "content-type": "application/json;odata=verbose"
+                    }
+                  },
+                  "authentication": {
+                    "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                    "type": "Raw"
+                  }
+                }
+              },
+              "Delete_User_Role": {
+                "runAfter": {
+                  "JSON_analysieren_-_Alt": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "0b945ea2-b864-467a-993a-51590ef15432"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                    "connectionName": "shared_sharepointonline_1",
+                    "operationId": "HttpRequest"
+                  },
+                  "parameters": {
+                    "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                    "parameters/method": "POST",
+                    "parameters/uri": "_api/web/lists/getByTitle('EFABO Anträge')/items(@{variables('EfaboID')})/roleassignments/removeroleassignment(principalid=@{body('JSON_analysieren_-_Alt')?['d']?['Id']},roledefid=@{if(equals(variables('Role'),'Genehmiger'),parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)'),parameters('Role Def Id Erstellen (hse_RoleDefIdErstellen)'))})",
+                    "parameters/headers": {
+                      "accept": "application/json;odata=verbose",
+                      "content-type": "application/json;odata=verbose"
+                    }
+                  },
+                  "authentication": {
+                    "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                    "type": "Raw"
+                  }
+                }
+              },
+              "JSON_analysieren_-_Alt": {
+                "runAfter": {
+                  "Get_UserPrincipalId_-_Alt": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "99eb9f93-a02b-45f2-848e-3567f0bc89e9"
+                },
+                "type": "ParseJson",
+                "inputs": {
+                  "content": "@body('Get_UserPrincipalId_-_Alt')",
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "d": {
+                        "type": "object",
+                        "properties": {
+                          "__metadata": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "uri": {
+                                "type": "string"
+                              },
+                              "type": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "Id": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@variables('RemoveUserMail')",
+              "@Blank()"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "bbc3877c-4e7f-42ff-a496-aa27a765726f"
+          },
+          "type": "If"
+        },
+        "Get_UserPrincipalId_-_Neu": {
+          "runAfter": {
+            "Variable_initialisieren_-_EfaboID": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "62124368-bad4-46be-b537-85c82e3a2a66"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline_1",
+              "operationId": "HttpRequest"
+            },
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "parameters/method": "POST",
+              "parameters/uri": "_api/web/SiteUsers/getbyemail('@{variables('NewUserMail')}')",
+              "parameters/headers": {
+                "accept": "application/json;odata=verbose",
+                "content-type": "application/json;odata=verbose"
+              }
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          }
+        },
+        "JSON_analysieren_-_Neu": {
+          "runAfter": {
+            "Get_UserPrincipalId_-_Neu": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "99eb9f93-a02b-45f2-848e-3567f0bc89e9"
+          },
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@body('Get_UserPrincipalId_-_Neu')",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "d": {
+                  "type": "object",
+                  "properties": {
+                    "__metadata": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "uri": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "Id": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Set_Genehmiger_mit_Prüfer_(ohne_Löschen)": {
+          "runAfter": {
+            "JSON_analysieren_-_Neu": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "1f720298-af92-48e1-8c6d-68cc7d91a41d"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline_1",
+              "operationId": "HttpRequest"
+            },
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "parameters/method": "POST",
+              "parameters/uri": "_api/web/lists/getbytitle('EFABO Anträge')/items(@{variables('EfaboID')})/roleassignments/addroleassignment(principalId=@{body('JSON_analysieren_-_Neu')?['d']?['Id']},roledefId=@{if(equals(variables('Role'),'Genehmiger'),parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)'),parameters('Role Def Id Erstellen (hse_RoleDefIdErstellen)'))})",
+              "parameters/headers": {
+                "accept": "application/json;odata=verbose",
+                "content-type": "application/json;odata=verbose"
+              }
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          }
+        },
+        "Variable_initialisieren_-_NewUserMail": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "1911335e-4e26-4730-bcd2-6662c75f8024"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "NewUserMail",
+                "type": "string",
+                "value": "@triggerBody()['text']"
+              }
+            ]
+          }
+        },
+        "Variable_initialisieren_-_RemoveUserMail": {
+          "runAfter": {
+            "Variable_initialisieren_-_NewUserMail": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "47f2fe4c-321a-4529-b6c1-e3bab42a0a0c"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "RemoveUserMail",
+                "type": "string",
+                "value": "@triggerBody()['text_1']"
+              }
+            ]
+          }
+        },
+        "Variable_initialisieren_-_Role": {
+          "runAfter": {
+            "Variable_initialisieren_-_RemoveUserMail": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "822028eb-8864-4da1-8702-bd1e6d985a04"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Role",
+                "type": "string",
+                "value": "@triggerBody()['text_2']"
+              }
+            ]
+          }
+        },
+        "Variable_initialisieren_-_EfaboID": {
+          "runAfter": {
+            "Variable_initialisieren_-_Role": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "68583a05-fbe9-4ea0-ab17-7e308ce8b7de"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "EfaboID",
+                "type": "integer",
+                "value": "@triggerBody()['number']"
+              }
+            ]
+          }
+        },
+        "Auf_eine_PowerApp_oder_einen_Flow_antworten": {
+          "runAfter": {
+            "User_Delete_Empty": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6b1e3521-1bf7-48f4-ab64-8f1bb17b6234"
+          },
+          "type": "Response",
+          "kind": "PowerApp",
+          "inputs": {
+            "statusCode": 200,
+            "body": {},
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

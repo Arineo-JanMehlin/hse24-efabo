@@ -1,0 +1,163 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  NoAccessEFABOScreen:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+      LoadingSpinnerColor: =RGBA(56, 96, 178, 1)
+    Children:
+      - Logo_Image_6:
+          Control: Image@2.2.3
+          Group: Header_Group_6
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Height: =103
+            Image: =HSE_logo_S_P_RGB
+            ImagePosition: =ImagePosition.Fill
+            Width: =177
+            X: =1182
+      - Header_Label_6:
+          Control: Label@2.5.1
+          Group: Header_Group_6
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            FontWeight: =FontWeight.Semibold
+            Height: =61
+            Size: =20
+            Text: '=LookUp(colRessource,Title = "Header_Label" && Sprache.Value = varSelectedCulture,Text) '
+            Width: =569
+            X: =30
+            Y: =14
+      - Highlight_Rectangle_6:
+          Control: Rectangle@2.3.0
+          Group: Header_Group_6
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Fill: =varHSEBranding.HSEOrange
+            Height: =12
+            Width: =230
+            X: =30
+            Y: =75
+      - Seperation_Rectangle_6:
+          Control: Rectangle@2.3.0
+          Group: Header_Group_6
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Fill: =RGBA(237, 237, 237, 1)
+            Height: =8
+            Width: =1366
+            Y: =87
+      - Circle1_1:
+          Control: Circle@2.3.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Fill: =varHSEBranding.HSEOrange
+            X: =633
+            Y: =201
+      - Icon1_1:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Color: =RGBA(255, 255, 255, 1)
+            Height: =50
+            Icon: =Icon.Cancel
+            Width: =50
+            X: =658
+            Y: =226
+      - lbl_Zugriff:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Text: '=LookUp(colRessource,Title = "lbl_Zugriff" && Sprache.Value = varSelectedCulture,Text) '
+            X: =608
+            Y: =316
+      - lbl_AntragMeldung:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            FontWeight: =FontWeight.Semibold
+            Height: =37
+            Text: '=LookUp(colRessource,Title = "lbl_AntragMeldung" && Sprache.Value = varSelectedCulture,Text) '
+            Width: =736
+            X: =315
+            Y: =405
+      - Icon2_4:
+          Control: Classic/Icon@2.5.0
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Color: =varHSEBranding.Black
+            Height: =20
+            Icon: =Icon.Cancel
+            OnSelect: =Launch("https://homeshoppingeurope24.sharepoint.com/sites/EFABO",{},LaunchTarget.Replace)
+            Width: =20
+            X: =1344
+            Y: =2
+      - gal_languages_6:
+          Control: Gallery@2.15.0
+          Variant: Horizontal
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Default: |-
+              =/*
+              LookUp(
+                  LanguagesCol;
+                  culture = "DE";
+                  ThisRecord
+              )
+              */
+            DelayItemLoading: =false
+            Height: =70
+            Items: =colLanguages
+            LoadingSpinner: =LoadingSpinner.None
+            ShowScrollbar: =false
+            TemplateSize: =55
+            Width: =130
+            X: =1052
+            Y: =14
+          Children:
+            - img_flag_6:
+                Control: Image@2.2.3
+                Properties:
+                  BorderColor: =varHSEBranding.HSEOrange
+                  BorderThickness: =If(ThisItem.IsSelected, 4, 0)
+                  Height: =50
+                  Image: =ThisItem.Image
+                  ImagePosition: =ImagePosition.Fill
+                  OnSelect: =Set(varSelectedCulture,ThisItem.Language)
+                  RadiusBottomLeft: =50
+                  RadiusBottomRight: =50
+                  RadiusTopLeft: =50
+                  RadiusTopRight: =50
+                  Width: =50
+                  X: =4
+                  Y: =4
+            - Button5_6:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  BorderColor: =ColorFade(Self.Fill, -15%)
+                  Color: =RGBA(0, 0, 0, 0)
+                  DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                  Fill: =RGBA(0, 0, 0, 0)
+                  Font: =Font.'Open Sans'
+                  Height: =56
+                  HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                  HoverColor: =RGBA(0, 0, 0, 0)
+                  HoverFill: =
+                  OnSelect: =Select(img_flag_6)
+                  PressedBorderColor: =Self.Fill
+                  PressedColor: =Self.Fill
+                  PressedFill: =Self.Color
+                  Text: ="Button"
+                  Width: =55
+                  Y: =4

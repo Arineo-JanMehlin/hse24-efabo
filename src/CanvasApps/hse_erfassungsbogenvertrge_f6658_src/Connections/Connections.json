@@ -1,0 +1,431 @@
+{
+  "0243cebd-54e0-43b7-8a06-ecc100e89b34": {
+    "appActions": [
+      "providers/PowerPlatform.Governance/Operations/Read",
+      "providers/PowerPlatform.Governance/Operations/Write"
+    ],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "SharePoint",
+      "iconUri": "https://conn-afd-prod-endpoint-bmc9bqahasf3grgk.b01.azurefd.net/v1.0.1769/1.0.1769.4352/sharepointonline/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_sharepointonline",
+      "parameterHints": {},
+      "parameterHintsV2": {}
+    },
+    "datasets": {
+      "https://homeshoppingeurope24.sharepoint.com/sites/EFABO_DEV": {
+        "datasetOverride": {
+          "environmentVariableName": "hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62",
+          "name": "https://homeshoppingeurope24.sharepoint.com/sites/EFABO_DEV"
+        },
+        "dataSources": {
+          "Arbeitsrechtliche Freigabe": {
+            "tableName": "312ce00d-e31d-4435-8e4c-63e76f0e6dfa",
+            "tableNameOverride": {
+              "environmentVariableName": "new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d",
+              "name": "312ce00d-e31d-4435-8e4c-63e76f0e6dfa"
+            }
+          },
+          "EFABO Anträge": {
+            "tableName": "d8010e65-d7b0-4b11-b0a0-ac65f5b96208",
+            "tableNameOverride": {
+              "environmentVariableName": "hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5",
+              "name": "d8010e65-d7b0-4b11-b0a0-ac65f5b96208"
+            }
+          },
+          "EFABO Anträge (Archiv)": {
+            "tableName": "39e1c6f3-9e40-4ccd-afe8-3f160bae0220",
+            "tableNameOverride": {
+              "environmentVariableName": "hse_shared_sharepointonline_799bc7aec5f1493c998580565ca93ce3",
+              "name": "39e1c6f3-9e40-4ccd-afe8-3f160bae0220"
+            }
+          },
+          "EFABO Document Library": {
+            "tableName": "7142763d-cd80-4a89-ba99-1b6185ce9fc6",
+            "tableNameOverride": {
+              "environmentVariableName": "hse_EFABO_Document_Library",
+              "name": "7142763d-cd80-4a89-ba99-1b6185ce9fc6"
+            }
+          },
+          "Geschäftsführer": {
+            "tableName": "1d5215bd-c4dc-416f-a6ff-bd78bb792000",
+            "tableNameOverride": {
+              "environmentVariableName": "hse_shared_sharepointonline_f035400abc77414899ed171c8f57f518",
+              "name": "1d5215bd-c4dc-416f-a6ff-bd78bb792000"
+            }
+          },
+          "Systemtexte": {
+            "tableName": "29dd47f1-f4cc-4c81-8d27-47123acdd59b",
+            "tableNameOverride": {
+              "environmentVariableName": "new_shared_sharepointonline_3658e4517d474bebb3af13645423b35a",
+              "name": "29dd47f1-f4cc-4c81-8d27-47123acdd59b"
+            }
+          }
+        }
+      },
+      "https://homeshoppingeurope24.sharepoint.com/sites/EFABO_DEV_hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62": {
+        "datasetOverride": {
+          "environmentVariableName": "hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62",
+          "name": "https://homeshoppingeurope24.sharepoint.com/sites/EFABO_DEV"
+        },
+        "dataSources": {
+          "IT-Security Freigabe": {
+            "tableName": "15e4a9aa-67e1-46a3-b61e-8d713d4c32f5",
+            "tableNameOverride": {
+              "environmentVariableName": "hse_ITSecurityFreigabe",
+              "name": "15e4a9aa-67e1-46a3-b61e-8d713d4c32f5"
+            }
+          }
+        }
+      }
+    },
+    "dataSources": [
+      "EFABO Anträge",
+      "EFABO Anträge (Archiv)",
+      "Geschäftsführer",
+      "Arbeitsrechtliche Freigabe",
+      "Systemtexte",
+      "EFABO Document Library",
+      "IT-Security Freigabe"
+    ],
+    "dependencies": {},
+    "dependents": [
+      "ea4cd5f1-857f-4199-be05-9356e3f7212c",
+      "c8197625-ddee-446e-a99a-423921701bc0",
+      "a4f04281-2350-43f1-b38b-46a6ce9c42e7",
+      "dfba3864-42cb-48a0-bfde-f487548d06b7"
+    ],
+    "id": "0243cebd-54e0-43b7-8a06-ecc100e89b34"
+  },
+  "4de3e83f-0574-450a-b913-1c15ad4912dd": {
+    "appActions": [],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "OneDrive for Business",
+      "iconUri": "https://conn-afd-prod-endpoint-bmc9bqahasf3grgk.b01.azurefd.net/v1.0.1763/1.0.1763.4307/onedriveforbusiness/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_onedriveforbusiness",
+      "parameterHints": {},
+      "parameterHintsV2": {}
+    },
+    "datasets": {},
+    "dataSources": [],
+    "dependencies": {},
+    "dependents": [
+      "a4f04281-2350-43f1-b38b-46a6ce9c42e7",
+      "dfba3864-42cb-48a0-bfde-f487548d06b7"
+    ],
+    "id": "4de3e83f-0574-450a-b913-1c15ad4912dd"
+  },
+  "a4f04281-2350-43f1-b38b-46a6ce9c42e7": {
+    "appActions": [
+      "Run"
+    ],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "Logik-Flows",
+      "iconUri": "https://conn-afd-prod-endpoint-bmc9bqahasf3grgk.b01.azurefd.net/v1.0.1766/1.0.1766.4330/logicflows/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_logicflows",
+      "parameterHints": {
+        "0243cebd-54e0-43b7-8a06-ecc100e89b34": {
+          "value": "shared_sharepointonline_1"
+        },
+        "4de3e83f-0574-450a-b913-1c15ad4912dd": {
+          "value": "shared_onedriveforbusiness"
+        },
+        "f7cb7131-4748-407e-8428-faaaf2d924d8": {
+          "value": "shared_office365"
+        },
+        "workflowEntityId": {
+          "value": "c4ec8987-5ebe-ed11-83fe-6045bd8f651f"
+        },
+        "workflowName": {
+          "value": "27ca7f17-b905-690a-d577-1ff1a3f03e62"
+        }
+      },
+      "parameterHintsV2": {
+        "shared_office365": {
+          "value": "f7cb7131-4748-407e-8428-faaaf2d924d8"
+        },
+        "shared_onedriveforbusiness": {
+          "value": "4de3e83f-0574-450a-b913-1c15ad4912dd"
+        },
+        "shared_sharepointonline_1": {
+          "value": "0243cebd-54e0-43b7-8a06-ecc100e89b34"
+        },
+        "workflowEntityId": {
+          "value": "c4ec8987-5ebe-ed11-83fe-6045bd8f651f"
+        },
+        "workflowName": {
+          "value": "27ca7f17-b905-690a-d577-1ff1a3f03e62"
+        }
+      }
+    },
+    "datasets": {},
+    "dataSources": [
+      "CreateHTML_PDF_AF"
+    ],
+    "dependencies": {
+      "shared_office365": "f7cb7131-4748-407e-8428-faaaf2d924d8",
+      "shared_onedriveforbusiness": "4de3e83f-0574-450a-b913-1c15ad4912dd",
+      "shared_sharepointonline_1": "0243cebd-54e0-43b7-8a06-ecc100e89b34"
+    },
+    "dependents": [],
+    "id": "a4f04281-2350-43f1-b38b-46a6ce9c42e7"
+  },
+  "aa74a532-de13-4de2-a6d9-0c62c0f62b51": {
+    "appActions": [
+      "Run"
+    ],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "Logik-Flows",
+      "iconUri": "https://conn-afd-prod-endpoint-bmc9bqahasf3grgk.b01.azurefd.net/v1.0.1766/1.0.1766.4330/logicflows/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_logicflows",
+      "parameterHints": {
+        "workflowEntityId": {
+          "value": "93156a01-ab6a-ed11-9561-000d3a2e4c11"
+        },
+        "workflowName": {
+          "value": "c584ea8a-ea8e-b5c4-ee31-3ce0025423bb"
+        }
+      },
+      "parameterHintsV2": {
+        "workflowEntityId": {
+          "value": "93156a01-ab6a-ed11-9561-000d3a2e4c11"
+        },
+        "workflowName": {
+          "value": "c584ea8a-ea8e-b5c4-ee31-3ce0025423bb"
+        }
+      }
+    },
+    "datasets": {},
+    "dataSources": [
+      "[Parent]EFABOBerechtigungenändern"
+    ],
+    "dependencies": {},
+    "dependents": [],
+    "id": "aa74a532-de13-4de2-a6d9-0c62c0f62b51"
+  },
+  "c8197625-ddee-446e-a99a-423921701bc0": {
+    "appActions": [
+      "Run"
+    ],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "Logik-Flows",
+      "iconUri": "https://conn-afd-prod-endpoint-bmc9bqahasf3grgk.b01.azurefd.net/v1.0.1766/1.0.1766.4330/logicflows/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_logicflows",
+      "parameterHints": {
+        "0243cebd-54e0-43b7-8a06-ecc100e89b34": {
+          "value": "shared_sharepointonline_1"
+        },
+        "workflowEntityId": {
+          "value": "4fd67657-8c74-ec11-8943-6045bd943d2b"
+        },
+        "workflowName": {
+          "value": "ad81af6b-c66a-18a9-e216-0cc6b6195f43"
+        }
+      },
+      "parameterHintsV2": {
+        "shared_sharepointonline_1": {
+          "value": "0243cebd-54e0-43b7-8a06-ecc100e89b34"
+        },
+        "workflowEntityId": {
+          "value": "4fd67657-8c74-ec11-8943-6045bd943d2b"
+        },
+        "workflowName": {
+          "value": "ad81af6b-c66a-18a9-e216-0cc6b6195f43"
+        }
+      }
+    },
+    "datasets": {},
+    "dataSources": [
+      "EFABOEntwurferstellen"
+    ],
+    "dependencies": {
+      "shared_sharepointonline_1": "0243cebd-54e0-43b7-8a06-ecc100e89b34"
+    },
+    "dependents": [],
+    "id": "c8197625-ddee-446e-a99a-423921701bc0"
+  },
+  "cb6878ee-fecd-4410-83bc-caa03a42fd0e": {
+    "appActions": [
+      "Run"
+    ],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "Logik-Flows",
+      "iconUri": "https://conn-afd-prod-endpoint-bmc9bqahasf3grgk.b01.azurefd.net/v1.0.1766/1.0.1766.4330/logicflows/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_logicflows",
+      "parameterHints": {
+        "workflowEntityId": {
+          "value": "1fce0777-4b6a-ed11-9560-6045bd918ca0"
+        },
+        "workflowName": {
+          "value": "13c0ee55-8106-3930-a90b-3ff7d4cba900"
+        }
+      },
+      "parameterHintsV2": {
+        "workflowEntityId": {
+          "value": "1fce0777-4b6a-ed11-9560-6045bd918ca0"
+        },
+        "workflowName": {
+          "value": "13c0ee55-8106-3930-a90b-3ff7d4cba900"
+        }
+      }
+    },
+    "datasets": {},
+    "dataSources": [
+      "[Parent]EFABOEntwurfzuPrüfung"
+    ],
+    "dependencies": {},
+    "dependents": [],
+    "id": "cb6878ee-fecd-4410-83bc-caa03a42fd0e"
+  },
+  "cbb5a00c-dd9d-436a-9275-ba10b385accc": {
+    "appActions": [
+      "ListGroupMembers"
+    ],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "Office 365-Gruppen",
+      "iconUri": "https://conn-afd-prod-endpoint-bmc9bqahasf3grgk.b01.azurefd.net/releases/v1.0.1777/1.0.1777.4410/office365groups/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_office365groups",
+      "parameterHints": {},
+      "parameterHintsV2": {}
+    },
+    "datasets": {},
+    "dataSources": [
+      "Office365-Gruppen"
+    ],
+    "dependencies": {},
+    "dependents": [],
+    "id": "cbb5a00c-dd9d-436a-9275-ba10b385accc"
+  },
+  "dfba3864-42cb-48a0-bfde-f487548d06b7": {
+    "appActions": [
+      "Run"
+    ],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "Logik-Flows",
+      "iconUri": "https://conn-afd-prod-endpoint-bmc9bqahasf3grgk.b01.azurefd.net/v1.0.1766/1.0.1766.4330/logicflows/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_logicflows",
+      "parameterHints": {
+        "0243cebd-54e0-43b7-8a06-ecc100e89b34": {
+          "value": "shared_sharepointonline_1"
+        },
+        "4de3e83f-0574-450a-b913-1c15ad4912dd": {
+          "value": "shared_onedriveforbusiness"
+        },
+        "b7d9aa68-c5c8-452b-87db-533de962f7f0": {
+          "value": "shared_sharepointonline_1"
+        },
+        "f7cb7131-4748-407e-8428-faaaf2d924d8": {
+          "value": "shared_office365"
+        },
+        "workflowDisplayName": {
+          "value": "CreateHTML_PDF_ITSec"
+        },
+        "workflowEntityId": {
+          "value": "1249cf9f-faf2-ef11-be20-6045bd909f2f"
+        },
+        "workflowName": {
+          "value": "1fd14c59-55bf-e756-aee5-4b22d4d22a33"
+        }
+      },
+      "parameterHintsV2": {
+        "shared_office365": {
+          "value": "f7cb7131-4748-407e-8428-faaaf2d924d8"
+        },
+        "shared_onedriveforbusiness": {
+          "value": "4de3e83f-0574-450a-b913-1c15ad4912dd"
+        },
+        "shared_sharepointonline_1": {
+          "value": "0243cebd-54e0-43b7-8a06-ecc100e89b34"
+        },
+        "workflowDisplayName": {
+          "value": "CreateHTML_PDF_ITSec"
+        },
+        "workflowEntityId": {
+          "value": "1249cf9f-faf2-ef11-be20-6045bd909f2f"
+        },
+        "workflowName": {
+          "value": "1fd14c59-55bf-e756-aee5-4b22d4d22a33"
+        }
+      }
+    },
+    "datasets": {},
+    "dataSources": [
+      "CreateHTML_PDF_ITSec"
+    ],
+    "dependencies": {
+      "shared_office365": "f7cb7131-4748-407e-8428-faaaf2d924d8",
+      "shared_onedriveforbusiness": "4de3e83f-0574-450a-b913-1c15ad4912dd",
+      "shared_sharepointonline_1": "0243cebd-54e0-43b7-8a06-ecc100e89b34"
+    },
+    "dependents": [],
+    "id": "dfba3864-42cb-48a0-bfde-f487548d06b7"
+  },
+  "ea4cd5f1-857f-4199-be05-9356e3f7212c": {
+    "appActions": [
+      "Run"
+    ],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "Logik-Flows",
+      "iconUri": "https://conn-afd-prod-endpoint-bmc9bqahasf3grgk.b01.azurefd.net/v1.0.1766/1.0.1766.4330/logicflows/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_logicflows",
+      "parameterHints": {
+        "0243cebd-54e0-43b7-8a06-ecc100e89b34": {
+          "value": "shared_sharepointonline"
+        },
+        "workflowEntityId": {
+          "value": "d6fa9f3c-1e49-ec11-8c62-000d3a442abd"
+        },
+        "workflowName": {
+          "value": "b4317588-6505-d4a5-a37d-a58b82f3967e"
+        }
+      },
+      "parameterHintsV2": {
+        "shared_sharepointonline": {
+          "value": "0243cebd-54e0-43b7-8a06-ecc100e89b34"
+        },
+        "workflowEntityId": {
+          "value": "d6fa9f3c-1e49-ec11-8c62-000d3a442abd"
+        },
+        "workflowName": {
+          "value": "b4317588-6505-d4a5-a37d-a58b82f3967e"
+        }
+      }
+    },
+    "datasets": {},
+    "dataSources": [
+      "CheckifuserinSharePointGroup"
+    ],
+    "dependencies": {
+      "shared_sharepointonline": "0243cebd-54e0-43b7-8a06-ecc100e89b34"
+    },
+    "dependents": [],
+    "id": "ea4cd5f1-857f-4199-be05-9356e3f7212c"
+  },
+  "f7cb7131-4748-407e-8428-faaaf2d924d8": {
+    "appActions": [],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "Office 365 Outlook",
+      "iconUri": "https://conn-afd-prod-endpoint-bmc9bqahasf3grgk.b01.azurefd.net/releases/v1.0.1777/1.0.1777.4410/office365/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_office365",
+      "parameterHints": {},
+      "parameterHintsV2": {}
+    },
+    "datasets": {},
+    "dataSources": [],
+    "dependencies": {},
+    "dependents": [
+      "a4f04281-2350-43f1-b38b-46a6ce9c42e7",
+      "dfba3864-42cb-48a0-bfde-f487548d06b7"
+    ],
+    "id": "f7cb7131-4748-407e-8428-faaaf2d924d8"
+  }
+}

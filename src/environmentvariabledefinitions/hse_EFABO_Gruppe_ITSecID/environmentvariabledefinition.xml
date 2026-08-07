@@ -1,0 +1,10 @@
+<environmentvariabledefinition schemaname="hse_EFABO_Gruppe_ITSecID">
+  <displayname default="EFABO_Gruppe_ITSecID">
+    <label description="EFABO_Gruppe_ITSecID" languagecode="1031" />
+  </displayname>
+  <introducedversion>1.0.1.4</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000000</type>
+</environmentvariabledefinition>

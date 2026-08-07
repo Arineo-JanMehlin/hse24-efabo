@@ -1,0 +1,88 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "hse_EFABOSharePoint"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)": {
+          "defaultValue": "https://homeshoppingeurope24.sharepoint.com/sites/EFABO_DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62"
+          }
+        },
+        "IT-Security Freigabe (hse_ITSecurityFreigabe)": {
+          "defaultValue": "15e4a9aa-67e1-46a3-b61e-8d713d4c32f5",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_ITSecurityFreigabe"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "581bf5cb-9406-4d52-9e72-19baa6e85fb9"
+          },
+          "type": "Request",
+          "kind": "Button",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {},
+              "required": []
+            }
+          }
+        }
+      },
+      "actions": {
+        "Get_ITSec_Prüfung_Draft": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "c6b184b2-2641-494e-a44a-f143cad458cd"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "GetItems",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "table": "@parameters('IT-Security Freigabe (hse_ITSecurityFreigabe)')",
+              "$filter": "Title eq 174",
+              "$top": 1
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

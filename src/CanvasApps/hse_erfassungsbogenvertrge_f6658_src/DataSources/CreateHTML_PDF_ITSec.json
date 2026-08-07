@@ -1,0 +1,10 @@
+[
+  {
+    "ApiId": "/providers/microsoft.powerapps/apis/shared_logicflows",
+    "FlowNameId": "00c4eac6-44e9-4cca-a397-1fcb5a6c8f21",
+    "Name": "CreateHTML_PDF_ITSec",
+    "ServiceKind": "ConnectedWadl",
+    "Type": "ServiceInfo",
+    "WorkflowEntityId": "1249cf9f-faf2-ef11-be20-6045bd909f2f"
+  }
+]

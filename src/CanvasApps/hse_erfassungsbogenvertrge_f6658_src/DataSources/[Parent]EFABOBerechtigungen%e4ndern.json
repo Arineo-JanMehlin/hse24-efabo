@@ -1,0 +1,10 @@
+[
+  {
+    "ApiId": "/providers/microsoft.powerapps/apis/shared_logicflows",
+    "FlowNameId": "84e09bf4-5b18-4c9a-ab69-b81b1d082137",
+    "Name": "[Parent]EFABOBerechtigungenändern",
+    "ServiceKind": "ConnectedWadl",
+    "Type": "ServiceInfo",
+    "WorkflowEntityId": "93156a01-ab6a-ed11-9561-000d3a2e4c11"
+  }
+]

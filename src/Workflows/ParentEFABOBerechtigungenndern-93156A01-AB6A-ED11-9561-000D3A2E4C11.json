@@ -1,0 +1,155 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "1c77b062-1c63-4efb-99a9-94c198591bd8"
+          },
+          "type": "Request",
+          "kind": "PowerApp",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "Variableinitialisieren_Wert": {
+                  "type": "any"
+                },
+                "Variableinitialisieren2_Wert": {
+                  "type": "any"
+                },
+                "EfaboID_Wert": {
+                  "type": "integer",
+                  "description": "Anfangswert eingeben",
+                  "x-ms-powerflows-param-ispartial": false
+                },
+                "RemoveUserMail_Wert": {
+                  "type": "string",
+                  "description": "Anfangswert eingeben",
+                  "x-ms-powerflows-param-ispartial": false
+                }
+              },
+              "required": [
+                "Variableinitialisieren_Wert",
+                "Variableinitialisieren2_Wert",
+                "EfaboID_Wert",
+                "RemoveUserMail_Wert"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "Untergeordneten_Flow_ausführen": {
+          "runAfter": {
+            "RemoveUserMail": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0ed87354-4649-4d67-8cf5-29d0c5abe2d6"
+          },
+          "type": "Workflow",
+          "inputs": {
+            "host": {
+              "workflowReferenceName": "da31cadf-4375-ec11-8943-6045bd943f26"
+            },
+            "body": {
+              "text": "@triggerBody()['Variableinitialisieren_Wert']",
+              "text_1": "@triggerBody()['RemoveUserMail_Wert']",
+              "text_2": "@triggerBody()['Variableinitialisieren2_Wert']",
+              "number": "@triggerBody()['EfaboID_Wert']"
+            }
+          }
+        },
+        "Variable_initialisieren_-_Role": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "d2297beb-6102-43f2-bab7-2641fd588e95"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Role",
+                "type": "string",
+                "value": "@{triggerBody()['Variableinitialisieren_Wert']}"
+              }
+            ]
+          }
+        },
+        "Variable_initialisieren_-_NewUserMail": {
+          "runAfter": {
+            "Variable_initialisieren_-_Role": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "90ef4270-8178-42c1-880e-99da9d8a6bc8"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "NewUserMail",
+                "type": "string",
+                "value": "@{triggerBody()['Variableinitialisieren2_Wert']}"
+              }
+            ]
+          }
+        },
+        "EfaboID": {
+          "runAfter": {
+            "Variable_initialisieren_-_NewUserMail": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "1da224d0-7932-4a52-bd0a-feb842e1206c"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "EfaboID",
+                "type": "integer",
+                "value": "@triggerBody()['EfaboID_Wert']"
+              }
+            ]
+          }
+        },
+        "RemoveUserMail": {
+          "runAfter": {
+            "EfaboID": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d516b5ef-1b9f-4754-81dd-981808482181"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "RemoveUserMail",
+                "type": "string",
+                "value": "@{triggerBody()['RemoveUserMail_Wert']}"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

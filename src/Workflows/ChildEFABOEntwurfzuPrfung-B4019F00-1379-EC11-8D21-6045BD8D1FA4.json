@@ -1,0 +1,1687 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "hse_EFABOSharePoint"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      },
+      "shared_office365": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "hse_sharedoffice365_44daf"
+        },
+        "api": {
+          "name": "shared_office365"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "EFABO Anträge (hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5)": {
+          "defaultValue": "d8010e65-d7b0-4b11-b0a0-ac65f5b96208",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5"
+          }
+        },
+        "EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)": {
+          "defaultValue": "https://homeshoppingeurope24.sharepoint.com/sites/EFABO_DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62"
+          }
+        },
+        "AppID (hse_AppID)": {
+          "defaultValue": "82f0abdb-6e73-46b5-a033-2611cea27ef9",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_AppID"
+          }
+        },
+        "Arbeitsrechtliche Freigabe (new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d)": {
+          "defaultValue": "312ce00d-e31d-4435-8e4c-63e76f0e6dfa",
+          "type": "String",
+          "metadata": {
+            "schemaName": "new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d"
+          }
+        },
+        "Role Def Id Erstellen (hse_RoleDefIdErstellen)": {
+          "defaultValue": "1073741926",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_RoleDefIdErstellen"
+          }
+        },
+        "Role Def Id Pruefen (hse_RoleDefIdPruefen)": {
+          "defaultValue": "1073741927",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_RoleDefIdPruefen"
+          }
+        },
+        "EFABO Testing (hse_EFABOTesting)": {
+          "defaultValue": true,
+          "type": "Bool",
+          "metadata": {
+            "schemaName": "hse_EFABOTesting"
+          }
+        },
+        "EFABO_Gruppe_SachbearbeiterRechtID (hse_EFABO_Gruppe_SachbearbeiterRechtID)": {
+          "defaultValue": "16",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_EFABO_Gruppe_SachbearbeiterRechtID"
+          }
+        },
+        "EFABO_Gruppe_RechtID (hse_EFABO_Gruppe_RechtID)": {
+          "defaultValue": "15",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_EFABO_Gruppe_RechtID"
+          }
+        },
+        "EFABO_Gruppe_FinanceID (hse_EFABO_Gruppe_FinanceID)": {
+          "defaultValue": "14",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_EFABO_Gruppe_FinanceID"
+          }
+        },
+        "EFABO_Gruppe_EinkaufID (hse_EFABO_Gruppe_EinkaufID)": {
+          "defaultValue": "12",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_EFABO_Gruppe_EinkaufID"
+          }
+        },
+        "EFABO_Gruppe_WorkermanagementID (hse_EFABO_Gruppe_WorkermanagementID)": {
+          "defaultValue": "40",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_EFABO_Gruppe_WorkermanagementID"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "dd823131-2cc2-4866-9661-bfc8ef99a90b"
+          },
+          "type": "Request",
+          "kind": "Button",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "number": {
+                  "title": "EfaboID",
+                  "type": "number",
+                  "x-ms-dynamically-added": true,
+                  "description": "EfaboID",
+                  "x-ms-content-hint": "NUMBER"
+                }
+              },
+              "required": [
+                "number"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "JSON_analysieren_-_Genehmiger": {
+          "runAfter": {
+            "Get_UserPrincipalId_-_Genehmiger": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "99eb9f93-a02b-45f2-848e-3567f0bc89e9"
+          },
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@outputs('Get_UserPrincipalId_-_Genehmiger')?['body']",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "d": {
+                  "type": "object",
+                  "properties": {
+                    "__metadata": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "uri": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "Id": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Set_Genehmiger_mit_Prüfer_(ohne_Löschen)": {
+          "runAfter": {
+            "JSON_analysieren_-_Genehmiger": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "1f720298-af92-48e1-8c6d-68cc7d91a41d"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline_1",
+              "operationId": "HttpRequest"
+            },
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "parameters/method": "POST",
+              "parameters/uri": "_api/web/lists/getbytitle('EFABO Anträge')/items(@{triggerBody()['number']})/roleassignments/addroleassignment(principalId=@{body('JSON_analysieren_-_Genehmiger')?['d']?['Id']},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+              "parameters/headers": {
+                "accept": "application/json;odata=verbose",
+                "content-type": "application/json;odata=verbose"
+              }
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          }
+        },
+        "Set_Sachbearbeiter_Recht_mit_Prüfer_(ohne_Löschen)": {
+          "runAfter": {
+            "Set_Genehmiger_mit_Prüfer_(ohne_Löschen)": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d3aeb45f-063b-4050-8e0d-bdb4f30abb09"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline_1",
+              "operationId": "HttpRequest"
+            },
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "parameters/method": "POST",
+              "parameters/uri": "_api/web/lists/getbytitle('EFABO Anträge')/items(@{triggerBody()['number']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_SachbearbeiterRechtID (hse_EFABO_Gruppe_SachbearbeiterRechtID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+              "parameters/headers": {
+                "accept": "application/json;odata=verbose",
+                "content-type": "application/json;odata=verbose"
+              }
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          }
+        },
+        "Set_Sachbearbeiter_Prüfende_Rechtsanwälte_mit_Prüfer_(ohne_Löschen)": {
+          "runAfter": {
+            "Set_Sachbearbeiter_Recht_mit_Prüfer_(ohne_Löschen)": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b1b16f18-c1ca-4402-b27c-ead09fe6b5b8"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline_1",
+              "operationId": "HttpRequest"
+            },
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "parameters/method": "POST",
+              "parameters/uri": "_api/web/lists/getbytitle('EFABO Anträge')/items(@{triggerBody()['number']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_RechtID (hse_EFABO_Gruppe_RechtID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+              "parameters/headers": {
+                "accept": "application/json;odata=verbose",
+                "content-type": "application/json;odata=verbose"
+              }
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          }
+        },
+        "Set_Sachbearbeiter_Sachbearbeiter_Finanzen_mit_Prüfer_(ohne_Löschen)": {
+          "runAfter": {
+            "Set_Sachbearbeiter_Prüfende_Rechtsanwälte_mit_Prüfer_(ohne_Löschen)": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "250154c8-c2f3-465e-abc9-50fa96a473a2"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline_1",
+              "operationId": "HttpRequest"
+            },
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "parameters/method": "POST",
+              "parameters/uri": "_api/web/lists/getbytitle('EFABO Anträge')/items(@{triggerBody()['number']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_FinanceID (hse_EFABO_Gruppe_FinanceID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+              "parameters/headers": {
+                "accept": "application/json;odata=verbose",
+                "content-type": "application/json;odata=verbose"
+              }
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          }
+        },
+        "Set_Sachbearbeiter_Einkauf_mit_Prüfer_(ohne_Löschen)": {
+          "runAfter": {
+            "Set_Sachbearbeiter_Sachbearbeiter_Finanzen_mit_Prüfer_(ohne_Löschen)": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "12b783c0-7ed6-432e-b9c7-066584140344"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline_1",
+              "operationId": "HttpRequest"
+            },
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "parameters/method": "POST",
+              "parameters/uri": "_api/web/lists/getbytitle('EFABO Anträge')/items(@{triggerBody()['number']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_EinkaufID (hse_EFABO_Gruppe_EinkaufID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+              "parameters/headers": {
+                "accept": "application/json;odata=verbose",
+                "content-type": "application/json;odata=verbose"
+              }
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          }
+        },
+        "Bedingung_-_Überprüfen_ob_Antrag_von_jemand_anderem_erstellt_wurde": {
+          "actions": {
+            "Get_UserPrincipalId_-_Verantwortlicher": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "5b375552-56a3-4836-b225-52224cea25b8"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "HttpRequest"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/SiteUsers/getbyemail('@{outputs('Get_EFABO')?['body/VerantwortlicherMitarbeiter/Email']}')",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "JSON_analysieren_-_Verantwortlicher": {
+              "runAfter": {
+                "Get_UserPrincipalId_-_Verantwortlicher": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "313ba7ab-9703-45b7-a451-1a2eea4769c1"
+              },
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@outputs('Get_UserPrincipalId_-_Verantwortlicher')?['body']",
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "d": {
+                      "type": "object",
+                      "properties": {
+                        "__metadata": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "uri": {
+                              "type": "string"
+                            },
+                            "type": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "Id": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "Set_Verantwortlicher_mit_Schreiberechte": {
+              "runAfter": {
+                "JSON_analysieren_-_Verantwortlicher": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "73e59135-480f-45c2-a718-21644da9c991"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "HttpRequest"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('EFABO Anträge')/items(@{triggerBody()['number']})/roleassignments/addroleassignment(principalId=@{body('JSON_analysieren_-_Verantwortlicher')?['d']?['Id']},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Set_Workermanagement_mit_Lesen": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "not": {
+              "equals": [
+                "@outputs('Get_EFABO')?['body/VerantwortlicherMitarbeiter/Email']",
+                "@outputs('Get_EFABO')?['body/Author/Email']"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "800c6b5b-883d-46f5-aa1e-aa56953dabd6"
+          },
+          "type": "If",
+          "description": "Der Ersteller hat immer autom. Berechtigungen auf die Anträge durch die SharePoint Einstellungen"
+        },
+        "Bedingung_-_Genehmiger_=_Ersteller_und_Verwantwortlicher_": {
+          "actions": {
+            "Element_aktualisieren_-_Update_direkt_zur_Prüfung": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "3cee812c-fcc1-4ed0-a08e-28930ec7fc28"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "PatchItem"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "table": "@parameters('EFABO Anträge (hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5)')",
+                  "id": "@triggerBody()['number']",
+                  "item/Status/Value": "In Prüfung",
+                  "item/Fachbereich/Value": "@outputs('Get_EFABO')?['body/Fachbereich/Value']",
+                  "item/Vertragsart/Value": "@outputs('Get_EFABO')?['body/Vertragsart/Value']",
+                  "item/PruefungFinanzen": "In Prüfung",
+                  "item/PruefungEinkauf": "In Prüfung",
+                  "item/PruefungRecht": "Anlage Akte in Lecare",
+                  "item/KommentarVon": [
+                    {
+                      "Value": "Kein neuer Kommentar"
+                    }
+                  ],
+                  "item/NeuerKommentar": false,
+                  "item/NeuerStatus": true,
+                  "item/K_x00fc_ndigungsfristTyp/Value": "@outputs('Get_EFABO')?['body/K_x00fc_ndigungsfristTyp/Value']",
+                  "item/K_x00fc_ndigungsfristArt/Value": "@outputs('Get_EFABO')?['body/K_x00fc_ndigungsfristArt/Value']",
+                  "item/Evtl_x002e_Sonderk_x00fc_ndigung": "@outputs('Get_EFABO')?['body/Evtl_x002e_Sonderk_x00fc_ndigung']",
+                  "item/Ma_x00df_nahmebudgetiert": "@outputs('Get_EFABO')?['body/Ma_x00df_nahmebudgetiert']",
+                  "item/VerwendungpersonenbezogeneDaten": "@outputs('Get_EFABO')?['body/VerwendungpersonenbezogeneDaten']",
+                  "item/Beiratspflicht": "@outputs('Get_EFABO')?['body/Beiratspflicht']",
+                  "item/ChangeofControl": "@outputs('Get_EFABO')?['body/ChangeofControl']",
+                  "item/Angebotvorhanden": "@outputs('Get_EFABO')?['body/Angebotvorhanden']",
+                  "item/Zur_x00fc_ckanAntragssteller": "@outputs('Get_EFABO')?['body/Zur_x00fc_ckanAntragssteller']",
+                  "item/VertragspartnerAlsKreditorAngele": "@outputs('Get_EFABO')?['body/VertragspartnerAlsKreditorAngele']"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Bedingung_-_Überprüfen_ob_Antrag_von_jemand_anderem_erstellt_wurde": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "E-Mail_senden_(V2)_-_Genehmiger_Fachbereich": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "5c4e2e4b-b1dc-4f03-b61d-ab8ed92447a3"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365",
+                    "connectionName": "shared_office365",
+                    "operationId": "SendEmailV2"
+                  },
+                  "parameters": {
+                    "emailMessage/To": "@outputs('Get_EFABO')?['body/Genehmiger/Email']",
+                    "emailMessage/Subject": "@{variables('varTesting')}EFABO: Neuer erfasster Vertrag (ID:@{triggerBody()['number']}) - Genehmigen/Ablehnen",
+                    "emailMessage/Body": "<p>&lt;p&gt;Hallo @{outputs('Get_EFABO')?['body/Genehmiger/DisplayName']},&lt;br&gt;<br>\n&lt;br&gt;<br>\nes wurde ein neuer Erfassungsbogen für Verträge (EFABO) angelegt.&lt;br&gt;&lt;br&gt;<br>\nVertragspartner: @{outputs('Get_EFABO')?['body/Vertragspartnervollst_x00e4_ndig']}&lt;br&gt;<br>\nGeplanter Vertragsinhalt: @{outputs('Get_EFABO')?['body/GeplanterVertragsinhalt']}&lt;br&gt;&lt;br&gt;<br>\n@{outputs('Get_EFABO')?['body/VerantwortlicherMitarbeiter/DisplayName']} ist verantwortlich für den Vertrag. Es wurde als verantwortlicher Fachbereich @{outputs('Get_EFABO')?['body/Fachbereich/Value']} ausgewählt. Gemäß den Organisationsvorschriften müssen die wirtschaftlichen Eckwerte des Vertrags von Dir überprüft und der Vorgang bestätigt werden.&lt;br&gt;<br>\n&lt;br&gt;<br>\nHier geht es zum Formular:&amp;nbsp;&lt;a href=\"@{variables('varURLzuElement')}\"&gt;Link&lt;/a&gt;&lt;/p&gt;</p>"
+                  },
+                  "authentication": "@parameters('$authentication')"
+                }
+              },
+              "Element_aktualisieren_-_Zur_Genehmigung": {
+                "runAfter": {
+                  "E-Mail_senden_(V2)_-_Genehmiger_Fachbereich": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "3cee812c-fcc1-4ed0-a08e-28930ec7fc28"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                    "connectionName": "shared_sharepointonline_1",
+                    "operationId": "PatchItem"
+                  },
+                  "parameters": {
+                    "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                    "table": "@parameters('EFABO Anträge (hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5)')",
+                    "id": "@triggerBody()['number']",
+                    "item/Status/Value": "Prüfung Genehmiger",
+                    "item/Fachbereich/Value": "@outputs('Get_EFABO')?['body/Fachbereich/Value']",
+                    "item/Vertragsart/Value": "@outputs('Get_EFABO')?['body/Vertragsart/Value']",
+                    "item/KommentarVon": [
+                      {
+                        "Value": "Kein neuer Kommentar"
+                      }
+                    ],
+                    "item/NeuerKommentar": false,
+                    "item/NeuerStatus": true,
+                    "item/K_x00fc_ndigungsfristTyp/Value": "@outputs('Get_EFABO')?['body/K_x00fc_ndigungsfristTyp/Value']",
+                    "item/K_x00fc_ndigungsfristArt/Value": "@outputs('Get_EFABO')?['body/K_x00fc_ndigungsfristArt/Value']",
+                    "item/Evtl_x002e_Sonderk_x00fc_ndigung": "@outputs('Get_EFABO')?['body/Evtl_x002e_Sonderk_x00fc_ndigung']",
+                    "item/Ma_x00df_nahmebudgetiert": "@outputs('Get_EFABO')?['body/Ma_x00df_nahmebudgetiert']",
+                    "item/VerwendungpersonenbezogeneDaten": "@outputs('Get_EFABO')?['body/VerwendungpersonenbezogeneDaten']",
+                    "item/Beiratspflicht": "@outputs('Get_EFABO')?['body/Beiratspflicht']",
+                    "item/ChangeofControl": "@outputs('Get_EFABO')?['body/ChangeofControl']",
+                    "item/Angebotvorhanden": "@outputs('Get_EFABO')?['body/Angebotvorhanden']",
+                    "item/Zur_x00fc_ckanAntragssteller": "@outputs('Get_EFABO')?['body/Zur_x00fc_ckanAntragssteller']",
+                    "item/VertragspartnerAlsKreditorAngele": "@outputs('Get_EFABO')?['body/VertragspartnerAlsKreditorAngele']"
+                  },
+                  "authentication": {
+                    "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                    "type": "Raw"
+                  }
+                }
+              }
+            }
+          },
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@outputs('Get_EFABO')?['body/Author/Email']",
+                  "@outputs('Get_EFABO')?['body/Genehmiger/Email']"
+                ]
+              },
+              {
+                "equals": [
+                  "@outputs('Get_EFABO')?['body/VerantwortlicherMitarbeiter/Email']",
+                  "@outputs('Get_EFABO')?['body/Genehmiger/Email']"
+                ]
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "eaa76ee6-ef25-42d3-8a6d-31f630e9c1f2"
+          },
+          "type": "If",
+          "description": "Wenn ja muss der Genehmiger Schritt übersprungen werden"
+        },
+        "Get_EFABO": {
+          "runAfter": {
+            "Variable_initialisieren_-_varURLzuElement": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "abca7441-0691-4c56-a16c-62eafb46f05e"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline_1",
+              "operationId": "GetItem"
+            },
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "table": "@parameters('EFABO Anträge (hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5)')",
+              "id": "@triggerBody()['number']"
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          }
+        },
+        "Überprüfen_ob_Arbeitsrechtliche_Prüfung_benötigt_wird": {
+          "actions": {
+            "Set_PruefungArbeitsrechtlicheFragen_Status_In_Prüfung": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "927a4ab0-7692-42e6-9b6d-ee69226dd411"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "PatchItem"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "table": "@parameters('EFABO Anträge (hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5)')",
+                  "id": "@triggerBody()['number']",
+                  "item/PruefungArbeitsrechtlicheFragen": "In Prüfung"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "Get_Arbeitsrechtliche_Prüfung": {
+              "runAfter": {
+                "Set_PruefungArbeitsrechtlicheFragen_Status_In_Prüfung": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "c6b184b2-2641-494e-a44a-f143cad458cd"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "GetItems"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "table": "@parameters('Arbeitsrechtliche Freigabe (new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d)')",
+                  "$filter": "Title eq @{triggerBody()['number']}",
+                  "$top": 1
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "Parse_Arbeitsrechtliche_Prüfung": {
+              "runAfter": {
+                "Get_Arbeitsrechtliche_Prüfung": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "43eac314-117f-4a4d-a1e9-51c5377b695f"
+              },
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@First(outputs('Get_Arbeitsrechtliche_Prüfung')?['body/value'])",
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "@@odata.etag": {
+                      "type": "string"
+                    },
+                    "ItemInternalId": {
+                      "type": "string"
+                    },
+                    "ID": {
+                      "type": "integer"
+                    },
+                    "Title": {
+                      "type": "string"
+                    },
+                    "Weisungen_des_Kreditors_von_HSE_": {
+                      "type": "boolean"
+                    },
+                    "Weisungen_von_Kreditor_erteilt": {
+                      "type": "boolean"
+                    },
+                    "Ausschlie_x00df_liche_Teilnahme_": {
+                      "type": "boolean"
+                    },
+                    "Benutzt_Kreditor_ausschlie_x00df": {
+                      "type": "boolean"
+                    },
+                    "Beautragung_des_Kreditors_in_let": {
+                      "type": "boolean"
+                    },
+                    "Prominenter_vor_der_Kamera_Exper": {
+                      "type": "boolean"
+                    },
+                    "Muss_Kreditor_in_HSE_Raeumlichke": {
+                      "type": "boolean"
+                    },
+                    "Zeitraum_Leistungen_Fachbereich_": {
+                      "type": "string"
+                    },
+                    "Arbeit_des_Kreditors_mit_mehr_al": {
+                      "type": "boolean"
+                    },
+                    "Warum_mehr_als_eine_Person": {
+                      "type": "string"
+                    },
+                    "Wie_viele_Tage_vor_Ort": {
+                      "type": "string"
+                    },
+                    "Warum_keine_pauschale_Verg_x00fc": {
+                      "type": "string"
+                    },
+                    "Kommentar_Legal": {
+                      "type": "string"
+                    },
+                    "Kreditor_in_Dienstplaene_und_Abl": {
+                      "type": "boolean"
+                    },
+                    "Beschaeftigung_des_Kreditors_bei": {
+                      "type": "boolean"
+                    },
+                    "Kreditor_laenger_6_Monate_ben_x0": {
+                      "type": "boolean"
+                    },
+                    "Kosten_groe_x00df_er_gleich_5000": {
+                      "type": "boolean"
+                    },
+                    "Warum_muss_Kreditor_Leistung_hoe": {
+                      "type": "string"
+                    },
+                    "Ausgleich_Kapazitaetsengpaesse": {
+                      "type": "boolean"
+                    },
+                    "Pauschale_Verguetung_Kreditor": {
+                      "type": "boolean"
+                    },
+                    "Best_x00e4_tigung_der_Antworten": {
+                      "type": "boolean"
+                    },
+                    "Author": {
+                      "type": "object",
+                      "properties": {
+                        "@@odata.type": {
+                          "type": "string"
+                        },
+                        "Claims": {
+                          "type": "string"
+                        },
+                        "DisplayName": {
+                          "type": "string"
+                        },
+                        "Email": {
+                          "type": "string"
+                        },
+                        "Picture": {
+                          "type": "string"
+                        },
+                        "Department": {},
+                        "JobTitle": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "Author#Claims": {
+                      "type": "string"
+                    },
+                    "Created": {
+                      "type": "string"
+                    },
+                    "Zugriff_des_Dienstleisters_auf_H": {
+                      "type": "boolean"
+                    },
+                    "Beschreibung_Weisungen_von_MA": {
+                      "type": "string"
+                    },
+                    "Beschreibung_Weisungen_Kreditor": {
+                      "type": "string"
+                    },
+                    "Projektbescheibung_Zeitraum": {
+                      "type": "string"
+                    },
+                    "Beschreibung_Hard_Software": {
+                      "type": "string"
+                    },
+                    "Kommentar_Antragsteller": {
+                      "type": "string"
+                    },
+                    "Modified": {
+                      "type": "string"
+                    },
+                    "Editor": {
+                      "type": "object",
+                      "properties": {
+                        "@@odata.type": {
+                          "type": "string"
+                        },
+                        "Claims": {
+                          "type": "string"
+                        },
+                        "DisplayName": {
+                          "type": "string"
+                        },
+                        "Email": {
+                          "type": "string"
+                        },
+                        "Picture": {
+                          "type": "string"
+                        },
+                        "Department": {},
+                        "JobTitle": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "Editor#Claims": {
+                      "type": "string"
+                    },
+                    "{Identifier}": {
+                      "type": "string"
+                    },
+                    "{IsFolder}": {
+                      "type": "boolean"
+                    },
+                    "{Thumbnail}": {
+                      "type": "object",
+                      "properties": {
+                        "Large": {},
+                        "Medium": {},
+                        "Small": {}
+                      }
+                    },
+                    "{Link}": {
+                      "type": "string"
+                    },
+                    "{Name}": {
+                      "type": "string"
+                    },
+                    "{FilenameWithExtension}": {
+                      "type": "string"
+                    },
+                    "{Path}": {
+                      "type": "string"
+                    },
+                    "{FullPath}": {
+                      "type": "string"
+                    },
+                    "{VersionNumber}": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "Freigabe_der_Arbeitsrechtlichen_Prüfung_beenden": {
+              "runAfter": {
+                "Parse_Arbeitsrechtliche_Prüfung": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d5b0c2e6-08b9-4584-bf31-6b0e10181ceb"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "UnshareItem"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "table": "@parameters('Arbeitsrechtliche Freigabe (new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d)')",
+                  "id": "@body('Parse_Arbeitsrechtliche_Prüfung')?['ID']"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "Set_Verantwortlich_mit_Ersteller_(ohne_Löschen)_AP": {
+              "runAfter": {
+                "Freigabe_der_Arbeitsrechtlichen_Prüfung_beenden": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "8def8938-910d-4aca-b843-6afe346ea3aa"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "HttpRequest"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('Arbeitsrechtliche Freigabe')/items(@{body('Parse_Arbeitsrechtliche_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{body('JSON_analysieren_-_Verantwortlich')?['d']?['Id']},roledefId=@{parameters('Role Def Id Erstellen (hse_RoleDefIdErstellen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "Set_Genehmiger_mit_Prüfer_(ohne_Löschen)_AP": {
+              "runAfter": {
+                "Set_Verantwortlich_mit_Ersteller_(ohne_Löschen)_AP": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "1f720298-af92-48e1-8c6d-68cc7d91a41d"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "HttpRequest"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('Arbeitsrechtliche Freigabe')/items(@{body('Parse_Arbeitsrechtliche_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{body('JSON_analysieren_-_Genehmiger')?['d']?['Id']},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "Set_Sachbearbeiter_Recht_mit_Prüfer_(ohne_Löschen)_AP": {
+              "runAfter": {
+                "Set_Genehmiger_mit_Prüfer_(ohne_Löschen)_AP": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d3aeb45f-063b-4050-8e0d-bdb4f30abb09"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "HttpRequest"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('Arbeitsrechtliche Freigabe')/items(@{body('Parse_Arbeitsrechtliche_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_SachbearbeiterRechtID (hse_EFABO_Gruppe_SachbearbeiterRechtID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "Set_Sachbearbeiter_Prüfende_Rechtsanwälte_mit_Prüfer_(ohne_Löschen)_AP": {
+              "runAfter": {
+                "Set_Sachbearbeiter_Recht_mit_Prüfer_(ohne_Löschen)_AP": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b1b16f18-c1ca-4402-b27c-ead09fe6b5b8"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "HttpRequest"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('Arbeitsrechtliche Freigabe')/items(@{body('Parse_Arbeitsrechtliche_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_RechtID (hse_EFABO_Gruppe_RechtID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "Set_Sachbearbeiter_Sachbearbeiter_Finanzen_mit_Prüfer_(ohne_Löschen)_AP": {
+              "runAfter": {
+                "Set_Sachbearbeiter_Prüfende_Rechtsanwälte_mit_Prüfer_(ohne_Löschen)_AP": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "250154c8-c2f3-465e-abc9-50fa96a473a2"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "HttpRequest"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('Arbeitsrechtliche Freigabe')/items(@{body('Parse_Arbeitsrechtliche_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_FinanceID (hse_EFABO_Gruppe_FinanceID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "Set_Sachbearbeiter_Einkauf_mit_Prüfer_(ohne_Löschen)_AP": {
+              "runAfter": {
+                "Set_Sachbearbeiter_Sachbearbeiter_Finanzen_mit_Prüfer_(ohne_Löschen)_AP": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "12b783c0-7ed6-432e-b9c7-066584140344"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "HttpRequest"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('Arbeitsrechtliche Freigabe')/items(@{body('Parse_Arbeitsrechtliche_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_EinkaufID (hse_EFABO_Gruppe_EinkaufID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              }
+            },
+            "Bedingung_-_Überprüfen_ob_Antrag_von_jemand_anderem_erstellt_wurde_AP": {
+              "actions": {
+                "Set_Verantwortlicher_mit_Schreiberechte_AP": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "73e59135-480f-45c2-a718-21644da9c991"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                      "connectionName": "shared_sharepointonline_1",
+                      "operationId": "HttpRequest"
+                    },
+                    "parameters": {
+                      "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                      "parameters/method": "POST",
+                      "parameters/uri": "_api/web/lists/getbytitle('EFABO Anträge')/items(@{body('Parse_Arbeitsrechtliche_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{body('JSON_analysieren_-_Verantwortlicher')?['d']?['Id']},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                      "parameters/headers": {
+                        "accept": "application/json;odata=verbose",
+                        "content-type": "application/json;odata=verbose"
+                      }
+                    },
+                    "authentication": {
+                      "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                      "type": "Raw"
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Set_Sachbearbeiter_Einkauf_mit_Prüfer_(ohne_Löschen)_AP": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "not": {
+                  "equals": [
+                    "@outputs('Get_EFABO')?['body/VerantwortlicherMitarbeiter/Email']",
+                    "@outputs('Get_EFABO')?['body/Author/Email']"
+                  ]
+                }
+              },
+              "metadata": {
+                "operationMetadataId": "800c6b5b-883d-46f5-aa1e-aa56953dabd6"
+              },
+              "type": "If",
+              "description": "Der Ersteller hat immer autom. Berechtigungen auf die Anträge durch die SharePoint Einstellungen"
+            }
+          },
+          "runAfter": {
+            "Bedingung_-_Genehmiger_=_Ersteller_und_Verwantwortlicher_": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Get_Arbeitsrechtliche_Freigabe_-_falls_vorhanden": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "bb100237-52d9-4c23-ac0e-ad390ab4ea14"
+                },
+                "type": "OpenApiConnection",
+                "inputs": {
+                  "host": {
+                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                    "connectionName": "shared_sharepointonline_1",
+                    "operationId": "GetItems"
+                  },
+                  "parameters": {
+                    "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                    "table": "@parameters('Arbeitsrechtliche Freigabe (new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d)')",
+                    "$filter": "Title eq @{triggerBody()['number']}",
+                    "$top": 1
+                  },
+                  "authentication": {
+                    "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                    "type": "Raw"
+                  }
+                }
+              },
+              "Überprüfen_ob_String_leer_ist": {
+                "actions": {},
+                "runAfter": {
+                  "Get_Arbeitsrechtliche_Freigabe_-_falls_vorhanden": [
+                    "Succeeded"
+                  ]
+                },
+                "else": {
+                  "actions": {
+                    "Parse_AP": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "3fb502da-b2e5-4554-89d4-ffdf4f25d78b"
+                      },
+                      "type": "ParseJson",
+                      "inputs": {
+                        "content": "@first(outputs('Get_Arbeitsrechtliche_Freigabe_-_falls_vorhanden')?['body/value'])",
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "@@odata.etag": {
+                              "type": "string"
+                            },
+                            "ItemInternalId": {
+                              "type": "string"
+                            },
+                            "ID": {
+                              "type": "integer"
+                            },
+                            "Title": {
+                              "type": "string"
+                            },
+                            "Weisungen_des_Kreditors_von_HSE_": {
+                              "type": "boolean"
+                            },
+                            "Weisungen_von_Kreditor_erteilt": {
+                              "type": "boolean"
+                            },
+                            "Ausschlie_x00df_liche_Teilnahme_": {
+                              "type": "boolean"
+                            },
+                            "Benutzt_Kreditor_ausschlie_x00df": {
+                              "type": "boolean"
+                            },
+                            "Beautragung_des_Kreditors_in_let": {
+                              "type": "boolean"
+                            },
+                            "Prominenter_vor_der_Kamera_Exper": {
+                              "type": "boolean"
+                            },
+                            "Muss_Kreditor_in_HSE_Raeumlichke": {
+                              "type": "boolean"
+                            },
+                            "Zeitraum_Leistungen_Fachbereich_": {
+                              "type": "string"
+                            },
+                            "Arbeit_des_Kreditors_mit_mehr_al": {
+                              "type": "boolean"
+                            },
+                            "Warum_mehr_als_eine_Person": {
+                              "type": "string"
+                            },
+                            "Wie_viele_Tage_vor_Ort": {
+                              "type": "string"
+                            },
+                            "Warum_keine_pauschale_Verg_x00fc": {
+                              "type": "string"
+                            },
+                            "Kommentar_Legal": {
+                              "type": "string"
+                            },
+                            "Kreditor_in_Dienstplaene_und_Abl": {
+                              "type": "boolean"
+                            },
+                            "Beschaeftigung_des_Kreditors_bei": {
+                              "type": "boolean"
+                            },
+                            "Kreditor_laenger_6_Monate_ben_x0": {
+                              "type": "boolean"
+                            },
+                            "Kosten_groe_x00df_er_gleich_5000": {
+                              "type": "boolean"
+                            },
+                            "Warum_muss_Kreditor_Leistung_hoe": {
+                              "type": "string"
+                            },
+                            "Ausgleich_Kapazitaetsengpaesse": {
+                              "type": "boolean"
+                            },
+                            "Pauschale_Verguetung_Kreditor": {
+                              "type": "boolean"
+                            },
+                            "Best_x00e4_tigung_der_Antworten": {
+                              "type": "boolean"
+                            },
+                            "Author": {
+                              "type": "object",
+                              "properties": {
+                                "@@odata.type": {
+                                  "type": "string"
+                                },
+                                "Claims": {
+                                  "type": "string"
+                                },
+                                "DisplayName": {
+                                  "type": "string"
+                                },
+                                "Email": {
+                                  "type": "string"
+                                },
+                                "Picture": {
+                                  "type": "string"
+                                },
+                                "Department": {},
+                                "JobTitle": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Author#Claims": {
+                              "type": "string"
+                            },
+                            "Created": {
+                              "type": "string"
+                            },
+                            "Zugriff_des_Dienstleisters_auf_H": {
+                              "type": "boolean"
+                            },
+                            "Beschreibung_Weisungen_von_MA": {
+                              "type": "string"
+                            },
+                            "Beschreibung_Weisungen_Kreditor": {
+                              "type": "string"
+                            },
+                            "Projektbescheibung_Zeitraum": {
+                              "type": "string"
+                            },
+                            "Beschreibung_Hard_Software": {
+                              "type": "string"
+                            },
+                            "Kommentar_Antragsteller": {
+                              "type": "string"
+                            },
+                            "Modified": {
+                              "type": "string"
+                            },
+                            "Editor": {
+                              "type": "object",
+                              "properties": {
+                                "@@odata.type": {
+                                  "type": "string"
+                                },
+                                "Claims": {
+                                  "type": "string"
+                                },
+                                "DisplayName": {
+                                  "type": "string"
+                                },
+                                "Email": {
+                                  "type": "string"
+                                },
+                                "Picture": {
+                                  "type": "string"
+                                },
+                                "Department": {},
+                                "JobTitle": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "Editor#Claims": {
+                              "type": "string"
+                            },
+                            "{Identifier}": {
+                              "type": "string"
+                            },
+                            "{IsFolder}": {
+                              "type": "boolean"
+                            },
+                            "{Thumbnail}": {
+                              "type": "object",
+                              "properties": {
+                                "Large": {},
+                                "Medium": {},
+                                "Small": {}
+                              }
+                            },
+                            "{Link}": {
+                              "type": "string"
+                            },
+                            "{Name}": {
+                              "type": "string"
+                            },
+                            "{FilenameWithExtension}": {
+                              "type": "string"
+                            },
+                            "{Path}": {
+                              "type": "string"
+                            },
+                            "{FullPath}": {
+                              "type": "string"
+                            },
+                            "{VersionNumber}": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "Delete_AP": {
+                      "runAfter": {
+                        "Parse_AP": [
+                          "Succeeded"
+                        ]
+                      },
+                      "metadata": {
+                        "operationMetadataId": "637f3481-6e89-47ec-826d-68095e75c98b"
+                      },
+                      "type": "OpenApiConnection",
+                      "inputs": {
+                        "host": {
+                          "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                          "connectionName": "shared_sharepointonline_1",
+                          "operationId": "DeleteItem"
+                        },
+                        "parameters": {
+                          "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                          "table": "@parameters('Arbeitsrechtliche Freigabe (new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d)')",
+                          "id": "@body('Parse_AP')?['ID']"
+                        },
+                        "authentication": {
+                          "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                          "type": "Raw"
+                        }
+                      }
+                    }
+                  }
+                },
+                "expression": {
+                  "lessOrEquals": [
+                    "@length(string(outputs('Get_Arbeitsrechtliche_Freigabe_-_falls_vorhanden')?['body/value']))",
+                    2
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "b3555aad-bc42-4715-ad3e-f312d15d906d"
+                },
+                "type": "If"
+              }
+            }
+          },
+          "expression": {
+            "and": [
+              {
+                "equals": [
+                  "@outputs('Get_EFABO')?['body/AufwandsbezogeneVerguetung']",
+                  "@true"
+                ]
+              },
+              {
+                "not": {
+                  "equals": [
+                    "@outputs('Get_EFABO')?['body/Whitelist']",
+                    "@true"
+                  ]
+                }
+              },
+              {
+                "not": {
+                  "equals": [
+                    "@outputs('Get_EFABO')?['body/Generalfreigabe']",
+                    "@true"
+                  ]
+                }
+              }
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a6aa6259-c589-4dac-865a-df0146720b6b"
+          },
+          "type": "If"
+        },
+        "Variable_initialisieren_-_varTestingBool": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "9895f730-497d-4fe0-82e2-51fa4f88609e"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varTestingBool",
+                "type": "boolean",
+                "value": "@parameters('EFABO Testing (hse_EFABOTesting)')"
+              }
+            ]
+          }
+        },
+        "Variable_initialisieren_-_varTesting": {
+          "runAfter": {
+            "Variable_initialisieren_-_varTestingBool": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "525b3bf7-00b7-46ad-869c-534c774a3ca8"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varTesting",
+                "type": "string",
+                "value": "@{if(variables('varTestingBool'),'TEST: ','')}"
+              }
+            ]
+          }
+        },
+        "Variable_initialisieren_-_varURLzuElement": {
+          "runAfter": {
+            "Variable_initialisieren_-_varTesting": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "aa00f6c0-a61c-4db7-a064-68d0f888408a"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "varURLzuElement",
+                "type": "string",
+                "value": "https://apps.powerapps.com/play/@{parameters('AppID (hse_AppID)')}?tenantId=1d0f52d7-4151-4a31-ad92-b176d150d4e6&ID=@{triggerBody()['number']}"
+              }
+            ]
+          }
+        },
+        "Set_Workermanagement_mit_Lesen": {
+          "runAfter": {
+            "Set_Sachbearbeiter_Einkauf_mit_Prüfer_(ohne_Löschen)": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "12b783c0-7ed6-432e-b9c7-066584140344"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline_1",
+              "operationId": "HttpRequest"
+            },
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "parameters/method": "POST",
+              "parameters/uri": "_api/web/lists/getbytitle('EFABO Anträge')/items(@{triggerBody()['number']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_WorkermanagementID (hse_EFABO_Gruppe_WorkermanagementID)')},roledefId=1073741826)",
+              "parameters/headers": {
+                "accept": "application/json;odata=verbose",
+                "content-type": "application/json;odata=verbose"
+              }
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          }
+        },
+        "Auf_eine_PowerApp_oder_einen_Flow_antworten": {
+          "runAfter": {
+            "Überprüfen_ob_Arbeitsrechtliche_Prüfung_benötigt_wird": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d70a32d2-59a6-4cdb-94cf-4e41ce664555"
+          },
+          "type": "Response",
+          "kind": "PowerApp",
+          "inputs": {
+            "statusCode": 200,
+            "body": {},
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        },
+        "Get_UserPrincipalId_-_Verantwortlich": {
+          "runAfter": {
+            "Get_EFABO": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f7c7678b-d5d3-4a82-9088-69bd29bea882"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline_1",
+              "operationId": "HttpRequest"
+            },
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "parameters/method": "POST",
+              "parameters/uri": "_api/web/SiteUsers/getbyemail('@{outputs('Get_EFABO')?['body/VerantwortlicherMitarbeiter/Email']}')",
+              "parameters/headers": {
+                "accept": "application/json;odata=verbose",
+                "content-type": "application/json;odata=verbose"
+              }
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          }
+        },
+        "JSON_analysieren_-_Verantwortlich": {
+          "runAfter": {
+            "Get_UserPrincipalId_-_Verantwortlich": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a89a7d24-f1a5-45bc-9317-a047d9c95905"
+          },
+          "type": "ParseJson",
+          "inputs": {
+            "content": "@outputs('Get_UserPrincipalId_-_Verantwortlich')?['body']",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "d": {
+                  "type": "object",
+                  "properties": {
+                    "__metadata": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "uri": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "Id": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "Get_UserPrincipalId_-_Genehmiger": {
+          "runAfter": {
+            "JSON_analysieren_-_Verantwortlich": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "62124368-bad4-46be-b537-85c82e3a2a66"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline_1",
+              "operationId": "HttpRequest"
+            },
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "parameters/method": "POST",
+              "parameters/uri": "_api/web/SiteUsers/getbyemail('@{outputs('Get_EFABO')?['body/Genehmiger/Email']}')",
+              "parameters/headers": {
+                "accept": "application/json;odata=verbose",
+                "content-type": "application/json;odata=verbose"
+              }
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

@@ -1,0 +1,405 @@
+App As appinfo:
+    BackEnabled: =false
+    OnStart: |-
+        =//Wenn false, dann werden das Formular und die Optionen für die IT-Sec Fragen nicht angezeigt
+        Set(
+            varITSec,
+            true
+        );
+        //Sprache als Parameter aussuchen (Standard: Deutsch)
+        Set(
+            varSelectedCulture,
+            If(
+                !IsBlank(Param("Culture")),
+                Param("Culture"),
+                "DE"
+            )
+        );
+        //Sprachtabelle laden
+        ClearCollect(
+            colRessource,
+            Systemtexte
+        );
+        //Flagcollection erstellen
+        ClearCollect(
+            colLanguages,
+            {
+                Image: Flag_of_Germany,
+                Language: "DE"
+            },
+            {
+                Image: Flag_of_the_United_Kingdom,
+                Language: "EN"
+            }
+        );
+        Set(
+            varHSEBranding,
+            {
+                HSEOrange: RGBA(
+                    255,
+                    60,
+                    40,
+                    1
+                ),
+                LightGray: RGBA(
+                    220,
+                    230,
+                    235,
+                    1
+                ),
+                MidnightBlue: RGBA(
+                    10,
+                    25,
+                    45,
+                    1
+                ),
+                White: RGBA(
+                    255,
+                    255,
+                    255,
+                    1
+                ),
+                Black: RGBA(
+                    0,
+                    0,
+                    0,
+                    1
+                ),
+                DarkRed: RGBA(
+                    190,
+                    10,
+                    20,
+                    1
+                )
+            }
+        );
+        Set(
+            GeplantVertragsVolumenValueGiven,
+            true
+        );
+        Set(
+            NewStatus,
+            ""
+        );
+        Set(
+            KFTyp,
+            ""
+        );
+        Set(
+            KFArt,
+            ""
+        );
+        Set(
+            varContractLongDuration,
+            false
+        );
+        ClearCollect(
+            GenehmigerUFColl,
+            'Office365-Gruppen'.ListGroupMembers("18d62c8a-f945-438e-87bb-dda23f2f370a").value
+            //{'@odata.type':"#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser";
+        //Claims:Concatenate("i:0#.f|membership|";'Office365-Gruppen'.ListGroupMembers("18d62c8a-f945-438e-87bb-dda23f2f370a").value.mail);
+        //DisplayName:'Office365-Gruppen'.ListGroupMembers("18d62c8a-f945-438e-87bb-dda23f2f370a").value.displayName;
+        //Email:'Office365-Gruppen'.ListGroupMembers("18d62c8a-f945-438e-87bb-dda23f2f370a").value.mail}
+        );
+        ClearCollect(
+            GenehmigerColl,
+            AddColumns(
+                GenehmigerUFColl,
+                '''@odata.type''',
+                "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+                Claims,
+                Concatenate(
+                    "i:0#.f|membership|",
+                    mail
+                ),
+                DisplayName,
+                displayName,
+                Email,
+                mail
+            )
+        );
+        //Get Geschäftsführerliste
+        ClearCollect(
+            colGeschäftsführer,
+            Geschäftsführer
+        );
+        //Alle Geschäftsführer aus Collection entfernen
+        ForAll(
+            colGeschäftsführer As GF,
+            Remove(
+                GenehmigerColl,
+                First(
+                    Filter(
+                        GenehmigerColl,
+                        Email = GF.'E-Mail-Adresse'
+                    )
+                )
+            )
+        );
+        // Hinzufügen current User für Tests
+        If(
+            User().Email in [
+                "robert.mueller_external@hse.com",
+                "jan.mehlin_external@hse.com",
+                "desvc.efabo@hse.com",
+                "lisa.grueneisl@hse.com"
+            ],
+            Collect(
+                GenehmigerColl,
+                {
+                    '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+                    Claims: Concatenate(
+                        "i:0#.f|membership|",
+                        User().Email
+                    ),
+                    DisplayName: User().FullName,
+                    Email: User().Email
+                }
+            )
+        );
+        // Abfrage welches Formular angezeigt werden soll
+        If(
+            // Überprüfung, ob eine ID übergeben wurde
+            IsBlankOrError(Param("ID")),
+            // Weiterleitung auf die New Form, wenn keine ID übergeben wurde
+            Set(
+                AngebotVorhanden,
+                true
+            );Navigate(NewEFABOScreen);
+            Set(
+                varRolleUser,
+                "Antragssteller"
+            );
+            Set(
+                varFormStatus,
+                "New"
+            ),
+            Set(
+                AntragsID,
+                Value(Param("ID"))
+            );
+            Set(
+                EfaboAntrag,
+                LookUp(
+                    'EFABO Anträge',
+                    ID = AntragsID
+                )
+            );
+            If(
+                // Check, ob es noch ein Entwurf ist.
+        // Entwürfe können nur durch den Ersteller geöffnet werden
+                EfaboAntrag.Status.Value = "Entwurf",
+                If(
+                    Lower(EfaboAntrag.'Erstellt von'.Email) = Lower(User().Email),
+                    Set(
+                        varRolleUser,
+                        "Antragssteller"
+                    );
+                    Navigate(EditEFABOScreen),
+                    Navigate(NoAccessEFABOScreen)
+                ),
+                //Abfrage welche Rolle der User hat
+                Clear(colUserRollen);
+                Set(
+                    varAntragsteller,
+                    false
+                );
+                Set(
+                    varGenehmiger,
+                    false
+                );
+                Set(
+                    varSachbearbeiterRecht,
+                    false
+                );
+                Set(
+                    varPruefendeRechtsanwaelte,
+                    false
+                );
+                Set(
+                    varSachbearbeiterFinanzen,
+                    false
+                );
+                Set(
+                    varEinkauf,
+                    false
+                );
+                Set(
+                    varITSec,
+                    false
+                );
+                Concurrent(
+                    If(
+                        Lower(EfaboAntrag.'Verantwortlicher Mitarbeiter'.Email) = User().Email,
+                        Set(
+                            varAntragsteller,
+                            true
+                        )
+                    ),
+                    If(
+                        User().Email = Lower(EfaboAntrag.'Genehmiger (gem. Orga-Unterschriften)'.Email) Or User().Email = "desvc.efabo@hse.com",
+                        Set(
+                            varGenehmiger,
+                            true
+                        )
+                    ),
+                    If(
+                        CheckifuserinSharePointGroup.Run(
+                            User().Email,
+                            "Sachbearbeiter Recht"
+                        ).groupmember = "True",
+                        Set(
+                            varSachbearbeiterRecht,
+                            true
+                        )
+                    ),
+                    If(
+                        CheckifuserinSharePointGroup.Run(
+                            User().Email,
+                            "Prüfende Rechtsanwälte"
+                        ).groupmember = "True",
+                        Set(
+                            varPruefendeRechtsanwaelte,
+                            true
+                        )
+                    ),
+                    If(
+                        CheckifuserinSharePointGroup.Run(
+                            User().Email,
+                            "Sachbearbeiter Finanzen"
+                        ).groupmember = "True",
+                        Set(
+                            varSachbearbeiterFinanzen,
+                            true
+                        )
+                    ),
+                    If(
+                        CheckifuserinSharePointGroup.Run(
+                            User().Email,
+                            "Einkauf"
+                        ).groupmember = "True",
+                        Set(
+                            varEinkauf,
+                            true
+                        )
+                    ),
+                    If(
+                        CheckifuserinSharePointGroup.Run(
+                            User().Email,
+                            "IT Security"
+                        ).groupmember = "True",
+                        Set(
+                            varITSec,
+                            true
+                        )
+                    )
+                );
+                If(
+                    varAntragsteller,
+                    Collect(
+                        colUserRollen,
+                        {Value: "Antragssteller"}
+                    )
+                );
+                If(
+                    varGenehmiger,
+                    Collect(
+                        colUserRollen,
+                        {Value: "Genehmiger"}
+                    )
+                );
+                If(
+                    varSachbearbeiterFinanzen,
+                    Collect(
+                        colUserRollen,
+                        {Value: "Sachbearbeiter Finanzen"}
+                    )
+                );
+                If(
+                    varEinkauf,
+                    Collect(
+                        colUserRollen,
+                        {Value: "Einkauf"}
+                    )
+                );
+                If(
+                    varPruefendeRechtsanwaelte,
+                    Collect(
+                        colUserRollen,
+                        {Value: "Prüfende Rechtsanwälte"}
+                    )
+                );
+                If(
+                    varSachbearbeiterRecht,
+                    Collect(
+                        colUserRollen,
+                        {Value: "Sachbearbeiter Recht"}
+                    )
+                );
+                If(
+                    varITSec,
+                    Collect(
+                        colUserRollen,
+                        {Value: "IT Security"}
+                    )
+                );
+                If(
+                    CountRows(colUserRollen) = 1,
+                    Set(
+                        varRolleUser,
+                        First(colUserRollen).Value
+                    );
+                    If(
+                        varRolleUser = "Antragssteller" && EfaboAntrag.Status.Value <> "Abgelehnt" && EfaboAntrag.Status.Value <> "Zurückgezogen" && EfaboAntrag.Status.Value <> "Abgeschlossen" && EfaboAntrag.Status.Value <> "Verlängerung beantragt",
+                        Navigate(EditEFABOScreen),
+                        Navigate(ViewEFABOScreen)
+                    )
+                );
+                If(
+                    CountRows(colUserRollen) > 1,
+                // Wenn es genau 2 Rollen sind, abfragen ob Legal und Sachbearbeiter Legal oder ob Genehmiger und Antragsteller
+                    If(
+                        CountRows(colUserRollen) = 2,
+                        If(
+                            "Prüfende Rechtsanwälte" in colUserRollen.Value && "Sachbearbeiter Recht" in colUserRollen.Value,
+                            If(
+                                EfaboAntrag.'Prüfung Legal' = "Anlage Akte in Lecare",
+                                Set(
+                                    varRolleUser,
+                                    "Sachbearbeiter Recht"
+                                );
+                                Navigate(ViewEFABOScreen),
+                                Set(
+                                    varRolleUser,
+                                    "Prüfende Rechtsanwälte"
+                                );
+                                Navigate(ViewEFABOScreen)
+                            ),
+                            If(
+                                "Antragssteller" in colUserRollen.Value && "Genehmiger" in colUserRollen.Value && EfaboAntrag.Status.Value <> "
+        Prüfung Genehmiger",
+                                If(
+                                    EfaboAntrag.Status.Value <> "Abgelehnt" && EfaboAntrag.Status.Value <> "Zurückgezogen" && EfaboAntrag.Status.Value <> "Abgeschlossen" && EfaboAntrag.Status.Value <> "Verlängerung beantragt",
+                                    Navigate(EditEFABOScreen),
+                                    Navigate(ViewEFABOScreen)
+                                ),
+                                Navigate(StartScreen)
+                            ),
+                            Navigate(StartScreen)
+                        ),
+                    // Default geh zur Rollenauswahl
+                        Navigate(StartScreen)
+                    )
+                )
+            )
+        )
+    StartScreen: =
+    Theme: =PowerAppsTheme
+
+    Host As hostControl.DefaultHostControlVariant:
+        OnCancel: =false
+        OnEdit: =false
+        OnNew: =false
+        OnSave: =false
+        OnView: =false
+

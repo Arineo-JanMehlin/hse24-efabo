@@ -1,0 +1,10 @@
+[
+  {
+    "ApiId": "/providers/microsoft.powerapps/apis/shared_logicflows",
+    "FlowNameId": "731f47c7-2a01-4c71-8ba6-7085de535ff7",
+    "Name": "CheckifuserinSharePointGroup",
+    "ServiceKind": "ConnectedWadl",
+    "Type": "ServiceInfo",
+    "WorkflowEntityId": "d6fa9f3c-1e49-ec11-8c62-000d3a442abd"
+  }
+]

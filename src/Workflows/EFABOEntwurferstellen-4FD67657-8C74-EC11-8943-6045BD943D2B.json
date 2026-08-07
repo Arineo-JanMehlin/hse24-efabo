@@ -1,0 +1,196 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline_1": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "hse_EFABOSharePoint"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "EFABO Anträge (hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5)": {
+          "defaultValue": "d8010e65-d7b0-4b11-b0a0-ac65f5b96208",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5"
+          }
+        },
+        "EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)": {
+          "defaultValue": "https://homeshoppingeurope24.sharepoint.com/sites/EFABO_DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "90b36a02-8ba9-448a-822b-795411ed46a2"
+          },
+          "type": "Request",
+          "kind": "PowerApp",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "GetEFABO_Id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "description": "Eindeutiger Bezeichner des abzurufenden Elements",
+                  "x-ms-powerflows-param-ispartial": false
+                }
+              },
+              "required": [
+                "GetEFABO_Id"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "Get_EFABO": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "17668c8f-58c2-4b1f-a0ae-f4dd338a2f02"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "table": "@parameters('EFABO Anträge (hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5)')",
+              "id": "@triggerBody()['GetEFABO_Id']"
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          }
+        },
+        "Create_New_EFABO_Item": {
+          "runAfter": {
+            "Get_EFABO": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "da0af3bd-b901-486e-96d0-7bc0364f49e7"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline_1",
+              "operationId": "PostItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "table": "@parameters('EFABO Anträge (hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5)')",
+              "item/Title": "@outputs('Get_EFABO')?['body/Title']",
+              "item/Status/Value": "Entwurf",
+              "item/VerantwortlicherMitarbeiter/Claims": "@outputs('Get_EFABO')?['body/VerantwortlicherMitarbeiter/Claims']",
+              "item/Fachbereich/Value": "@outputs('Get_EFABO')?['body/Fachbereich/Value']",
+              "item/Genehmiger/Claims": "@outputs('Get_EFABO')?['body/Genehmiger/Claims']",
+              "item/Vertragspartnervollst_x00e4_ndig": "@outputs('Get_EFABO')?['body/Vertragspartnervollst_x00e4_ndig']",
+              "item/Vertragsart/Value": "@outputs('Get_EFABO')?['body/Vertragsart/Value']",
+              "item/Angebotsnummer": "@outputs('Get_EFABO')?['body/Angebotsnummer']",
+              "item/GeplanterVertragsinhalt": "@outputs('Get_EFABO')?['body/GeplanterVertragsinhalt']",
+              "item/Whitelist": "@outputs('Get_EFABO')?['body/Whitelist']",
+              "item/AufwandsbezogeneVerguetung": "@outputs('Get_EFABO')?['body/AufwandsbezogeneVerguetung']",
+              "item/Generalfreigabe": "@outputs('Get_EFABO')?['body/Generalfreigabe']",
+              "item/KommentarVon": [
+                {
+                  "Value": "Kein neuer Kommentar"
+                }
+              ],
+              "item/ITAsset": "@outputs('Get_EFABO')?['body/ITAsset']",
+              "item/ITAccess": "@outputs('Get_EFABO')?['body/ITAccess']",
+              "item/ErstellungZutrittsausweis": "@outputs('Get_EFABO')?['body/ErstellungZutrittsausweis']",
+              "item/Stra_x00df_eundHausnummer": "@outputs('Get_EFABO')?['body/Stra_x00df_eundHausnummer']",
+              "item/PLZ": "@outputs('Get_EFABO')?['body/PLZ']",
+              "item/Ort": "@outputs('Get_EFABO')?['body/Ort']",
+              "item/eMail": "@outputs('Get_EFABO')?['body/eMail']",
+              "item/Faxnummer": "@outputs('Get_EFABO')?['body/Faxnummer']",
+              "item/Telefonnummer": "@outputs('Get_EFABO')?['body/Telefonnummer']",
+              "item/Vorwahl": "@outputs('Get_EFABO')?['body/Vorwahl']",
+              "item/GeplantesVertragsvolumenimEinzel": "@outputs('Get_EFABO')?['body/GeplantesVertragsvolumenimEinzel']",
+              "item/GeplantesVertragsvolumenj_x00e4_": "@outputs('Get_EFABO')?['body/GeplantesVertragsvolumenj_x00e4_']",
+              "item/GeplantesVertragsvolumenbisMinde": "@outputs('Get_EFABO')?['body/GeplantesVertragsvolumenbisMinde']",
+              "item/K_x00fc_ndigungsfristWert": "@outputs('Get_EFABO')?['body/K_x00fc_ndigungsfristWert']",
+              "item/K_x00fc_ndigungsfristTyp/Value": "@outputs('Get_EFABO')?['body/K_x00fc_ndigungsfristTyp/Value']",
+              "item/K_x00fc_ndigungsfristArt/Value": "@outputs('Get_EFABO')?['body/K_x00fc_ndigungsfristArt/Value']",
+              "item/Evtl_x002e_Sonderk_x00fc_ndigung": "@outputs('Get_EFABO')?['body/Evtl_x002e_Sonderk_x00fc_ndigung']",
+              "item/Kostenstelle": "@outputs('Get_EFABO')?['body/Kostenstelle']",
+              "item/Ma_x00df_nahmebudgetiert": "@outputs('Get_EFABO')?['body/Ma_x00df_nahmebudgetiert']",
+              "item/GeplanteVertragslaufzeitBeginn": "@outputs('Get_EFABO')?['body/GeplanteVertragslaufzeitBeginn']",
+              "item/VoraussichtlichesEnde": "@outputs('Get_EFABO')?['body/VoraussichtlichesEnde']",
+              "item/Geplante_x0020_Zalhungsbedingung": "@outputs('Get_EFABO')?['body/Geplante_x0020_Zalhungsbedingung']",
+              "item/VerwendungpersonenbezogeneDaten": "@outputs('Get_EFABO')?['body/VerwendungpersonenbezogeneDaten']",
+              "item/Beiratspflicht": "@outputs('Get_EFABO')?['body/Beiratspflicht']",
+              "item/ChangeofControl": "@outputs('Get_EFABO')?['body/ChangeofControl']",
+              "item/Angebotvorhanden": "@outputs('Get_EFABO')?['body/Angebotvorhanden']",
+              "item/GrundfehlendesAngebot": "@outputs('Get_EFABO')?['body/GrundfehlendesAngebot']",
+              "item/GrundVertragslaufzeit": "@outputs('Get_EFABO')?['body/GrundVertragslaufzeit']",
+              "item/VertragspartnerAlsKreditorAngele": "@outputs('Get_EFABO')?['body/VertragspartnerAlsKreditorAngele']"
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          }
+        },
+        "Respond_to_a_PowerApp_or_flow": {
+          "runAfter": {
+            "Create_New_EFABO_Item": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6e9a2fe8-a1de-4c1f-b0f5-cf0756f9644c"
+          },
+          "type": "Response",
+          "kind": "PowerApp",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "draft_id": "@{outputs('Create_New_EFABO_Item')?['body/ID']}"
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "draft_id": {
+                  "title": "Draft ID",
+                  "x-ms-dynamically-added": true,
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}

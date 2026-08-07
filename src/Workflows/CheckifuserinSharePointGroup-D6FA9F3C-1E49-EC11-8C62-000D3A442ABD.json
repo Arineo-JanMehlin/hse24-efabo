@@ -1,0 +1,270 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "hse_EFABOSharePoint"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)": {
+          "defaultValue": "https://homeshoppingeurope24.sharepoint.com/sites/EFABO_DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62"
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "05503ab1-ac11-4b67-b540-834a764567be"
+          },
+          "type": "Request",
+          "kind": "PowerApp",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "UserPrincipalName_Wert": {
+                  "type": "string",
+                  "description": "Anfangswert eingeben",
+                  "x-ms-powerflows-param-ispartial": false
+                },
+                "GroupName_Wert": {
+                  "type": "string",
+                  "description": "Anfangswert eingeben",
+                  "x-ms-powerflows-param-ispartial": false
+                }
+              },
+              "required": [
+                "UserPrincipalName_Wert",
+                "GroupName_Wert"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "UserPrincipalName": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "4d4210e3-cc47-4a45-8a60-fb86abc46031"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "UserPrincipalNameLowLetter",
+                "type": "string",
+                "value": "@{toLower(triggerBody()['UserPrincipalName_Wert'])}"
+              }
+            ]
+          },
+          "description": "Aus der Power übergebene User Principalname des zu prüfenden Benutzers"
+        },
+        "GroupName": {
+          "runAfter": {
+            "UserPrincipalName": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "afd9765a-e662-4770-9cd4-384690022388"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "GroupName",
+                "type": "string",
+                "value": "@{triggerBody()['GroupName_Wert']}"
+              }
+            ]
+          },
+          "description": "Aus der Power App übergebene SharePoint Gruppen Name"
+        },
+        "Variable_initialisieren_-_IsGroupMember": {
+          "runAfter": {
+            "GroupName": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "d0c48aa4-83d0-4ab7-ad26-d71757d1028f"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "IsGroupMember",
+                "type": "boolean"
+              }
+            ]
+          },
+          "description": "Variable für die Rückgabe an Power Apps, ob der User in der Gruppe ist"
+        },
+        "HTTP-Anforderung_an_SharePoint_senden_-_Check_if_User_in_Group": {
+          "runAfter": {
+            "Variable_initialisieren_-_IsGroupMember": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "497150b6-cd68-4307-8b19-161342e36bbf"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "HttpRequest",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "parameters/method": "GET",
+              "parameters/uri": "_api/web/sitegroups/getByName('@{variables('GroupName')}')/Users?$filter=UserPrincipalName eq '@{variables('UserPrincipalNameLowLetter')}'"
+            },
+            "authentication": {
+              "type": "Raw",
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']"
+            }
+          }
+        },
+        "Variable_initialisieren_-_UserGroupInfo": {
+          "runAfter": {
+            "HTTP-Anforderung_an_SharePoint_senden_-_Check_if_User_in_Group": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0ad84fb2-727b-420c-b88d-8e2b00c25dbe"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "UserGroupInfo",
+                "type": "string",
+                "value": "@{body('HTTP-Anforderung_an_SharePoint_senden_-_Check_if_User_in_Group')['d']['results']}"
+              }
+            ]
+          },
+          "description": "Speichert das Ergebnis der SharePoint Abfrage"
+        },
+        "Bedingung": {
+          "actions": {
+            "Variable_festlegen_-_IsGroupMember_=_true": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "be53e1e7-c8e0-4ce0-b56d-17e8016f7fdb"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "IsGroupMember",
+                "value": "@true"
+              }
+            }
+          },
+          "runAfter": {
+            "Variable_initialisieren_-_UserGroupInfo": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Variable_festlegen_-_IsGroupMemeber_=_false": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "86844dd6-1b5c-4ce7-b674-1b5f79534457"
+                },
+                "type": "SetVariable",
+                "inputs": {
+                  "name": "IsGroupMember",
+                  "value": "@false"
+                }
+              }
+            }
+          },
+          "expression": {
+            "not": {
+              "equals": [
+                "@variables('UserGroupInfo')",
+                "[]"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "5e30f490-f9d2-4978-8c4e-5da0120b0b0d"
+          },
+          "type": "If",
+          "description": "Wenn kein leeres Json-Ergebnis zurückgeliefert wird, ist der Benutzer in der SharePoint Gruppe"
+        },
+        "Variable_festlegen_-_IsGroupMemeber_=_false_wenn_Fehler_beim_Auslesen": {
+          "runAfter": {
+            "Bedingung": [
+              "Failed",
+              "Skipped"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "8b35cde1-568d-4d19-a9c7-d89a16ebdf1e"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "IsGroupMember",
+            "value": "@false"
+          }
+        },
+        "Auf_eine_PowerApp_oder_einen_Flow_antworten": {
+          "runAfter": {
+            "Variable_festlegen_-_IsGroupMemeber_=_false_wenn_Fehler_beim_Auslesen": [
+              "Succeeded",
+              "Skipped"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "f8609918-c946-4448-8455-c0984de29502"
+          },
+          "type": "Response",
+          "kind": "PowerApp",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "groupmember": "@{variables('IsGroupMember')}"
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "groupmember": {
+                  "title": "GroupMember",
+                  "x-ms-dynamically-added": true,
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}

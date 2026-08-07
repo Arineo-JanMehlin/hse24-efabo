@@ -1,0 +1,1011 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  TestingScreen:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+      LoadingSpinnerColor: =RGBA(56, 96, 178, 1)
+    Children:
+      - Label1:
+          Control: Label@2.5.1
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Text: ="Antrags ID"
+            X: =40
+            Y: =40
+      - TextInput2_1:
+          Control: Classic/TextInput@2.3.2
+          Properties:
+            BorderColor: =varHSEBranding.LightGray
+            Color: =varHSEBranding.Black
+            Default: =
+            DisabledBorderColor: =varHSEBranding.LightGray
+            DisabledColor: =ColorFade(varHSEBranding.Black,50%)
+            DisabledFill: =ColorFade(varHSEBranding.LightGray,70%)
+            Fill: =varHSEBranding.White
+            FocusedBorderThickness: =3
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 15%)
+            HoverColor: =varHSEBranding.Black
+            HoverFill: =ColorFade(varHSEBranding.LightGray,70%)
+            PressedBorderColor: =ColorFade(varHSEBranding.LightGray,70%)
+            PressedColor: =ColorFade(varHSEBranding.LightGray,70%)
+            PressedFill: =ColorFade(varHSEBranding.LightGray,70%)
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Tooltip: =
+            Width: =108
+            X: =244
+            Y: =40
+      - Button1_7:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =varHSEBranding.White
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =varHSEBranding.HSEOrange
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(varHSEBranding.HSEOrange, -20%)
+            OnSelect: |-
+              =Set(
+                  AntragsID,
+                  Value(TextInput2_1.Text)
+              );
+              Set(
+                  EfaboAntrag,
+                  LookUp(
+                      'EFABO Anträge',
+                      ID = AntragsID
+                  )
+              )
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Text: ="Antrag suchen/laden"
+            Width: =386
+            X: =534
+            Y: =40
+      - Button1_11:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =varHSEBranding.White
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =varHSEBranding.HSEOrange
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(varHSEBranding.HSEOrange, -20%)
+            OnSelect: =Set(varTestResult,CheckifuserinSharePointGroup.Run(User().Email,TextInput2_2.Text))
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Text: ="Überprüfung User in Gruppe"
+            Width: =386
+            X: =534
+            Y: =181
+      - TextInput2_2:
+          Control: Classic/TextInput@2.3.2
+          Properties:
+            BorderColor: =varHSEBranding.LightGray
+            Color: =varHSEBranding.Black
+            Default: =
+            DisabledBorderColor: =varHSEBranding.LightGray
+            DisabledColor: =ColorFade(varHSEBranding.Black,50%)
+            DisabledFill: =ColorFade(varHSEBranding.LightGray,70%)
+            Fill: =varHSEBranding.White
+            FocusedBorderThickness: =3
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 15%)
+            HoverColor: =varHSEBranding.Black
+            HoverFill: =ColorFade(varHSEBranding.LightGray,70%)
+            PressedBorderColor: =ColorFade(varHSEBranding.LightGray,70%)
+            PressedColor: =ColorFade(varHSEBranding.LightGray,70%)
+            PressedFill: =ColorFade(varHSEBranding.LightGray,70%)
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Tooltip: =
+            Width: =236
+            X: =244
+            Y: =181
+      - Label1_1:
+          Control: Label@2.5.1
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Text: ="SharePoint Gruppe"
+            Width: =173
+            X: =40
+            Y: =181
+      - Label7:
+          Control: Label@2.5.1
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Text: =varTestResult.groupmember
+            X: =964
+            Y: =181
+      - ComboBox2_1:
+          Control: Classic/ComboBox@2.4.0
+          Properties:
+            BorderColor: =varHSEBranding.LightGray
+            ChevronBackground: =varHSEBranding.White
+            ChevronDisabledBackground: =ColorFade(varHSEBranding.LightGray,70%)
+            ChevronDisabledFill: =ColorFade(varHSEBranding.Black,50%)
+            ChevronFill: =varHSEBranding.Black
+            ChevronHoverBackground: =varHSEBranding.LightGray
+            ChevronHoverFill: =varHSEBranding.Black
+            Color: =varHSEBranding.Black
+            DisabledBorderColor: =varHSEBranding.LightGray
+            DisabledColor: =ColorFade(varHSEBranding.Black,50%)
+            DisabledFill: =ColorFade(varHSEBranding.LightGray,70%)
+            DisplayFields: =["Value"]
+            Fill: =varHSEBranding.White
+            FocusedBorderThickness: =3
+            Font: =Font.'Open Sans'
+            Height: =41
+            HoverColor: =varHSEBranding.Black
+            HoverFill: =ColorFade(varHSEBranding.LightGray,70%)
+            Items: |-
+              =[
+                  "Prüfung Genehmiger",
+                  "In Prüfung",
+                  "Abgelehnt",
+                  "Kommentar Antragsteller",
+                  "Zurückgezogen",
+                  "Abgeschlossen",
+                  "Prüfung Recht Abgeschlossen",
+                  "Prüfung Finanzen Abgeschlossen",
+                  "Prüfung Einkauf Abgeschlossen",
+                  "In Prüfung Recht",
+                  "Kommentar",
+                  "Änderung",
+                  "Entwurf",
+                  "Prüfung Arbeitsrechtliche Fragen Abgeschlossen",
+                  "Prüfung ITSec Abgeschlossen"
+              ]
+            PressedBorderColor: =ColorFade(varHSEBranding.LightGray,70%)
+            PressedColor: =ColorFade(varHSEBranding.LightGray,70%)
+            PressedFill: =ColorFade(varHSEBranding.LightGray,70%)
+            SearchFields: =["Value"]
+            SelectMultiple: =false
+            SelectionColor: =varHSEBranding.Black
+            SelectionFill: =ColorFade(varHSEBranding.LightGray,75%)
+            SelectionTagColor: =varHSEBranding.Black
+            SelectionTagFill: =Color.Transparent
+            Tooltip: =
+            Width: =236
+            X: =244
+            Y: =251
+      - Button1_8:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =varHSEBranding.White
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =varHSEBranding.HSEOrange
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(varHSEBranding.HSEOrange, -20%)
+            OnSelect: =Navigate(SuccessScreen,ScreenTransition.None, {NextStatus:ComboBox2_1.Selected.Value})
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Text: ="Set NextStep für Success Screen"
+            Width: =386
+            X: =534
+            Y: =252
+      - Label1_2:
+          Control: Label@2.5.1
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Text: ="NextStep"
+            Width: =173
+            X: =40
+            Y: =252
+      - ComboBox2_2:
+          Control: Classic/ComboBox@2.4.0
+          Properties:
+            BorderColor: =varHSEBranding.LightGray
+            ChevronBackground: =varHSEBranding.White
+            ChevronDisabledBackground: =ColorFade(varHSEBranding.LightGray,70%)
+            ChevronDisabledFill: =ColorFade(varHSEBranding.Black,50%)
+            ChevronFill: =varHSEBranding.Black
+            ChevronHoverBackground: =varHSEBranding.LightGray
+            ChevronHoverFill: =varHSEBranding.Black
+            Color: =varHSEBranding.Black
+            DisabledBorderColor: =varHSEBranding.LightGray
+            DisabledColor: =ColorFade(varHSEBranding.Black,50%)
+            DisabledFill: =ColorFade(varHSEBranding.LightGray,70%)
+            DisplayFields: =["Value"]
+            Fill: =varHSEBranding.White
+            FocusedBorderThickness: =3
+            Font: =Font.'Open Sans'
+            Height: =41
+            HoverColor: =varHSEBranding.Black
+            HoverFill: =ColorFade(varHSEBranding.LightGray,70%)
+            Items: =[ "Genehmiger", "Einkauf", "Antragssteller", "Prüfende Rechtsanwälte", "Sachbearbeiter Finanzen", "Sachbearbeiter Recht", "IT Security" ]
+            PressedBorderColor: =ColorFade(varHSEBranding.LightGray,70%)
+            PressedColor: =ColorFade(varHSEBranding.LightGray,70%)
+            PressedFill: =ColorFade(varHSEBranding.LightGray,70%)
+            SearchFields: =["Value"]
+            SelectMultiple: =false
+            SelectionColor: =varHSEBranding.Black
+            SelectionFill: =ColorFade(varHSEBranding.LightGray,75%)
+            SelectionTagColor: =varHSEBranding.Black
+            SelectionTagFill: =Color.Transparent
+            Tooltip: =
+            Width: =236
+            X: =244
+            Y: =110
+      - Button1_9:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =varHSEBranding.White
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =varHSEBranding.HSEOrange
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(varHSEBranding.HSEOrange, -20%)
+            OnSelect: =Set(varRolleUser,ComboBox2_2.Selected.Value)
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Text: ="Set varRolleUser"
+            Width: =386
+            X: =534
+            Y: =111
+      - Label1_3:
+          Control: Label@2.5.1
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Text: ="Rolle User"
+            Width: =173
+            X: =40
+            Y: =111
+      - Button1_10:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =varHSEBranding.White
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =varHSEBranding.HSEOrange
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(varHSEBranding.HSEOrange, -20%)
+            OnSelect: |-
+              =UpdateContext({varBackToRequestor: false});UpdateContext({varRejectApproval: false})
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Text: ="Reset Screen"
+            Width: =200
+            X: =1087
+            Y: =40
+      - Button1_13:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =varHSEBranding.White
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =varHSEBranding.HSEOrange
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(varHSEBranding.HSEOrange, -20%)
+            OnSelect: |-
+              =UpdateContext({cvarAntragsteller: false});
+              UpdateContext({cvarGenehmiger: false});
+              UpdateContext({cvarSachbearbeiterRecht: false});
+              UpdateContext({cvarPruefendeRechtsanwaelte: false});
+              UpdateContext({cvarSachbearbeiterFinanzen: false});
+              UpdateContext({cvarEinkauf: false});
+              // Abfrage welches Formular angezeigt werden soll
+              If(
+                  // Überprüfung, ob eine ID übergeben wurde
+                  IsBlankOrError(TextInput2_1.Text),
+                  // Weiterleitung auf die New Form, wenn keine ID übergeben wurde
+                  Navigate(NewEFABOScreen),
+                  Set(
+                      AntragsID,
+                      Value(TextInput2_1.Text)
+                  );
+                  Set(
+                      EfaboAntrag,
+                      LookUp(
+                          'EFABO Anträge',
+                          ID = AntragsID
+                      )
+                  );
+                  //Abfrage welche Rolle der User hat
+              Clear(colUserRollen);
+                  Set(
+                      varAntragsteller,
+                      false
+                  );
+                  Set(
+                      varGenehmiger,
+                      false
+                  );
+                  Set(
+                      varSachbearbeiterRecht,
+                      false
+                  );
+                  Set(
+                      varPruefendeRechtsanwaelte,
+                      false
+                  );
+                  Set(
+                      varSachbearbeiterFinanzen,
+                      false
+                  );
+                  Set(
+                      varEinkauf,
+                      false
+                  );
+                  Concurrent(
+                      If(
+                          Lower(EfaboAntrag.'Verantwortlicher Mitarbeiter'.Email) = User().Email,
+                          Set(
+                              varAntragsteller,
+                              true
+                          )
+                      ),
+                      If(
+                          User().Email = Lower(EfaboAntrag.'Genehmiger (gem. Orga-Unterschriften)'.Email) Or User().Email = "desvc.efabo@hse.com",
+                          Set(
+                              varGenehmiger,
+                              true
+                          )
+                      ),
+                      If(
+                          CheckifuserinSharePointGroup.Run(
+                              User().Email,
+                              "Sachbearbeiter Recht"
+                          ).groupmember = "True",
+                          Set(
+                              varSachbearbeiterRecht,
+                              true
+                          )
+                      ),
+                      If(
+                          CheckifuserinSharePointGroup.Run(
+                              User().Email,
+                              "Prüfende Rechtsanwälte"
+                          ).groupmember = "True",
+                          Set(
+                              varPruefendeRechtsanwaelte,
+                              true
+                          )
+                      ),
+                      If(
+                          CheckifuserinSharePointGroup.Run(
+                              User().Email,
+                              "Sachbearbeiter Finanzen"
+                          ).groupmember = "True",
+                          Set(
+                              varSachbearbeiterFinanzen,
+                              true
+                          )
+                      ),
+                      If(
+                          CheckifuserinSharePointGroup.Run(
+                              User().Email,
+                              "Einkauf"
+                          ).groupmember = "True",
+                          Set(
+                              varEinkauf,
+                              true
+                          )
+                      )
+                  );
+                  If(
+                      varAntragsteller,
+                      Collect(
+                          colUserRollen,
+                          {Value: "Antragssteller"}
+                      )
+                  );
+                  If(
+                      varGenehmiger,
+                      Collect(
+                          colUserRollen,
+                          {Value: "Genehmiger"}
+                      )
+                  );
+                  If(
+                      varSachbearbeiterFinanzen,
+                      Collect(
+                          colUserRollen,
+                          {Value: "Sachbearbeiter Finanzen"}
+                      )
+                  );
+                  If(
+                      varEinkauf,
+                      Collect(
+                          colUserRollen,
+                          {Value: "Einkauf"}
+                      )
+                  );
+                  If(
+                      varPruefendeRechtsanwaelte,
+                      Collect(
+                          colUserRollen,
+                          {Value: "Sachbearbeiter Recht"}
+                      );
+                      Collect(
+                          colUserRollen,
+                          {Value: "Prüfende Rechtsanwälte"}
+                      ),
+                      If(
+                          varSachbearbeiterFinanzen,
+                          Collect(
+                              colUserRollen,
+                              {Value: "Sachbearbeiter Recht"}
+                          )
+                      )
+                  );
+                  If(
+                      CountRows(colUserRollen) = 1,
+                      Set(
+                          varRolleUser,
+                          First(colUserRollen).Value
+                      );
+                      If(
+                          varRolleUser = "Antragssteller" && EfaboAntrag.Status.Value <> "Abgelehnt" && EfaboAntrag.Status.Value <> "Zurückgezogen" && EfaboAntrag.Status.Value <> "Abgeschlossen" && EfaboAntrag.Status.Value <> "Verlängerung beantragt",
+                          Navigate(EditEFABOScreen),
+                          Navigate(ViewEFABOScreen)
+                      )
+                  );
+                  If(
+                      CountRows(colUserRollen) > 1,
+                      // Wenn es genau 2 Rollen sind, abfragen ob Legal und Sachbearbeiter Legal oder ob Genehmiger und Antragsteller
+                      If(
+                          CountRows(colUserRollen) = 2,
+                          If(
+                              "Prüfende Rechtsanwälte" in colUserRollen.Value && "Sachbearbeiter Recht" in colUserRollen.Value,
+                              If(
+                                  EfaboAntrag.'Prüfung Legal' = "Anlage Akte in Lecare",
+                                  Set(
+                                      varRolleUser,
+                                      "Sachbearbeiter Recht"
+                                  );
+                                  Navigate(ViewEFABOScreen),
+                                  Set(
+                                      varRolleUser,
+                                      "Prüfende Rechtsanwälte"
+                                  );
+                                  Navigate(ViewEFABOScreen)
+                              ),
+                              If(
+                                  "Antragssteller" in colUserRollen.Value && "Genehmiger" in colUserRollen.Value,
+                                  If(
+                                      EfaboAntrag.Status.Value <> "Abgelehnt" && EfaboAntrag.Status.Value <> "Zurückgezogen" && EfaboAntrag.Status.Value <> "Abgeschlossen",
+                                      Navigate(EditEFABOScreen),
+                                      Navigate(ViewEFABOScreen)
+                                  ),
+                                  Navigate(StartScreen)
+                              )
+                          ),
+                          // Default geh zur Rollenauswahl
+                          Navigate(StartScreen)
+                      )
+                  )
+              )
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Text: ="Test OnAppStart Navigation"
+            Width: =386
+            X: =534
+            Y: =443
+      - Label4:
+          Control: Label@2.5.1
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Text: =If("Prüfende Rechtsanwälte" in colUserRollen.Value && "Sachbearbeiter Recht" in colUserRollen.Value,"Ja","Nein")
+            Width: =235
+            X: =40
+            Y: =443
+      - Button1_18:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =varHSEBranding.White
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =varHSEBranding.HSEOrange
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(varHSEBranding.HSEOrange, -20%)
+            OnSelect: |-
+              = ClearCollect(
+                          colUserRollen,
+                          {Value: "Einkauf"},
+                          {Value: "Genehmiger"}
+                      )
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Text: ="Collect userRoles"
+            Width: =386
+            X: =534
+            Y: =329
+      - gal_languages_2:
+          Control: Gallery@2.15.0
+          Variant: Horizontal
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Default: |-
+              =/*
+              LookUp(
+                  LanguagesCol;
+                  culture = "DE";
+                  ThisRecord
+              )
+              */
+            DelayItemLoading: =false
+            Height: =70
+            Items: =colLanguages
+            LoadingSpinner: =LoadingSpinner.None
+            ShowScrollbar: =false
+            TemplateSize: =55
+            Width: =130
+            X: =585
+            Y: =682
+          Children:
+            - img_flag_2:
+                Control: Image@2.2.3
+                Properties:
+                  BorderColor: =varHSEBranding.HSEOrange
+                  BorderThickness: =If(ThisItem.IsSelected, 4, 0)
+                  Height: =50
+                  Image: =ThisItem.Image
+                  ImagePosition: =ImagePosition.Fill
+                  OnSelect: =Set(varSelectedCulture,ThisItem.Language)
+                  RadiusBottomLeft: =50
+                  RadiusBottomRight: =50
+                  RadiusTopLeft: =50
+                  RadiusTopRight: =50
+                  Width: =50
+                  X: =4
+                  Y: =4
+            - Button5_5:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  BorderColor: =ColorFade(Self.Fill, -15%)
+                  Color: =RGBA(0, 0, 0, 0)
+                  DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                  Fill: =RGBA(0, 0, 0, 0)
+                  Font: =Font.'Open Sans'
+                  Height: =56
+                  HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                  HoverColor: =RGBA(0, 0, 0, 0)
+                  HoverFill: =
+                  OnSelect: =Select(img_flag_2)
+                  PressedBorderColor: =Self.Fill
+                  PressedColor: =Self.Fill
+                  PressedFill: =Self.Color
+                  Text: ="Button"
+                  Width: =55
+                  Y: =4
+      - Button1_21:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =varHSEBranding.White
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =varHSEBranding.HSEOrange
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            Height: =70
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(varHSEBranding.HSEOrange, -20%)
+            OnSelect: |
+              =//Neues Item in SharePoint erstellen
+              UpdateContext(
+                  {
+                      varPatch: Patch(
+                          'EFABO Anträge',
+                          Defaults('EFABO Anträge'),
+                          {
+                              'Abgelehnt durch': varItemCopy.'Abgelehnt durch',
+                              'Angebot vorhanden': varItemCopy.'Angebot vorhanden',
+                              Angebotsnummer: varItemCopy.Angebotsnummer,
+                              Beiratspflicht: varItemCopy.Beiratspflicht,
+                              'Change of Control': varItemCopy.'Change of Control',
+                              'E-Mail-Adresse': varItemCopy.'E-Mail-Adresse',
+                              'Evtl. Sonderkündigungsrecht': varItemCopy.'Evtl. Sonderkündigungsrecht',
+                              Fachbereich: varItemCopy.Fachbereich,
+                              Faxnummer: varItemCopy.Faxnummer,
+                              'Dateiname mit Erweiterung': varItemCopy.'File name with extension',
+                              Ordnerpfad: varItemCopy.'Folder path',
+                              'Vollständiger Pfad': varItemCopy.'Full Path',
+                              'Genehmiger (gem. Orga-Unterschriften)':varItemCopy.'Genehmiger (gem. Orga-Unterschriften)',
+                              'Geplante Vertragslaufzeit Beginn ': varItemCopy.'Geplante Vertragslaufzeit Beginn ',
+                              'Geplante Zahlungsbedingung': varItemCopy.'Geplante Zahlungsbedingung',
+                              'Geplanter Vertragsinhalt': varItemCopy.'Geplanter Vertragsinhalt',
+                              'Geplantes Vertragsvolumen bis Mindestlaufzeit': varItemCopy.'Geplantes Vertragsvolumen bis Mindestlaufzeit',
+                              'Geplantes Vertragsvolumen im Einzelfall': varItemCopy.'Geplantes Vertragsvolumen im Einzelfall',
+                              'Geplantes Vertragsvolumen jährlich': varItemCopy.'Geplantes Vertragsvolumen jährlich',
+                              'Grund fehlendes Angebot': varItemCopy.'Grund fehlendes Angebot',
+                              'Grund Vertragslaufzeit': varItemCopy.'Grund Vertragslaufzeit'
+                              /*ID:varItemCopy.ID,*/,
+                              Bezeichner: varItemCopy.Identifier,
+                              'Kommentar an': varItemCopy.'Kommentar an',
+                              'Kommentar Finance': varItemCopy.'Kommentar Finance',
+                              'Kommentar Genehmiger': varItemCopy.'Kommentar Genehmiger',
+                              'Kommentar Indirect Sourcing': varItemCopy.'Kommentar Indirect Sourcing',
+                              'Kommentar Legal': varItemCopy.'Kommentar Legal',
+                              'Kommentar von': varItemCopy.'Kommentar von',
+                              Kommentar: varItemCopy.Kommentar,
+                              Kostenstelle: varItemCopy.Kostenstelle,
+                              'Kündigungsfrist Art': varItemCopy.'Kündigungsfrist Art',
+                              'Kündigungsfrist Typ': varItemCopy.'Kündigungsfrist Typ',
+                              'Kündigungsfrist Wert': varItemCopy.'Kündigungsfrist Wert',
+                              'Maßnahme budgetiert': varItemCopy.'Maßnahme budgetiert',
+                              Name: varItemCopy.Name,
+                              'Neuer Kommentar': varItemCopy.'Neuer Kommentar',
+                              'Neuer Status': varItemCopy.'Neuer Status',
+                              Ort: varItemCopy.Ort,
+                              PLZ: varItemCopy.PLZ,
+                              'Prüfender Rechtsanwalt ': varItemCopy.'Prüfender Rechtsanwalt ',
+                              PruefungArbeitsrechtlicheFragen: varItemCopy.'Prüfung Arbeitsrechtliche Fragen',
+                              'Prüfung Finance': varItemCopy.'Prüfung Finance',
+                              'Prüfung Indirect Sourcing': varItemCopy.'Prüfung Indirect Sourcing',
+                              'Prüfung Legal': varItemCopy.'Prüfung Legal',
+                              Status: varItemCopy.Status,
+                              'Straße und Hausnummer': varItemCopy.'Straße und Hausnummer',
+                              Titel: varItemCopy.Titel,
+                              Telefonnummer: varItemCopy.Telefonnummer,
+                              'Verantwortlicher Mitarbeiter': varItemCopy.'Verantwortlicher Mitarbeiter',
+                              Vertragsart: varItemCopy.Vertragsart,
+                              'Vertragspartner als Kreditor angelegt': varItemCopy.'Vertragspartner als Kreditor angelegt',
+                              'Vertragspartner vollständige Firmenbezeichnung': varItemCopy.'Vertragspartner vollständige Firmenbezeichnung',
+                              'Verwendung personenbezogene Daten': varItemCopy.'Verwendung personenbezogene Daten',
+                              Vorwahl: varItemCopy.Vorwahl,
+                              'Voraussichtliches Ende': varItemCopy.'Voraussichtliches Ende',
+                              Whitelist: varItemCopy.Whitelist,
+                              'Zurück an Antragssteller': varItemCopy.'Zurück an Antragssteller'
+                          }
+                      )
+                  }
+              );
+              //Wenn Patchbefehl erfolg hatte
+              If(
+                  !IsBlank(varPatch),
+                  Notify(
+                      "Deine Kopie wurde erfolgreich mit der ID " & varPatch.ID & " erstellt!",
+                      NotificationType.Success
+                  );
+                  //PopUp schließen
+              Select(ic_Close),
+                  Notify(
+                      "Die Kopie wurde leider nicht erstellt. Bitte kontaktieren Sie einen ",
+                      NotificationType.Error
+                  )
+              );
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Text: ="Nur Kopie speichern"
+            Width: =199
+            X: =740
+            Y: =682
+      - Label4_1:
+          Control: Label@2.5.1
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Text: ="Backup:"
+            Width: =81
+            X: =500
+            Y: =697
+      - Button1_19:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =varHSEBranding.White
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =varHSEBranding.HSEOrange
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(varHSEBranding.HSEOrange, -20%)
+            OnSelect: =Set(varFormStatus,ComboBox2_5.Selected.Value)
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Text: |-
+              ="Set Form Status
+              "
+            Width: =386
+            X: =534
+            Y: =386
+      - ComboBox2_5:
+          Control: Classic/ComboBox@2.4.0
+          Properties:
+            BorderColor: =varHSEBranding.LightGray
+            ChevronBackground: =varHSEBranding.White
+            ChevronDisabledBackground: =ColorFade(varHSEBranding.LightGray,70%)
+            ChevronDisabledFill: =ColorFade(varHSEBranding.Black,50%)
+            ChevronFill: =varHSEBranding.Black
+            ChevronHoverBackground: =varHSEBranding.LightGray
+            ChevronHoverFill: =varHSEBranding.Black
+            Color: =varHSEBranding.Black
+            DisabledBorderColor: =varHSEBranding.LightGray
+            DisabledColor: =ColorFade(varHSEBranding.Black,50%)
+            DisabledFill: =ColorFade(varHSEBranding.LightGray,70%)
+            DisplayFields: =["Value"]
+            Fill: =varHSEBranding.White
+            FocusedBorderThickness: =3
+            Font: =Font.'Open Sans'
+            Height: =41
+            HoverColor: =varHSEBranding.Black
+            HoverFill: =ColorFade(varHSEBranding.LightGray,70%)
+            Items: =[ "New", "Edit", "View"]
+            PressedBorderColor: =ColorFade(varHSEBranding.LightGray,70%)
+            PressedColor: =ColorFade(varHSEBranding.LightGray,70%)
+            PressedFill: =ColorFade(varHSEBranding.LightGray,70%)
+            SearchFields: =["Value"]
+            SelectMultiple: =false
+            SelectionColor: =varHSEBranding.Black
+            SelectionFill: =ColorFade(varHSEBranding.LightGray,75%)
+            SelectionTagColor: =varHSEBranding.Black
+            SelectionTagFill: =Color.Transparent
+            Tooltip: =
+            Width: =236
+            X: =244
+            Y: =385
+      - Label1_4:
+          Control: Label@2.5.1
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Text: ="FormStatus"
+            Width: =173
+            X: =40
+            Y: =386
+      - Form1:
+          Control: Form@2.4.4
+          Variant: Classic
+          Layout: Vertical
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            DataSource: ='EFABO Anträge'
+            Height: =101
+            Item: =EfaboAntrag
+            X: =58
+            Y: =532
+          Children:
+            - Kommentar von_DataCard3:
+                Control: TypedDataCard@1.0.7
+                Variant: ClassicComboBoxMultiSelectEdit
+                Properties:
+                  BorderColor: =RGBA(0, 18, 107, 1)
+                  DataField: ="KommentarVon"
+                  Default: |-
+                    =//Filter(ThisItem.'Kommentar von' in Choices([@'EFABO Anträge'].'Kommentar von'))
+                    //Filter(Choices([@'EFABO Anträge'].'Kommentar von');Value in ThisItem.'Kommentar von'.Value || Value = "Antragsteller"; Value <> "Kein neuer Kommentar")
+                    //ThisItem.'Kommentar von'
+                    If(NextStatus= "Kommentar",Filter(Choices([@'EFABO Anträge'].'Kommentar von'),Value in ThisItem.'Kommentar von'.Value || Value = varCommentFrom, Value <> "Kein neuer Kommentar"),ThisItem.'Kommentar von')
+                  DisplayName: ="Kommentar von"
+                  Required: =false
+                  Update: =DataCardValue57.SelectedItems
+                  Width: =266
+                  X: =0
+                  Y: =0
+                Children:
+                  - DataCardKey79:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldName
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(0, 18, 107, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =34
+                        Text: =Parent.DisplayName
+                        Width: =Parent.Width - 60
+                        Wrap: =false
+                        X: =30
+                        Y: =10
+                  - DataCardValue57:
+                      Control: Classic/ComboBox@2.4.0
+                      MetadataKey: FieldValue
+                      Properties:
+                        BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+                        ChevronBackground: =RGBA(56, 96, 178, 1)
+                        ChevronFill: =RGBA(255, 255, 255, 1)
+                        ChevronHoverBackground: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+                        ChevronHoverFill: =RGBA(255, 255, 255, 1)
+                        DefaultSelectedItems: =Parent.Default
+                        DisplayFields: =["Value"]
+                        DisplayMode: =Parent.DisplayMode
+                        Font: =Font.'Open Sans'
+                        HoverFill: =RGBA(186, 202, 226, 1)
+                        Items: =Choices([@'EFABO Anträge'].'Kommentar von')
+                        PaddingLeft: =If(Self.DisplayMode = DisplayMode.Edit, 5, 0)
+                        PressedColor: =RGBA(255, 255, 255, 1)
+                        PressedFill: =RGBA(0, 18, 107, 1)
+                        SearchFields: =["Value"]
+                        SelectionColor: =RGBA(255, 255, 255, 1)
+                        SelectionFill: =RGBA(56, 96, 178, 1)
+                        Tooltip: =Parent.DisplayName
+                        Width: =Parent.Width - 60
+                        X: =30
+                        Y: =DataCardKey79.Y + DataCardKey79.Height + 5
+                  - ErrorMessage65:
+                      Control: Label@2.5.1
+                      MetadataKey: ErrorMessage
+                      Properties:
+                        AutoHeight: =true
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(168, 0, 0, 1)
+                        Font: =Font.'Open Sans'
+                        FontWeight: =FontWeight.Semibold
+                        Height: =10
+                        Live: =Live.Assertive
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =14
+                        Text: =Parent.Error
+                        Visible: =Parent.DisplayMode=DisplayMode.Edit
+                        Width: =Parent.Width - 60
+                        X: =30
+                        Y: =DataCardValue57.Y + DataCardValue57.Height
+                  - StarVisible65:
+                      Control: Label@2.5.1
+                      MetadataKey: FieldRequired
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =RGBA(0, 0, 0, 1)
+                        Color: =RGBA(0, 18, 107, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =DataCardKey79.Height
+                        Text: ="*"
+                        Visible: =And(Parent.Required, Parent.DisplayMode=DisplayMode.Edit)
+                        Width: =30
+                        Wrap: =false
+                        Y: =DataCardKey79.Y
+      - DataTable1:
+          Control: DataTable@1.0.3
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            HeadingColor: =RGBA(255, 255, 255, 1)
+            HeadingFill: =RGBA(56, 96, 178, 1)
+            HeadingFont: =Font.'Open Sans'
+            Height: =26
+            HoverFill: =RGBA(186, 202, 226, .2)
+            Items: =EfaboAntrag.'Kommentar von'
+            SelectedFill: =RGBA(56, 96, 178, .2)
+            Width: =143
+            X: =716
+            Y: =533
+      - Button2:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(56, 96, 178, 1)
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+            OnSelect: |-
+              =//Patch('EFABO Anträge';EfaboAntrag;{'Kommentar von': Filter(Choices([@'EFABO Anträge'].'Kommentar von');Value in EfaboAntrag.'Kommentar von'.Value || Value = "LegalAP"; Value <> "Kein neuer Kommentar")})
+              //Filter(Choices([@'EFABO Anträge'].'Kommentar von');Value in ThisItem.'Kommentar von'.Value || Value = "Antragsteller"; Value <> "Kein neuer Kommentar")
+              UpdateContext({NewComment:true});UpdateContext({NextStatus: "Kommentar"});UpdateContext({varCommentFrom:"Legal"})
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            X: =421
+            Y: =593
+      - Button2_1:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =RGBA(56, 96, 178, 1)
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(RGBA(56, 96, 178, 1), -20%)
+            OnSelect: |-
+              =//Patch('EFABO Anträge';EfaboAntrag;{'Kommentar von': Filter(Choices([@'EFABO Anträge'].'Kommentar von');Value in EfaboAntrag.'Kommentar von'.Value || Value = "LegalAP"; Value <> "Kein neuer Kommentar")})
+              //Filter(Choices([@'EFABO Anträge'].'Kommentar von');Value in ThisItem.'Kommentar von'.Value || Value = "Antragsteller"; Value <> "Kein neuer Kommentar")
+              UpdateContext({varCommentFrom:"Kein neuer Kommentar"})
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            X: =363
+            Y: =657
+      - Label11:
+          Control: Label@2.5.1
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Height: =150
+            Text: =User().Email
+            Width: =318
+            X: =1048
+            Y: =443

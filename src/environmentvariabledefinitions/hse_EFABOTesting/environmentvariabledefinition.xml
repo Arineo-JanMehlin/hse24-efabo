@@ -1,0 +1,10 @@
+<environmentvariabledefinition schemaname="hse_EFABOTesting">
+  <displayname default="EFABO Testing">
+    <label description="EFABO Testing" languagecode="1031" />
+  </displayname>
+  <introducedversion>1.0.0.0</introducedversion>
+  <iscustomizable>1</iscustomizable>
+  <isrequired>0</isrequired>
+  <secretstore>0</secretstore>
+  <type>100000002</type>
+</environmentvariabledefinition>

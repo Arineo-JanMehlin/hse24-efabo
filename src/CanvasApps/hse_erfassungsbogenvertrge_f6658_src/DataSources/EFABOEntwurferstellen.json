@@ -1,0 +1,10 @@
+[
+  {
+    "ApiId": "/providers/microsoft.powerapps/apis/shared_logicflows",
+    "FlowNameId": "a54a7827-b185-4402-8261-a54f0ae7428d",
+    "Name": "EFABOEntwurferstellen",
+    "ServiceKind": "ConnectedWadl",
+    "Type": "ServiceInfo",
+    "WorkflowEntityId": "4fd67657-8c74-ec11-8943-6045bd943d2b"
+  }
+]

@@ -1,0 +1,201 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  StartScreen:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+      LoadingSpinnerColor: =RGBA(56, 96, 178, 1)
+      OnVisible: |+
+        =Set(varShowSpinner,true);
+    Children:
+      - Logo_Image_1:
+          Control: Image@2.2.3
+          Group: Header_Group_1
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Height: =87
+            Image: =HSE_logo_S_P_RGB
+            ImagePosition: =ImagePosition.Fill
+            OnSelect: =ResetForm(NewForm)
+            Width: =177
+            X: =1189
+      - Header_Label_1:
+          Control: Label@2.5.1
+          Group: Header_Group_1
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            FontWeight: =FontWeight.Semibold
+            Height: =61
+            Size: =22
+            Text: |+
+              =LookUp(colRessource,Title = "Header_Label" && Sprache.Value = varSelectedCulture,Text) 
+              //"Erfassungsbogen Verträge (EFABO)"
+            Width: =569
+            X: =30
+            Y: =14
+      - Highlight_Rectangle_1:
+          Control: Rectangle@2.3.0
+          Group: Header_Group_1
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Fill: =varHSEBranding.HSEOrange
+            Height: =12
+            Width: =230
+            X: =30
+            Y: =75
+      - Seperation_Rectangle_1:
+          Control: Rectangle@2.3.0
+          Group: Header_Group_1
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Fill: =varHSEBranding.LightGray
+            Height: =8
+            Width: =1366
+            Y: =87
+      - lbl_StatusInPrüfungRecht_1:
+          Control: Label@2.5.1
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Height: =154
+            Text: "=//\"Für den gewählten Erfassungsbogen wurden mehrere Rollen für dich erkannt. Bitte wähle die Rolle aus, mit der du das Formular öffnen möchtest.\"\r\nLookUp(colRessource,Title = \"lbl_StatusInPrüfungRecht_1\" && Sprache.Value = varSelectedCulture,Text) "
+            VerticalAlign: =VerticalAlign.Top
+            Width: =1251
+            X: =30
+            Y: =131
+      - btn_ ToForm:
+          Control: Classic/Button@2.2.0
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =varHSEBranding.White
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =varHSEBranding.HSEOrange
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(varHSEBranding.HSEOrange, -20%)
+            OnSelect: |-
+              =Set(
+                  varRolleUser,
+                  ddl_Rollen.Selected.Value
+              );
+              If(
+                  ddl_Rollen.Selected.Value = "Antragssteller" && EfaboAntrag.Status.Value <> "Abgelehnt" && EfaboAntrag.Status.Value <> "Zurückgezogen" && EfaboAntrag.Status.Value <> "Abgeschlossen" && EfaboAntrag.Status.Value <> "Verlängerung beantragt",
+                  Navigate(EditEFABOScreen),
+                  Navigate(ViewEFABOScreen)
+              )
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Text: '=LookUp(colRessource,Title = "btn_ToForm" && Sprache.Value = varSelectedCulture,Text) '
+            Width: =320
+            X: =702
+            Y: =257
+      - lbl_Rolle:
+          Control: Label@2.5.1
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Text: '=LookUp(colRessource,Title = "lbl_Rolle" && Sprache.Value = varSelectedCulture,Text) '
+            Width: =80
+            X: =343
+            Y: =257
+      - ddl_Rollen:
+          Control: Classic/DropDown@2.3.1
+          Properties:
+            BorderColor: =varHSEBranding.LightGray
+            ChevronBackground: =Color.White
+            ChevronDisabledBackground: =ColorFade(varHSEBranding.LightGray,70%)
+            ChevronDisabledFill: =ColorFade(varHSEBranding.Black,50%)
+            ChevronFill: =varHSEBranding.Black
+            ChevronHoverBackground: =varHSEBranding.LightGray
+            ChevronHoverFill: =varHSEBranding.Black
+            Color: =varHSEBranding.Black
+            DisabledBorderColor: =varHSEBranding.LightGray
+            DisabledColor: =ColorFade(varHSEBranding.Black,50%)
+            Fill: =varHSEBranding.White
+            FocusedBorderThickness: =3
+            Font: =Font.'Open Sans'
+            HoverColor: =varHSEBranding.Black
+            HoverFill: =ColorFade(varHSEBranding.LightGray,70%)
+            Items: =AddColumns(colUserRollen,Text,LookUp(colRessource,Title = "ddl_Rollen" && Wert =Value && Sprache.Value = varSelectedCulture,Text))
+            Items.Value: =Text
+            PressedBorderColor: =ColorFade(varHSEBranding.LightGray,70%)
+            PressedColor: =ColorFade(varHSEBranding.LightGray,70%)
+            PressedFill: =ColorFade(varHSEBranding.LightGray,70%)
+            SelectionColor: =varHSEBranding.Black
+            SelectionFill: =ColorFade(varHSEBranding.LightGray,75%)
+            Width: =236
+            X: =423
+            Y: =257
+      - gal_languages:
+          Control: Gallery@2.15.0
+          Variant: Horizontal
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Default: |-
+              =/*
+              LookUp(
+                  LanguagesCol;
+                  culture = "DE";
+                  ThisRecord
+              )
+              */
+            DelayItemLoading: =false
+            Height: =70
+            Items: =colLanguages
+            LoadingSpinner: =LoadingSpinner.None
+            ShowScrollbar: =false
+            TemplateSize: =55
+            Width: =130
+            X: =1084
+            Y: =12
+          Children:
+            - img_flag:
+                Control: Image@2.2.3
+                Properties:
+                  BorderColor: =varHSEBranding.HSEOrange
+                  BorderThickness: =If(ThisItem.IsSelected, 4, 0)
+                  Height: =50
+                  Image: =ThisItem.Image
+                  ImagePosition: =ImagePosition.Fill
+                  OnSelect: =Set(varSelectedCulture,ThisItem.Language)
+                  RadiusBottomLeft: =50
+                  RadiusBottomRight: =50
+                  RadiusTopLeft: =50
+                  RadiusTopRight: =50
+                  Width: =50
+                  X: =4
+                  Y: =4
+            - Button5:
+                Control: Classic/Button@2.2.0
+                Properties:
+                  BorderColor: =ColorFade(Self.Fill, -15%)
+                  Color: =RGBA(0, 0, 0, 0)
+                  DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                  Fill: =RGBA(0, 0, 0, 0)
+                  Font: =Font.'Open Sans'
+                  Height: =56
+                  HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+                  HoverColor: =RGBA(0, 0, 0, 0)
+                  HoverFill: =
+                  OnSelect: =Select(img_flag)
+                  PressedBorderColor: =Self.Fill
+                  PressedColor: =Self.Fill
+                  PressedFill: =Self.Color
+                  Text: ="Button"
+                  Width: =60
+                  Y: =4

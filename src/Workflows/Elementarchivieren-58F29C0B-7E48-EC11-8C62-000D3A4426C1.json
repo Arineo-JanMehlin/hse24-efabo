@@ -1,0 +1,603 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "hse_EFABOSharePoint"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "EFABO Anträge (hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5)": {
+          "defaultValue": "d8010e65-d7b0-4b11-b0a0-ac65f5b96208",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5"
+          }
+        },
+        "EFABO Anträge (Archiv) (hse_shared_sharepointonline_799bc7aec5f1493c998580565ca93ce3)": {
+          "defaultValue": "39e1c6f3-9e40-4ccd-afe8-3f160bae0220",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_shared_sharepointonline_799bc7aec5f1493c998580565ca93ce3"
+          }
+        },
+        "EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)": {
+          "defaultValue": "https://homeshoppingeurope24.sharepoint.com/sites/EFABO_DEV",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62"
+          }
+        },
+        "Arbeitsrechtliche Freigabe (new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d)": {
+          "defaultValue": "312ce00d-e31d-4435-8e4c-63e76f0e6dfa",
+          "type": "String",
+          "metadata": {
+            "schemaName": "new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d"
+          }
+        },
+        "EFABO Arbeitsrechtliche Freigabe (Archiv) (hse_EFABOArbeitsrechtlicheFreigabeArchiv)": {
+          "defaultValue": "dd6503ba-f333-47be-a68f-ccd34fd8ffa8",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_EFABOArbeitsrechtlicheFreigabeArchiv"
+          }
+        }
+      },
+      "triggers": {
+        "Wiederholung": {
+          "recurrence": {
+            "frequency": "Week",
+            "interval": 1,
+            "timeZone": "GMT Standard Time",
+            "schedule": {
+              "weekDays": [
+                "Sunday"
+              ],
+              "hours": [
+                "12"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "117216c4-618f-45ff-b0cc-062beab57a68"
+          },
+          "type": "Recurrence"
+        }
+      },
+      "actions": {
+        "Alle_Elemente_-_älter_als_ein_Jahr_-_abrufen": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "36559e14-18d7-48b2-92ef-c3882888afac"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_sharepointonline",
+              "operationId": "GetItems",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+            },
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "table": "@parameters('EFABO Anträge (hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5)')",
+              "$filter": "Created lt '@{addDays(utcNow(),-365)}'"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Auf_alle_gefundenen_Elemente_anwenden": {
+          "foreach": "@outputs('Alle_Elemente_-_älter_als_ein_Jahr_-_abrufen')?['body/value']",
+          "actions": {
+            "Element_löschen_-_in_Anträge_Liste": {
+              "runAfter": {
+                "Element_erstellen_-_In_Archiv": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "3daf9c97-9ab5-420b-a77e-bb2629e252a5"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "DeleteItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "table": "@parameters('EFABO Anträge (hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5)')",
+                  "id": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['ID']"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Element_erstellen_-_In_Archiv": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "37b1ca25-e338-4f4d-b312-266049f9ae0f"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_sharepointonline",
+                  "operationId": "PostItem",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "table": "@parameters('EFABO Anträge (Archiv) (hse_shared_sharepointonline_799bc7aec5f1493c998580565ca93ce3)')",
+                  "item/Title": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Title']",
+                  "item/Status/Value": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Status/Value']",
+                  "item/VerantwortlicherMitarbeiter/Claims": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['VerantwortlicherMitarbeiter/Claims']",
+                  "item/Fachbereich/Value": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Fachbereich/Value']",
+                  "item/Genehmiger/Claims": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Genehmiger']",
+                  "item/Vertragspartnervollst_x00e4_ndig": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Vertragspartnervollst_x00e4_ndig']",
+                  "item/Vertragsart/Value": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Vertragsart/Value']",
+                  "item/Angebotsnummer": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Angebotsnummer']",
+                  "item/GeplanterVertragsinhalt": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['GeplanterVertragsinhalt']",
+                  "item/Kommentar": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Kommentar']",
+                  "item/Kommentar_x0020_Finanzen": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Kommentar_x0020_Finanzen']",
+                  "item/Kommentar_x0020_Recht": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Kommentar_x0020_Recht']",
+                  "item/Kommentar_x0020_Genehmiger": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Kommentar_x0020_Genehmiger']",
+                  "item/KommentarEinkauf": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['KommentarEinkauf']",
+                  "item/PruefenderRechtsanwalt/Claims": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['PruefenderRechtsanwalt/Claims']",
+                  "item/AbgelehntDurch/Value": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['AbgelehntDurch/Value']",
+                  "item/PruefungFinanzen": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['PruefungFinanzen']",
+                  "item/PruefungEinkauf": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['PruefungEinkauf']",
+                  "item/PruefungRecht": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['PruefungRecht']",
+                  "item/Whitelist": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Whitelist']",
+                  "item/PruefungArbeitsrechtlicheFragen": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['PruefungArbeitsrechtlicheFragen']",
+                  "item/Aufwandsbezogene_x0020_Verguetun": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['AufwandsbezogeneVerguetung']",
+                  "item/Generalfreigabe": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Generalfreigabe']",
+                  "item/ITAsset": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['ITAsset']",
+                  "item/ITAccess": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['ITAccess']",
+                  "item/ErstellungZutrittsausweis": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['ErstellungZutrittsausweis']",
+                  "item/VertragsunterzeichnerName": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['VertragsunterzeichnerName']",
+                  "item/VertragsunterzeichnerMail": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['VertragsunterzeichnerMail']",
+                  "item/Einsatz_Software": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Einsatz_Software']",
+                  "item/Stra_x00df_eundHausnummer": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Stra_x00df_eundHausnummer']",
+                  "item/PLZ": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['PLZ']",
+                  "item/Ort": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Ort']",
+                  "item/eMail": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['eMail']",
+                  "item/Faxnummer": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Faxnummer']",
+                  "item/Telefonnummer": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Telefonnummer']",
+                  "item/Vorwahl": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Vorwahl']",
+                  "item/GeplantesVertragsvolumenimEinzel": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['GeplantesVertragsvolumenimEinzel']",
+                  "item/GeplantesVertragsvolumenj_x00e4_": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['GeplantesVertragsvolumenj_x00e4_']",
+                  "item/GeplantesVertragsvolumenbisMinde": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['GeplantesVertragsvolumenbisMinde']",
+                  "item/K_x00fc_ndigungsfristWert": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['K_x00fc_ndigungsfristWert']",
+                  "item/K_x00fc_ndigungsfristTyp/Value": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['K_x00fc_ndigungsfristTyp/Value']",
+                  "item/K_x00fc_ndigungsfristArt/Value": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['K_x00fc_ndigungsfristArt/Value']",
+                  "item/Evtl_x002e_Sonderk_x00fc_ndigung": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Evtl_x002e_Sonderk_x00fc_ndigung']",
+                  "item/Kostenstelle": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Kostenstelle']",
+                  "item/Ma_x00df_nahmebudgetiert": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Ma_x00df_nahmebudgetiert']",
+                  "item/GeplanteVertragslaufzeitBeginn": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['GeplanteVertragslaufzeitBeginn']",
+                  "item/VoraussichtlichesEnde": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['VoraussichtlichesEnde']",
+                  "item/Geplante_x0020_Zalhungsbedingung": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Geplante_x0020_Zalhungsbedingung']",
+                  "item/VerwendungpersonenbezogeneDaten": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['VerwendungpersonenbezogeneDaten']",
+                  "item/Beiratspflicht": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Beiratspflicht']",
+                  "item/ChangeofControl": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['ChangeofControl']",
+                  "item/Angebotvorhanden": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Angebotvorhanden']",
+                  "item/GrundfehlendesAngebot": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['GrundfehlendesAngebot']",
+                  "item/Zur_x00fc_ckanAntragssteller": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Zur_x00fc_ckanAntragssteller']",
+                  "item/Zum_x0020_Formular": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Zum_x0020_Formular']",
+                  "item/GrundVertragslaufzeit": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['GrundVertragslaufzeit']",
+                  "item/NeuerStatus": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['NeuerStatus']",
+                  "item/NeuerKommentar": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['NeuerKommentar']",
+                  "item/KommentarVon": [
+                    {}
+                  ],
+                  "item/VertragspartnerAlsKreditorAngele": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['VertragspartnerAlsKreditorAngele']",
+                  "item/KommentarAn": "@items('Auf_alle_gefundenen_Elemente_anwenden')?['KommentarAn']"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Überprüfen_ob_Whitelistprüfung_benötigt_wird": {
+              "actions": {
+                "Get_Arbeitsrechtliche_Prüfung": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "10d27fd8-1604-4d25-b39f-3b88de4310e4"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "GetItems",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    },
+                    "parameters": {
+                      "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                      "table": "@parameters('Arbeitsrechtliche Freigabe (new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d)')",
+                      "$filter": "Title eq @{items('Auf_alle_gefundenen_Elemente_anwenden')?['ID']}"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "AP_Element_löschen_-_In_AP_Liste": {
+                  "runAfter": {
+                    "AP_Element_erstellen_-_In_Archiv": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "a4e96f9d-16e7-4356-932a-f02234a80f49"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "DeleteItem",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    },
+                    "parameters": {
+                      "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                      "table": "@parameters('Arbeitsrechtliche Freigabe (new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d)')",
+                      "id": "@body('Parse_Arbeitsrechtliche_Prüfung')?['ID']"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                },
+                "Parse_Arbeitsrechtliche_Prüfung": {
+                  "runAfter": {
+                    "Get_Arbeitsrechtliche_Prüfung": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "793e16e4-c3ee-4023-8630-54a6c7e17e49"
+                  },
+                  "type": "ParseJson",
+                  "inputs": {
+                    "content": "@first(outputs('Get_Arbeitsrechtliche_Prüfung')?['body/value'])",
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "@@odata.etag": {
+                          "type": "string"
+                        },
+                        "ItemInternalId": {
+                          "type": "string"
+                        },
+                        "ID": {
+                          "type": "integer"
+                        },
+                        "Title": {
+                          "type": "string"
+                        },
+                        "Weisungen_des_Kreditors_von_HSE_": {
+                          "type": "boolean"
+                        },
+                        "Weisungen_von_Kreditor_erteilt": {
+                          "type": "boolean"
+                        },
+                        "Ausschlie_x00df_liche_Teilnahme_": {
+                          "type": "boolean"
+                        },
+                        "Benutzt_Kreditor_ausschlie_x00df": {
+                          "type": "boolean"
+                        },
+                        "Beautragung_des_Kreditors_in_let": {
+                          "type": "boolean"
+                        },
+                        "Prominenter_vor_der_Kamera_Exper": {
+                          "type": "boolean"
+                        },
+                        "Muss_Kreditor_in_HSE_Raeumlichke": {
+                          "type": "boolean"
+                        },
+                        "Zeitraum_Leistungen_Fachbereich_": {
+                          "type": "string"
+                        },
+                        "Zeitraum_Warum_laenger_6_Monate_": {
+                          "type": "string"
+                        },
+                        "Arbeit_des_Kreditors_mit_mehr_al": {
+                          "type": "boolean"
+                        },
+                        "Warum_mehr_als_eine_Person": {
+                          "type": "string"
+                        },
+                        "Wie_viele_Tage_vor_Ort": {
+                          "type": "string"
+                        },
+                        "Warum_keine_pauschale_Verg_x00fc": {
+                          "type": "string"
+                        },
+                        "Kommentar_Legal": {
+                          "type": "string"
+                        },
+                        "Kreditor_in_Dienstplaene_und_Abl": {
+                          "type": "boolean"
+                        },
+                        "Beschaeftigung_des_Kreditors_bei": {
+                          "type": "boolean"
+                        },
+                        "Kreditor_laenger_6_Monate_ben_x0": {
+                          "type": "boolean"
+                        },
+                        "Kosten_groe_x00df_er_gleich_5000": {
+                          "type": "boolean"
+                        },
+                        "Warum_muss_Kreditor_Leistung_hoe": {
+                          "type": "string"
+                        },
+                        "Ausgleich_Kapazitaetsengpaesse": {
+                          "type": "boolean"
+                        },
+                        "Pauschale_Verguetung_Kreditor": {
+                          "type": "boolean"
+                        },
+                        "Best_x00e4_tigung_der_Antworten": {
+                          "type": "boolean"
+                        },
+                        "Author": {
+                          "type": "object",
+                          "properties": {
+                            "@@odata.type": {
+                              "type": "string"
+                            },
+                            "Claims": {
+                              "type": "string"
+                            },
+                            "DisplayName": {
+                              "type": "string"
+                            },
+                            "Email": {
+                              "type": "string"
+                            },
+                            "Picture": {
+                              "type": "string"
+                            },
+                            "Department": {},
+                            "JobTitle": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "Author#Claims": {
+                          "type": "string"
+                        },
+                        "Created": {
+                          "type": "string"
+                        },
+                        "Zugriff_des_Dienstleisters_auf_H": {
+                          "type": "boolean"
+                        },
+                        "Sozialversicherungspflichtig": {
+                          "type": "boolean"
+                        },
+                        "Solzialversicherungspflichtig_Er": {
+                          "type": "string"
+                        },
+                        "Beginn_der_Leistungserbringung": {
+                          "type": "string"
+                        },
+                        "Ende_der_Leistungserbringung": {
+                          "type": "string"
+                        },
+                        "Leistungsbeschreibung": {
+                          "type": "string"
+                        },
+                        "Beschreibung_Weisungen_von_MA": {
+                          "type": "string"
+                        },
+                        "Beschreibung_Weisungen_Kreditor": {
+                          "type": "string"
+                        },
+                        "Projektbescheibung_Zeitraum": {
+                          "type": "string"
+                        },
+                        "Beschreibung_Hard_Software": {
+                          "type": "string"
+                        },
+                        "Kommentar_Antragsteller": {
+                          "type": "string"
+                        },
+                        "Modified": {
+                          "type": "string"
+                        },
+                        "Editor": {
+                          "type": "object",
+                          "properties": {
+                            "@@odata.type": {
+                              "type": "string"
+                            },
+                            "Claims": {
+                              "type": "string"
+                            },
+                            "DisplayName": {
+                              "type": "string"
+                            },
+                            "Email": {
+                              "type": "string"
+                            },
+                            "Picture": {
+                              "type": "string"
+                            },
+                            "Department": {},
+                            "JobTitle": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "Editor#Claims": {
+                          "type": "string"
+                        },
+                        "{Identifier}": {
+                          "type": "string"
+                        },
+                        "{IsFolder}": {
+                          "type": "boolean"
+                        },
+                        "{Thumbnail}": {
+                          "type": "object",
+                          "properties": {
+                            "Large": {},
+                            "Medium": {},
+                            "Small": {}
+                          }
+                        },
+                        "{Link}": {
+                          "type": "string"
+                        },
+                        "{Name}": {
+                          "type": "string"
+                        },
+                        "{FilenameWithExtension}": {
+                          "type": "string"
+                        },
+                        "{Path}": {
+                          "type": "string"
+                        },
+                        "{FullPath}": {
+                          "type": "string"
+                        },
+                        "{VersionNumber}": {
+                          "type": "string"
+                        },
+                        "Aenderungen": {
+                          "type": "boolean"
+                        },
+                        "Ende_der_Leistungserbringung_Neu": {
+                          "type": "string"
+                        },
+                        "Expertise_des_Kreditors": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "AP_Element_erstellen_-_In_Archiv": {
+                  "runAfter": {
+                    "Parse_Arbeitsrechtliche_Prüfung": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "a08ab5e4-3652-484d-9e66-1caad86c0d0a"
+                  },
+                  "type": "OpenApiConnection",
+                  "inputs": {
+                    "host": {
+                      "connectionName": "shared_sharepointonline",
+                      "operationId": "PostItem",
+                      "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline"
+                    },
+                    "parameters": {
+                      "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                      "table": "@parameters('EFABO Arbeitsrechtliche Freigabe (Archiv) (hse_EFABOArbeitsrechtlicheFreigabeArchiv)')",
+                      "item/Title": "@body('Parse_Arbeitsrechtliche_Prüfung')?['ID']",
+                      "item/Weisungen_des_Kreditors_von_HSE_": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Weisungen_des_Kreditors_von_HSE_']",
+                      "item/Weisungen_von_Kreditor_erteilt": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Weisungen_von_Kreditor_erteilt']",
+                      "item/Ausschlie_x00df_liche_Teilnahme_": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Ausschlie_x00df_liche_Teilnahme_']",
+                      "item/Benutzt_Kreditor_ausschlie_x00df": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Benutzt_Kreditor_ausschlie_x00df']",
+                      "item/Beautragung_des_Kreditors_in_let": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Beautragung_des_Kreditors_in_let']",
+                      "item/Prominenter_vor_der_Kamera_Exper": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Prominenter_vor_der_Kamera_Exper']",
+                      "item/Muss_Kreditor_in_HSE_Raeumlichke": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Muss_Kreditor_in_HSE_Raeumlichke']",
+                      "item/Zeitraum_Leistungen_Fachbereich_": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Zeitraum_Leistungen_Fachbereich_']",
+                      "item/Arbeit_des_Kreditors_mit_mehr_al": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Arbeit_des_Kreditors_mit_mehr_al']",
+                      "item/Warum_mehr_als_eine_Person": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Warum_mehr_als_eine_Person']",
+                      "item/Wie_viele_Tage_vor_Ort": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Wie_viele_Tage_vor_Ort']",
+                      "item/Warum_keine_pauschale_Verg_x00fc": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Warum_keine_pauschale_Verg_x00fc']",
+                      "item/Kommentar_Legal": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Kommentar_Legal']",
+                      "item/Kreditor_in_Dienstplaene_und_Abl": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Kreditor_in_Dienstplaene_und_Abl']",
+                      "item/Beschaeftigung_des_Kreditors_bei": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Beschaeftigung_des_Kreditors_bei']",
+                      "item/Kreditor_laenger_6_Monate_ben_x0": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Kreditor_laenger_6_Monate_ben_x0']",
+                      "item/Zeitraum_Warum_laenger_6_Monate_": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Zeitraum_Warum_laenger_6_Monate_']",
+                      "item/Kosten_groe_x00df_er_gleich_5000": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Kosten_groe_x00df_er_gleich_5000']",
+                      "item/Warum_muss_Kreditor_Leistung_hoe": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Warum_muss_Kreditor_Leistung_hoe']",
+                      "item/Ausgleich_Kapazitaetsengpaesse": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Ausgleich_Kapazitaetsengpaesse']",
+                      "item/Pauschale_Verguetung_Kreditor": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Pauschale_Verguetung_Kreditor']",
+                      "item/Best_x00e4_tigung_der_Antworten": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Best_x00e4_tigung_der_Antworten']",
+                      "item/Zugriff_des_Dienstleisters_auf_H": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Zugriff_des_Dienstleisters_auf_H']",
+                      "item/Beschreibung_Weisungen_von_MA": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Beschreibung_Weisungen_von_MA']",
+                      "item/Beschreibung_Weisungen_Kreditor": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Beschreibung_Weisungen_Kreditor']",
+                      "item/Projektbescheibung_Zeitraum": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Projektbescheibung_Zeitraum']",
+                      "item/Beschreibung_Hard_Software": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Beschreibung_Hard_Software']",
+                      "item/Kommentar_Antragsteller": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Kommentar_Antragsteller']",
+                      "item/Beginn_der_Leistungserbringung": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Beginn_der_Leistungserbringung']",
+                      "item/Ende_der_Leistungserbringung": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Ende_der_Leistungserbringung']",
+                      "item/Leistungsbeschreibung": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Leistungsbeschreibung']",
+                      "item/Sozialversicherungspflichtig": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Sozialversicherungspflichtig']",
+                      "item/Solzialversicherungspflichtig_Er": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Solzialversicherungspflichtig_Er']",
+                      "item/Aenderungen": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Aenderungen']",
+                      "item/Ende_der_Leistungserbringung_Neu": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Ende_der_Leistungserbringung_Neu']",
+                      "item/Expertise_des_Kreditors": "@body('Parse_Arbeitsrechtliche_Prüfung')?['Expertise_des_Kreditors']"
+                    },
+                    "authentication": "@parameters('$authentication')"
+                  }
+                }
+              },
+              "runAfter": {
+                "Element_löschen_-_in_Anträge_Liste": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "and": [
+                  {
+                    "equals": [
+                      "@items('Auf_alle_gefundenen_Elemente_anwenden')?['AufwandsbezogeneVerguetung']",
+                      "@true"
+                    ]
+                  },
+                  {
+                    "not": {
+                      "equals": [
+                        "@outputs('Element_erstellen_-_In_Archiv')?['body/Whitelist']",
+                        "@true"
+                      ]
+                    }
+                  },
+                  {
+                    "not": {
+                      "equals": [
+                        "@items('Auf_alle_gefundenen_Elemente_anwenden')?['Generalfreigabe']",
+                        "@true"
+                      ]
+                    }
+                  }
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "04b40761-06d1-4bfb-be62-71fa713c3589"
+              },
+              "type": "If"
+            }
+          },
+          "runAfter": {
+            "Alle_Elemente_-_älter_als_ein_Jahr_-_abrufen": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "c5feab0a-63bc-4327-bcff-04085aaaf848"
+          },
+          "type": "Foreach"
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}
