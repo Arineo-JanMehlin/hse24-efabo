@@ -1,0 +1,13 @@
+EditorState:
+  ScreensOrder:
+    - StartScreen
+    - NewEFABOScreen
+    - ViewEFABOScreen
+    - EditEFABOScreen
+    - ArbeitsrechtlichteFreigabenScreen
+    - ITSecurityFreigabenScreen
+    - SuccessScreen
+    - NoAccessEFABOScreen
+    - TestingScreen
+    - AvailableColorsAndControlsScreen
+    - Screen2

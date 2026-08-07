@@ -1,0 +1,403 @@
+Screens:
+  SuccessScreen:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+      LoadingSpinnerColor: =RGBA(56, 96, 178, 1)
+      OnVisible: |
+        =If(
+            IsBlankOrError(NextStatus),
+            UpdateContext({NextStatus: glNextStatus})
+        );
+        ResetForm(NewForm);
+        ResetForm(AF_Form);
+        ResetForm(ViewForm);
+        ResetForm(EditForm);
+        UpdateContext({varCommentFrom: "Kein neuer Kommentar"});
+        UpdateContext({NewComment: false});
+    Children:
+      - Logo_Image_2:
+          Control: Image
+          Group: Header_Group_2
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Height: =103
+            Image: =HSE_logo_S_P_RGB
+            ImagePosition: =ImagePosition.Fill
+            Width: =177
+            X: =1182
+      - Header_Label_2:
+          Control: Label
+          Group: Header_Group_2
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            FontWeight: =FontWeight.Semibold
+            Height: =61
+            Size: =20
+            Text: '=LookUp(colRessource,Title = "Header_Label" && Sprache.Value = varSelectedCulture,Text) '
+            Width: =569
+            X: =30
+            Y: =14
+      - Highlight_Rectangle_2:
+          Control: Rectangle
+          Group: Header_Group_2
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Fill: =varHSEBranding.HSEOrange
+            Height: =12
+            Width: =230
+            X: =30
+            Y: =75
+      - Seperation_Rectangle_2:
+          Control: Rectangle
+          Group: Header_Group_2
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Fill: =RGBA(237, 237, 237, 1)
+            Height: =8
+            Width: =1366
+            Y: =87
+      - Circle1:
+          Control: Circle
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Fill: =varHSEBranding.HSEOrange
+            X: =633
+            Y: =201
+      - Icon1:
+          Control: Classic/Icon
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Color: =RGBA(255, 255, 255, 1)
+            Height: =50
+            Icon: =Icon.Check
+            Width: =50
+            X: =658
+            Y: =226
+      - lbl_Gespeichert:
+          Control: Label
+          Properties:
+            Align: =Align.Center
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Text: '=LookUp(colRessource,Title = "lbl_Gespeichert" && Sprache.Value = varSelectedCulture,Text) '
+            X: =608
+            Y: =316
+      - lbl_Genehmigung:
+          Control: Label
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Height: =154
+            Text: '=LookUp(colRessource,Title = "lbl_Genehmigung" && Sprache.Value = varSelectedCulture,Text) '
+            VerticalAlign: =VerticalAlign.Top
+            Visible: =NextStatus = "Prüfung Genehmiger"
+            Width: =665
+            X: =429
+            Y: =405
+      - lbl_NächsterSchrittÜberschrift:
+          Control: Label
+          Properties:
+            AutoHeight: =true
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            FontWeight: =FontWeight.Semibold
+            Height: =37
+            Text: '=LookUp(colRessource,Title = "lbl_NächsterSchrittÜberschrift" && Sprache.Value = varSelectedCulture,Text) '
+            Visible: =And(NextStatus <> "Änderung")
+            Width: =158
+            X: =271
+            Y: =405
+      - btn_NeuenVertragErfassen:
+          Control: Classic/Button
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =varHSEBranding.White
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =varHSEBranding.HSEOrange
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(varHSEBranding.HSEOrange, -20%)
+            OnSelect: |-
+              =Navigate(NewForm);
+              ResetForm(NewForm);
+              Set(varFormStatus,"New");
+              Set(
+                  EfaboAntrag,
+                  Blank()
+              );
+              Set(
+                  AngebotVorhanden,
+                  true
+              )
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Text: '=LookUp(colRessource,Title = "btn_NeuenVertragErfassen" && Sprache.Value = varSelectedCulture,Text) '
+            Visible: =varRolleUser = "Antragssteller" || varRolleUser = "Genehmiger"
+            Width: =328
+            X: =641
+            Y: =696
+      - btn_ZuMeinenAnträgen:
+          Control: Classic/Button
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =varHSEBranding.White
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =varHSEBranding.HSEOrange
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(varHSEBranding.HSEOrange, -20%)
+            OnSelect: |-
+              =//App in Dev Umgebung?
+              If(
+                  Last(
+                      ForAll(Split(
+                          Param("appId"),
+                          "/"
+                      ), {Result: ThisRecord.Value})
+                  ).Result = "82f0abdb-6e73-46b5-a033-2611cea27ef9",
+                  //Ja, gehe in Dev SharePoint Seite
+                  Switch(
+                      varRolleUser,
+                      "Sachbearbeiter Finanzen",
+                      Launch("https://homeshoppingeurope24.sharepoint.com/sites/EFABO_DEV/Lists/EFABO%20Antrge/AllItems.aspx?viewid=fcc07569%2D41bd%2D4ff1%2D8f4c%2D9b3a2c8e795d"),
+                      "Einkauf",
+                      Launch("https://homeshoppingeurope24.sharepoint.com/sites/EFABO_DEV/Lists/EFABO%20Antrge/AllItems.aspx?viewid=2b484092%2D1465%2D4e5d%2D92de%2De189bb52dd40"),
+                      "Prüfende Rechtsanwälte",
+                      Launch("https://homeshoppingeurope24.sharepoint.com/sites/EFABO_DEV/Lists/EFABO%20Antrge/AllItems.aspx?viewid=177c464c%2D2fcd%2D4d3b%2D8fbb%2Db7351a4f1875"),
+                      "Sachbearbeiter Recht",
+                      Launch("https://homeshoppingeurope24.sharepoint.com/sites/EFABO_DEV/Lists/EFABO%20Antrge/AllItems.aspx?viewid=744d5a68%2D856b%2D4da8%2Da650%2Df121d0fdbf59"),
+                  // Defaultverhalten für Antragsteller und Genehmiger
+                      Launch("https://homeshoppingeurope24.sharepoint.com/sites/EFABO_DEV")
+                  ),
+              //Nein, gehe in Prod SharePoint Seite
+                  Switch(
+                      varRolleUser,
+                      "Sachbearbeiter Finanzen",
+                      Launch("https://homeshoppingeurope24.sharepoint.com/sites/EFABO/Lists/EFABO%20Antrge/Prfung%20durch%20Finanzen.aspx"),
+                      "Einkauf",
+                      Launch("https://homeshoppingeurope24.sharepoint.com/sites/EFABO/Lists/EFABO%20Antrge/Prfung%20durch%20Indirect%20Sourcing.aspx"),
+                      "Prüfende Rechtsanwälte",
+                      Launch("https://homeshoppingeurope24.sharepoint.com/sites/EFABO/Lists/EFABO%20Antrge/Prfung%20durch%20Legal.aspx"),
+                      "Sachbearbeiter Recht",
+                      Launch("https://homeshoppingeurope24.sharepoint.com/sites/EFABO/Lists/EFABO%20Antrge/Anlage%20Akte%20in%20Lecare.aspx"),
+                  // Defaultverhalten für Antragsteller und Genehmiger
+                      Launch("https://homeshoppingeurope24.sharepoint.com/sites/EFABO")
+                  )
+              )
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Text: '=LookUp(colRessource,Title = "btn_ZuMeinenAnträgen" && Sprache.Value = varSelectedCulture,Text) '
+            Width: =298
+            X: =1018
+            Y: =696
+      - lbl_GenehmigungErfolgreich:
+          Control: Label
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Height: =154
+            Text: |-
+              =If(
+                  !IsBlankOrError(NewForm.LastSubmit.ID),
+                  If(
+                      IsBlank(
+                          LookUp(
+                              'EFABO Anträge',
+                              ID = NewForm.LastSubmit.ID
+                          ).'Prüfung ITSec'
+                      ) && varUpdateFrom <> "ITS_Form",
+                      LookUp(
+                          colRessource,
+                          Title = "lbl_GenehmigungErfolgreich" && Sprache.Value = varSelectedCulture,
+                          Text
+                      ),
+                      LookUp(
+                          colRessource,
+                          Title = "lbl_GenehmigungErfolgreich_MitITSecurity" && Sprache.Value = varSelectedCulture,
+                          Text
+                      )
+                  ),
+                  If(
+                      IsBlank(
+                          LookUp(
+                              'EFABO Anträge',
+                              ID = EfaboAntrag.ID
+                          ).'Prüfung ITSec'
+                      ) && varUpdateFrom <> "ITS_Form",
+                      LookUp(
+                          colRessource,
+                          Title = "lbl_GenehmigungErfolgreich" && Sprache.Value = varSelectedCulture,
+                          Text
+                      ),
+                      LookUp(
+                          colRessource,
+                          Title = "lbl_GenehmigungErfolgreich_MitITSecurity" && Sprache.Value = varSelectedCulture,
+                          Text
+                      )
+                  )
+              )
+            VerticalAlign: =VerticalAlign.Top
+            Visible: =NextStatus = "In Prüfung"
+            Width: =665
+            X: =429
+            Y: =405
+      - lbl_Abgelehnt:
+          Control: Label
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Height: =154
+            Text: '=LookUp(colRessource,Title = "lbl_Abgelehnt" && Sprache.Value = varSelectedCulture,Text) '
+            VerticalAlign: =VerticalAlign.Top
+            Visible: =NextStatus = "Abgelehnt"
+            Width: =665
+            X: =429
+            Y: =405
+      - lbl_StatusKommentar:
+          Control: Label
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Height: =154
+            Text: '=LookUp(colRessource,Title = "lbl_StatusKommentar" && Sprache.Value = varSelectedCulture,Text) '
+            VerticalAlign: =VerticalAlign.Top
+            Visible: =NextStatus = "Kommentar"
+            Width: =665
+            X: =429
+            Y: =405
+      - lbl_StatusPrüfungEinerRolleAbgeschlossen:
+          Control: Label
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Height: =154
+            Text: '=LookUp(colRessource,Title = "lbl_StatusPrüfungEinerRolleAbgeschlossen" && Sprache.Value = varSelectedCulture,Text) '
+            VerticalAlign: =VerticalAlign.Top
+            Visible: =NextStatus = "Prüfung Einkauf Abgeschlossen" || NextStatus = "Prüfung Finanzen Abgeschlossen" || NextStatus = "Prüfung ITSec Abgeschlossen" || NextStatus = "Prüfung Recht Abgeschlossen" || NextStatus = "Prüfung Arbeitsrechtliche Fragen Abgeschlossen"
+            Width: =665
+            X: =429
+            Y: =405
+      - lbl_StatusPrüfungAbgeschlossen:
+          Control: Label
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Height: =154
+            Text: '=LookUp(colRessource,Title = "lbl_StatusPrüfungAbgeschlossen" && Sprache.Value = varSelectedCulture,Text) '
+            VerticalAlign: =VerticalAlign.Top
+            Visible: =NextStatus = "Abgeschlossen"
+            Width: =665
+            X: =429
+            Y: =405
+      - lbl_Zurückgezogen:
+          Control: Label
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Height: =154
+            Text: '=LookUp(colRessource,Title = "lbl_Zurückgezogen" && Sprache.Value = varSelectedCulture,Text) '
+            VerticalAlign: =VerticalAlign.Top
+            Visible: =NextStatus = "Zurückgezogen"
+            Width: =665
+            X: =429
+            Y: =405
+      - lbl_StatusKommentarAntragsteller:
+          Control: Label
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Height: =154
+            Text: '=LookUp(colRessource,Title = "lbl_StatusKommentarAntragsteller" && Sprache.Value = varSelectedCulture,Text) '
+            VerticalAlign: =VerticalAlign.Top
+            Visible: =NextStatus = "Kommentar Antragsteller"
+            Width: =665
+            X: =429
+            Y: =405
+      - lbl_StatusInPrüfungRecht:
+          Control: Label
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Height: =154
+            Text: '=LookUp(colRessource,Title = "lbl_StatusInPrüfungRecht" && Sprache.Value = varSelectedCulture,Text) '
+            VerticalAlign: =VerticalAlign.Top
+            Visible: =NextStatus = "In Prüfung Recht"
+            Width: =665
+            X: =429
+            Y: =405
+      - Icon2_3:
+          Control: Classic/Icon
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Color: =varHSEBranding.Black
+            Height: =20
+            Icon: =Icon.Cancel
+            OnSelect: =Launch("https://homeshoppingeurope24.sharepoint.com/sites/EFABO",{},LaunchTarget.Replace)
+            Width: =20
+            X: =1344
+            Y: =2
+      - lbl_StatusEntwurf:
+          Control: Label
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Height: =154
+            Text: '=LookUp(colRessource,Title = "lbl_Entwurf" && Sprache.Value = varSelectedCulture,Text) '
+            VerticalAlign: =VerticalAlign.Top
+            Visible: =NextStatus = "Entwurf"
+            Width: =665
+            X: =429
+            Y: =405
+      - lbl_Verlaengerung_Beantragt:
+          Control: Label
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Height: =154
+            Text: '=LookUp(colRessource,Title = "lbl_Verlaengerung_Beantragt" && Sprache.Value = varSelectedCulture,Text) '
+            VerticalAlign: =VerticalAlign.Top
+            Visible: =NextStatus = "Verlängern"
+            Width: =665
+            X: =429
+            Y: =405
+      - lbl_Verlaengerung_Genehmigt:
+          Control: Label
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Height: =154
+            Text: '=LookUp(colRessource,Title = "lbl_Verlaengerung_Genehmigt" && Sprache.Value = varSelectedCulture,Text) '
+            VerticalAlign: =VerticalAlign.Top
+            Visible: =NextStatus = "Verlängert"
+            Width: =665
+            X: =429
+            Y: =405
+      - lbl_Verlaengerung_Abgelehnt:
+          Control: Label
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Height: =154
+            Text: '=LookUp(colRessource,Title = "lbl_Verlaengerung_Abgelehnt" && Sprache.Value = varSelectedCulture,Text) '
+            VerticalAlign: =VerticalAlign.Top
+            Visible: =NextStatus = "Verlängerung abgelehnt"
+            Width: =665
+            X: =429
+            Y: =405

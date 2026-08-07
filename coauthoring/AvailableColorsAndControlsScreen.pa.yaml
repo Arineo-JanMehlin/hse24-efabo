@@ -1,0 +1,108 @@
+Screens:
+  AvailableColorsAndControlsScreen:
+    Properties:
+      Fill: =RGBA(255, 255, 255, 1)
+      LoadingSpinnerColor: =RGBA(56, 96, 178, 1)
+    Children:
+      - ComboBox2:
+          Control: Classic/ComboBox
+          Properties:
+            BorderColor: =varHSEBranding.LightGray
+            ChevronBackground: =varHSEBranding.White
+            ChevronDisabledBackground: =ColorFade(varHSEBranding.LightGray,70%)
+            ChevronDisabledFill: =ColorFade(varHSEBranding.Black,50%)
+            ChevronFill: =varHSEBranding.Black
+            ChevronHoverBackground: =varHSEBranding.LightGray
+            ChevronHoverFill: =varHSEBranding.Black
+            Color: =varHSEBranding.Black
+            DefaultSelectedItems: =Parent.Default
+            DisabledBorderColor: =varHSEBranding.LightGray
+            DisabledColor: =ColorFade(varHSEBranding.Black,50%)
+            DisabledFill: =ColorFade(varHSEBranding.LightGray,70%)
+            Fill: =varHSEBranding.White
+            FocusedBorderThickness: =3
+            Font: =Font.'Open Sans'
+            HoverColor: =varHSEBranding.Black
+            HoverFill: =ColorFade(varHSEBranding.LightGray,70%)
+            PressedBorderColor: =ColorFade(varHSEBranding.LightGray,70%)
+            PressedColor: =ColorFade(varHSEBranding.LightGray,70%)
+            PressedFill: =ColorFade(varHSEBranding.LightGray,70%)
+            SelectionColor: =varHSEBranding.Black
+            SelectionFill: =ColorFade(varHSEBranding.LightGray,75%)
+            SelectionTagColor: =varHSEBranding.Black
+            SelectionTagFill: =Color.Transparent
+            Tooltip: =Parent.DisplayName
+            X: =60
+            Y: =87
+      - TextInput2:
+          Control: Classic/TextInput
+          Properties:
+            BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+            Color: =varHSEBranding.Black
+            Default: =Parent.Default
+            DisabledBorderColor: =varHSEBranding.LightGray
+            DisabledColor: =ColorFade(varHSEBranding.Black,50%)
+            DisabledFill: =ColorFade(varHSEBranding.LightGray,70%)
+            Fill: =varHSEBranding.White
+            FocusedBorderThickness: =3
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 15%)
+            HoverColor: =varHSEBranding.Black
+            HoverFill: =ColorFade(varHSEBranding.LightGray,70%)
+            MaxLength: =Parent.MaxLength
+            PressedBorderColor: =ColorFade(varHSEBranding.LightGray,70%)
+            PressedColor: =ColorFade(varHSEBranding.LightGray,70%)
+            PressedFill: =ColorFade(varHSEBranding.LightGray,70%)
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Tooltip: =Parent.DisplayName
+            Width: =328
+            X: =60
+            Y: =178
+      - DatePicker1:
+          Control: Classic/DatePicker
+          Properties:
+            BorderColor: =If(IsBlank(Parent.Error), Parent.BorderColor, Color.Red)
+            Color: =varHSEBranding.Black
+            DefaultDate: =Parent.Default
+            DisabledBorderColor: =varHSEBranding.LightGray
+            DisabledColor: =ColorFade(varHSEBranding.Black,50%)
+            DisabledFill: =ColorFade(varHSEBranding.LightGray,70%)
+            EndYear: =Year(Today())+100
+            Fill: =varHSEBranding.White
+            FocusedBorderThickness: =3
+            Font: =Font.'Open Sans'
+            IconBackground: =varHSEBranding.White
+            IconFill: =varHSEBranding.Black
+            StartOfWeek: =StartOfWeek.Monday
+            StartYear: =1899
+            Tooltip: =Parent.DisplayName
+            X: =60
+            Y: =265
+      - Toggle1:
+          Control: Classic/Toggle
+          Properties:
+            BorderColor: =varHSEBranding.LightGray
+            Color: =varHSEBranding.Black
+            Default: =Parent.Default
+            DisabledBorderColor: =varHSEBranding.LightGray
+            DisabledColor: =ColorFade(varHSEBranding.Black,50%)
+            FalseFill: =varHSEBranding.LightGray
+            FalseText: ="Nein"
+            Font: =Font.'Open Sans'
+            HandleFill: =varHSEBranding.White
+            TrueFill: =varHSEBranding.HSEOrange
+            TrueText: ="Ja"
+            Width: =110
+            X: =60
+            Y: =351
+      - Label6:
+          Control: Label
+          Properties:
+            BorderColor: =RGBA(0, 18, 107, 1)
+            Font: =Font.'Open Sans'
+            Text: ="LookUp('Environment Variable Values';DisplayName = 'AppID').Value"
+            X: =500
+            Y: =30
