@@ -5,6 +5,28 @@
 
 ## Teil 0 – Flows aktivieren & testen (Maker-Portal, ~10 Min.)
 
+> ⛔ **Blocker (Stand 07.08.):** Aktivieren scheitert mit `ConnectionAuthorizationFailed` auf `hse_EFABOSharePoint` — die SA-Connections (Besitzer `desvc.efabo@hse.com`) sind nicht mit `jan.mehlin_external` geteilt. Entsperren, eine der Optionen:
+> - **A (sauber, sobald AVD HELP-78885 da):** Auf AVD als `desvc.efabo@hse.com` anmelden → make.powerapps.com → Connections → alle 3 EFABO-Connections (SharePoint, Office 365 Outlook, OneDrive) → Teilen → `jan.mehlin_external` mit „Kann verwenden" hinzufügen. Danach kann Jan aktivieren. Alternativ Flows direkt als SA einschalten.
+> - **B (sofort, falls Power-Platform-Admin-Rolle vorhanden):** Admin-PowerShell, siehe Block unten — teilt SA-Connections per `Set-AdminPowerAppConnectionRoleAssignment` (CanUse) mit Jan.
+> - **C:** Person mit bestehendem Connection-Zugriff (bisheriger EFABO-Betreuer?) schaltet beide Flows ein.
+> - ❌ **Nicht:** Connection Reference `hse_EFABOSharePoint` auf eigene Connection umbiegen — wird von allen Flows der Solution geteilt, Berechtigungs-Flows brauchen SA-Rechte (Manage Permissions) auf der Site.
+>
+> ```powershell
+> # Voraussetzung: Power Platform Admin / Dynamics 365 Admin Rolle
+> Install-Module Microsoft.PowerApps.Administration.PowerShell -Scope CurrentUser
+> Add-PowerAppsAccount   # Login als jan.mehlin_external@hse.com
+> $env = "066791b7-04a5-43a6-b01d-b1d6b971e869"
+> $jan = "656999fd-fa20-459d-9b08-a7c01c8531b2"  # Objekt-ID aus der Fehlermeldung
+> # SA-Connections finden (Ersteller desvc.efabo):
+> Get-AdminPowerAppConnection -EnvironmentName $env |
+>   Where-Object { $_.CreatedBy.userPrincipalName -eq "desvc.efabo@hse.com" } |
+>   Select-Object ConnectionName, ConnectorName, DisplayName
+> # Für jede der 3 Connections (shared_sharepointonline, shared_office365, shared_onedriveforbusiness):
+> Set-AdminPowerAppConnectionRoleAssignment -EnvironmentName $env `
+>   -ConnectionName "<ConnectionName aus Liste>" -ConnectorName "<ConnectorName aus Liste>" `
+>   -RoleName CanUse -PrincipalType User -PrincipalObjectId $jan
+> ```
+
 1. [make.powerapps.com](https://make.powerapps.com/environments/066791b7-04a5-43a6-b01d-b1d6b971e869/solutions) → Solution **EFABO** öffnen.
 2. **Connection References prüfen** (Zahnrad an jedem Flow bzw. Solution → Connection References): alle 3 müssen eine gültige Connection haben — `EFABO SharePoint`, `Office 365 Outlook EFABO`, **`OneDrive for Business EFABO`** (wichtig: unter wessen Account die OneDrive-Connection läuft — dort landen die temporären HTML-Dateien und von dort läuft die PDF-Konvertierung. Ziel: `desvc.efabo@hse.com`).
 3. Flow **„EFABO Druck und Versand"** öffnen → **Einschalten**.
