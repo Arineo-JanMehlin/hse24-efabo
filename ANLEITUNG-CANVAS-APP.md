@@ -38,6 +38,8 @@
 
 ## Teil 1 – App-Umbau (Pflicht, ~20 Min.)
 
+> ⛔ **Blocker (Stand 07.08., P6 in PROBLEME.md):** Jan hat keinen Zugriff auf die SharePoint-Site `EFABO_DEV` → Studio lädt die Datenquellen nicht, Bearbeitung und Test blockiert. SA-Connections sind fürs Studio **nicht** nötig (Consent-Dialog „Zulassen" erstellt eigene Connections) — es fehlt nur der Site-Zugriff. Entsperren: Site-Owner nimmt `jan.mehlin_external@hse.com` als Mitglied (Bearbeiten) auf + in die EFABO-SharePoint-Gruppen (Recht/IT-Security) für Rollentests. Selbstservice: Site-URL öffnen → „Zugriff anfordern".
+
 App **„Erfassungsbogen Verträge"** im Studio öffnen (Bearbeiten).
 
 ### 1.1 Neuen Flow als Datenquelle hinzufügen
