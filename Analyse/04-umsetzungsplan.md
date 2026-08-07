@@ -1,6 +1,12 @@
 # Diff Anforderungen ↔ Ist-Stand & Umsetzungsplan
 
 > Stand 07.08.2026. Basis: Analyse 01–03, UMSETZUNGSLEITFADEN.md, PROBLEME.md.
+>
+> **Umsetzungsstand 07.08.2026:** Flow-Seite komplett umgesetzt und als **v1.0.2.0 in DEV importiert**:
+> F6-Mapping-Fix (live), ITSec-Block in Child EzP (live), neuer Flow „EFABO Druck und Versand" (`3f8e2d4a-…`, deaktiviert)
+> + „[Parent] EFABO Druck und Versand" (`7c4b9e1d-…`, deaktiviert), Auto-Druck-Aufrufe in „Geänderter Vertrag"
+> (Cases Abgeschlossen/Abgelehnt), neues Druck-HTML (width 100 %, colgroup 40/60, table-layout fixed, page-break-Regeln,
+> AF-Datumsfeld-Bugfix). App-Seite: siehe `ANLEITUNG-CANVAS-APP.md` (User setzt um).
 
 ## A. Diff: Anforderung vs. Ist-Stand
 
@@ -76,7 +82,7 @@ Design-Entscheidungen:
 ## E. Offene Fragen an Kunde/intern
 
 1. P2: Nachtrag automatisierte Mail-Variante beauftragt? (intern Robert Mueller, dann HSE)
-2. `legalcoordinator@hse.com` als alleiniger Empfänger bestätigt? Fallback-Mail beim manuellen Button auch dorthin oder zusätzlich an Auslöser?
+2. ~~`legalcoordinator@hse.com` als Empfänger~~ ✅ bestätigt (Jan, 07.08.). Offen bleibt: Fallback-Mail beim manuellen Button auch dorthin oder zusätzlich an Auslöser?
 3. Korrektes Feld für ITSec-Frage „Haben Dienstleister Zugriff…" (F15-Duplikat)?
 4. DEVTEST-Flow + „Test FLow Anlage" löschen? Testuser aus App.OnStart entfernen (F17)?
 5. B3/AP5 (Upload-Stabilisierung) im Budget? Ideen-Teil (Reminder, Infomails) nur nach Zusatzfreigabe – Restbudget nach #1–#5 vermutlich knapp.

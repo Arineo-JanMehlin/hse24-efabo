@@ -1,0 +1,82 @@
+{
+  "properties": {
+    "connectionReferences": {},
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "manual": {
+          "type": "Request",
+          "kind": "PowerAppV2",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "number": {
+                  "title": "EfaboID",
+                  "type": "number",
+                  "x-ms-dynamically-added": true,
+                  "description": "ID des EFABO Antrags",
+                  "x-ms-content-hint": "NUMBER"
+                }
+              },
+              "required": [
+                "number"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "Untergeordneten_Flow_ausführen": {
+          "runAfter": {},
+          "type": "Workflow",
+          "inputs": {
+            "host": {
+              "workflowReferenceName": "3f8e2d4a-91c7-4b5e-a6d2-8c0f5e7b9a31"
+            },
+            "body": {
+              "number": "@triggerBody()['number']",
+              "text": "Manuell"
+            }
+          }
+        },
+        "Respond_to_a_PowerApp_or_flow": {
+          "runAfter": {
+            "Untergeordneten_Flow_ausführen": [
+              "Succeeded"
+            ]
+          },
+          "type": "Response",
+          "kind": "PowerApp",
+          "inputs": {
+            "statusCode": 200,
+            "body": {
+              "message": "@{coalesce(outputs('Untergeordneten_Flow_ausführen')?['body/message'],'Der Export wurde angestoßen.')}"
+            },
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "title": "Message",
+                  "x-ms-dynamically-added": true,
+                  "type": "string"
+                }
+              },
+              "additionalProperties": {}
+            }
+          }
+        }
+      },
+      "outputs": {}
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}

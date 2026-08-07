@@ -115,6 +115,20 @@
           "metadata": {
             "schemaName": "hse_EFABO_Gruppe_WorkermanagementID"
           }
+        },
+        "IT-Security Freigabe (hse_ITSecurityFreigabe)": {
+          "defaultValue": "15e4a9aa-67e1-46a3-b61e-8d713d4c32f5",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_ITSecurityFreigabe"
+          }
+        },
+        "EFABO_Gruppe_ITSecID (hse_EFABO_Gruppe_ITSecID)": {
+          "defaultValue": "45",
+          "type": "String",
+          "metadata": {
+            "schemaName": "hse_EFABO_Gruppe_ITSecID"
+          }
         }
       },
       "triggers": {
@@ -1525,9 +1539,40 @@
             ]
           }
         },
-        "Set_Workermanagement_mit_Lesen": {
+        "Set_ITSec_mit_Prüfer_(ohne_Löschen)": {
           "runAfter": {
             "Set_Sachbearbeiter_Einkauf_mit_Prüfer_(ohne_Löschen)": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "12b783c0-7ed6-432e-b9c7-066584140344"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline_1",
+              "operationId": "HttpRequest"
+            },
+            "parameters": {
+              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+              "parameters/method": "POST",
+              "parameters/uri": "_api/web/lists/getbytitle('EFABO Anträge')/items(@{triggerBody()['number']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_ITSecID (hse_EFABO_Gruppe_ITSecID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+              "parameters/headers": {
+                "accept": "application/json;odata=verbose",
+                "content-type": "application/json;odata=verbose"
+              }
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          }
+        },
+        "Set_Workermanagement_mit_Lesen": {
+          "runAfter": {
+            "Set_ITSec_mit_Prüfer_(ohne_Löschen)": [
               "Succeeded"
             ]
           },
@@ -1556,9 +1601,382 @@
             }
           }
         },
-        "Auf_eine_PowerApp_oder_einen_Flow_antworten": {
+        "Bedingung_-_Einsatz_Software_wird_benötigt": {
+          "type": "If",
+          "expression": {
+            "equals": [
+              "@outputs('Get_EFABO')?['body/Einsatz_Software']",
+              "@true"
+            ]
+          },
+          "actions": {
+            "Set_ITSec_Status_In_Prüfung": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "PatchItem"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "table": "@parameters('EFABO Anträge (hse_shared_sharepointonline_fcca56274f1141e5872506919ee226b5)')",
+                  "id": "@triggerBody()['number']",
+                  "item/PruefungITSec": "In Prüfung"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "metadata": {
+                "operationMetadataId": "927a4ab0-7692-42e6-9b6d-ee69226dd411"
+              }
+            },
+            "Get_ITSec_Prüfung": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "GetItems"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "table": "@parameters('IT-Security Freigabe (hse_ITSecurityFreigabe)')",
+                  "$filter": "Title eq @{triggerBody()['number']}",
+                  "$top": 1
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "runAfter": {
+                "Set_ITSec_Status_In_Prüfung": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "c6b184b2-2641-494e-a44a-f143cad458cd"
+              }
+            },
+            "Parse_ITSec_Prüfung": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@First(outputs('Get_ITSec_Prüfung')?['body/value'])",
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ID": {
+                      "type": "integer"
+                    },
+                    "Title": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Get_ITSec_Prüfung": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "43eac314-117f-4a4d-a1e9-51c5377b695f"
+              }
+            },
+            "Freigabe_der_ITSec_Prüfung_beenden": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "UnshareItem"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "table": "@parameters('IT-Security Freigabe (hse_ITSecurityFreigabe)')",
+                  "id": "@body('Parse_ITSec_Prüfung')?['ID']"
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "runAfter": {
+                "Parse_ITSec_Prüfung": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d5b0c2e6-08b9-4584-bf31-6b0e10181ceb"
+              }
+            },
+            "Set_Verantwortlich_mit_Ersteller_(ohne_Löschen)_ITS": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "HttpRequest"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('IT Security Freigabe')/items(@{body('Parse_ITSec_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{body('JSON_analysieren_-_Verantwortlich')?['d']?['Id']},roledefId=@{parameters('Role Def Id Erstellen (hse_RoleDefIdErstellen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "runAfter": {
+                "Freigabe_der_ITSec_Prüfung_beenden": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "8def8938-910d-4aca-b843-6afe346ea3aa"
+              }
+            },
+            "Set_Genehmiger_mit_Prüfer_(ohne_Löschen)_ITS": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "HttpRequest"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('IT Security Freigabe')/items(@{body('Parse_ITSec_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{body('JSON_analysieren_-_Genehmiger')?['d']?['Id']},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "runAfter": {
+                "Set_Verantwortlich_mit_Ersteller_(ohne_Löschen)_ITS": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "1f720298-af92-48e1-8c6d-68cc7d91a41d"
+              }
+            },
+            "Set_Sachbearbeiter_Recht_mit_Prüfer_(ohne_Löschen)_ITS": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "HttpRequest"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('IT Security Freigabe')/items(@{body('Parse_ITSec_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_SachbearbeiterRechtID (hse_EFABO_Gruppe_SachbearbeiterRechtID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "runAfter": {
+                "Set_Genehmiger_mit_Prüfer_(ohne_Löschen)_ITS": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "d3aeb45f-063b-4050-8e0d-bdb4f30abb09"
+              }
+            },
+            "Set_Sachbearbeiter_Prüfende_Rechtsanwälte_mit_Prüfer_(ohne_Löschen)_ITS": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "HttpRequest"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('IT Security Freigabe')/items(@{body('Parse_ITSec_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_RechtID (hse_EFABO_Gruppe_RechtID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "runAfter": {
+                "Set_Sachbearbeiter_Recht_mit_Prüfer_(ohne_Löschen)_ITS": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b1b16f18-c1ca-4402-b27c-ead09fe6b5b8"
+              }
+            },
+            "Set_Sachbearbeiter_Sachbearbeiter_Finanzen_mit_Prüfer_(ohne_Löschen)_ITS": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "HttpRequest"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('IT Security Freigabe')/items(@{body('Parse_ITSec_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_FinanceID (hse_EFABO_Gruppe_FinanceID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "runAfter": {
+                "Set_Sachbearbeiter_Prüfende_Rechtsanwälte_mit_Prüfer_(ohne_Löschen)_ITS": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "250154c8-c2f3-465e-abc9-50fa96a473a2"
+              }
+            },
+            "Set_Sachbearbeiter_Einkauf_mit_Prüfer_(ohne_Löschen)_ITS": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "HttpRequest"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('IT Security Freigabe')/items(@{body('Parse_ITSec_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_EinkaufID (hse_EFABO_Gruppe_EinkaufID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "runAfter": {
+                "Set_Sachbearbeiter_Sachbearbeiter_Finanzen_mit_Prüfer_(ohne_Löschen)_ITS": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "12b783c0-7ed6-432e-b9c7-066584140344"
+              }
+            },
+            "Set_IT_Security_mit_Prüfer_(ohne_Löschen)_ITS": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "HttpRequest"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('IT Security Freigabe')/items(@{body('Parse_ITSec_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{parameters('EFABO_Gruppe_ITSecID (hse_EFABO_Gruppe_ITSecID)')},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "runAfter": {
+                "Set_Sachbearbeiter_Einkauf_mit_Prüfer_(ohne_Löschen)_ITS": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "12b783c0-7ed6-432e-b9c7-066584140344"
+              }
+            },
+            "Set_Verantwortlicher_mit_Prüfer_(ohne_Löschen)_ITS": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                  "connectionName": "shared_sharepointonline_1",
+                  "operationId": "HttpRequest"
+                },
+                "parameters": {
+                  "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
+                  "parameters/method": "POST",
+                  "parameters/uri": "_api/web/lists/getbytitle('IT Security Freigabe')/items(@{body('Parse_ITSec_Prüfung')?['ID']})/roleassignments/addroleassignment(principalId=@{body('JSON_analysieren_-_Verantwortlich')?['d']?['Id']},roledefId=@{parameters('Role Def Id Pruefen (hse_RoleDefIdPruefen)')})",
+                  "parameters/headers": {
+                    "accept": "application/json;odata=verbose",
+                    "content-type": "application/json;odata=verbose"
+                  }
+                },
+                "authentication": {
+                  "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+                  "type": "Raw"
+                }
+              },
+              "runAfter": {
+                "Set_IT_Security_mit_Prüfer_(ohne_Löschen)_ITS": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "73e59135-480f-45c2-a718-21644da9c991"
+              }
+            }
+          },
+          "else": {
+            "actions": {}
+          },
           "runAfter": {
             "Überprüfen_ob_Arbeitsrechtliche_Prüfung_benötigt_wird": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "a6aa6259-c589-4dac-865a-df0146720b6b"
+          }
+        },
+        "Auf_eine_PowerApp_oder_einen_Flow_antworten": {
+          "runAfter": {
+            "Bedingung_-_Einsatz_Software_wird_benötigt": [
               "Succeeded"
             ]
           },

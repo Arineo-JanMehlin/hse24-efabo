@@ -2186,6 +2186,23 @@
                       "metadata": {
                         "operationMetadataId": "1fc300ce-6428-4b63-ad92-4d281d749060"
                       }
+                    },
+                    "Untergeordneten_Flow_ausführen_-_Druck_Abgelehnt": {
+                      "runAfter": {
+                        "E-Mail_senden_(V2)_-_Ablehnung_an_Verantwortlichen": [
+                          "Succeeded"
+                        ]
+                      },
+                      "type": "Workflow",
+                      "inputs": {
+                        "host": {
+                          "workflowReferenceName": "3f8e2d4a-91c7-4b5e-a6d2-8c0f5e7b9a31"
+                        },
+                        "body": {
+                          "number": "@triggerOutputs()?['body/ID']",
+                          "text": "Abgelehnt"
+                        }
+                      }
                     }
                   },
                   "case": "Abgelehnt"
@@ -2293,6 +2310,23 @@
                       },
                       "metadata": {
                         "operationMetadataId": "be4add7a-043e-4f09-b723-c0ee1415a5bb"
+                      }
+                    },
+                    "Untergeordneten_Flow_ausführen_-_Druck_Abgeschlossen": {
+                      "runAfter": {
+                        "E-Mail_senden_(V2)_-_Info_über_Abschluss_an_Verwantwortlichen": [
+                          "Succeeded"
+                        ]
+                      },
+                      "type": "Workflow",
+                      "inputs": {
+                        "host": {
+                          "workflowReferenceName": "3f8e2d4a-91c7-4b5e-a6d2-8c0f5e7b9a31"
+                        },
+                        "body": {
+                          "number": "@triggerOutputs()?['body/ID']",
+                          "text": "Abgeschlossen"
+                        }
                       }
                     }
                   },

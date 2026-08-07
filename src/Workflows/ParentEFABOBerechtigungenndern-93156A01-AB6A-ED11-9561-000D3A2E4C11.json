@@ -64,9 +64,9 @@
               "workflowReferenceName": "da31cadf-4375-ec11-8943-6045bd943f26"
             },
             "body": {
-              "text": "@triggerBody()['Variableinitialisieren_Wert']",
+              "text": "@triggerBody()['Variableinitialisieren2_Wert']",
               "text_1": "@triggerBody()['RemoveUserMail_Wert']",
-              "text_2": "@triggerBody()['Variableinitialisieren2_Wert']",
+              "text_2": "@triggerBody()['Variableinitialisieren_Wert']",
               "number": "@triggerBody()['EfaboID_Wert']"
             }
           }

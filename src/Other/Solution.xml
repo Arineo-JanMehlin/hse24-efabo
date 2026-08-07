@@ -6,7 +6,7 @@
       <LocalizedName description="EFABO" languagecode="1031" />
     </LocalizedNames>
     <Descriptions />
-    <Version>1.0.1.5</Version>
+    <Version>1.0.2.0</Version>
     <Managed>0</Managed>
     <Publisher>
       <UniqueName>HSE</UniqueName>
@@ -94,6 +94,8 @@
       <RootComponent type="29" id="{da31cadf-4375-ec11-8943-6045bd943f26}" behavior="0" />
       <RootComponent type="29" id="{e7b63977-2fd1-ef11-a72e-6045bd932588}" behavior="0" />
       <RootComponent type="300" schemaName="hse_erfassungsbogenvertrge_f6658" behavior="0" />
+      <RootComponent type="29" id="{3f8e2d4a-91c7-4b5e-a6d2-8c0f5e7b9a31}" behavior="0" />
+      <RootComponent type="29" id="{7c4b9e1d-25f8-4a6c-b3e9-d15a8f2c6470}" behavior="0" />
     </RootComponents>
     <MissingDependencies />
   </SolutionManifest>
