@@ -24,10 +24,19 @@
                   "x-ms-dynamically-added": true,
                   "description": "ID des EFABO Antrags",
                   "x-ms-content-hint": "NUMBER"
+                },
+                "email": {
+                  "title": "AusloeserMail",
+                  "type": "string",
+                  "format": "email",
+                  "x-ms-dynamically-added": true,
+                  "description": "E-Mail des auslösenden Users (erhält Kopie der Mail)",
+                  "x-ms-content-hint": "EMAIL"
                 }
               },
               "required": [
-                "number"
+                "number",
+                "email"
               ]
             }
           }
@@ -43,7 +52,8 @@
             },
             "body": {
               "number": "@triggerBody()['number']",
-              "text": "Manuell"
+              "text": "Manuell",
+              "email": "@triggerBody()?['email']"
             }
           }
         },

@@ -98,6 +98,14 @@
                   "x-ms-dynamically-added": true,
                   "description": "Abgeschlossen | Abgelehnt | Manuell",
                   "x-ms-content-hint": "TEXT"
+                },
+                "email": {
+                  "title": "AusloeserMail",
+                  "type": "string",
+                  "format": "email",
+                  "x-ms-dynamically-added": true,
+                  "description": "E-Mail des Auslösers (optional, erhält Kopie)",
+                  "x-ms-content-hint": "EMAIL"
                 }
               },
               "required": [
@@ -469,6 +477,7 @@
                 },
                 "parameters": {
                   "emailMessage/To": "legalcoordinator@hse.com",
+                  "emailMessage/Cc": "@coalesce(triggerBody()?['email'],'')",
                   "emailMessage/Subject": "@{variables('varTesting')}EFABO @{triggerBody()['number']}: @{toLower(coalesce(outputs('Get_EFABO')?['body/Status/Value'], triggerBody()['text']))} – Prüfdokumente",
                   "emailMessage/Body": "<p>Guten Tag,</p><p>der EFABO mit der ID <b>@{triggerBody()['number']}</b> wurde <b>@{toLower(coalesce(outputs('Get_EFABO')?['body/Status/Value'], triggerBody()['text']))}</b>.</p><p><b>Kommentar Legal (Lecare AZ):</b><br>@{coalesce(outputs('Get_EFABO')?['body/Kommentar_x0020_Recht'],'&ndash;')}</p><p>@{if(equals(length(variables('varAttachments')),0),'Für diesen EFABO sind keine Prüfdokumente (Arbeitsrechtliche Freigabe / IT-Security) hinterlegt.','Die zugehörigen Prüfdokumente befinden sich im Anhang.')}</p><p>Diese Nachricht wurde automatisch von der EFABO-Lösung versendet. Auslöser: @{triggerBody()['text']}</p>",
                   "emailMessage/Attachments": "@variables('varAttachments')",
@@ -493,7 +502,7 @@
           "inputs": {
             "statusCode": 200,
             "body": {
-              "message": "Der Export wurde erstellt und an den Legal Coordinator (legalcoordinator@hse.com) versendet."
+              "message": "Der Export wurde erstellt und an den Legal Coordinator (legalcoordinator@hse.com) versendet.@{if(empty(coalesce(triggerBody()?['email'],'')),'',concat(' Eine Kopie ging an ',triggerBody()?['email'],'.'))}"
             },
             "schema": {
               "type": "object",

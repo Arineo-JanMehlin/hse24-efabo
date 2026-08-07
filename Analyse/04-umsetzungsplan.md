@@ -45,7 +45,7 @@ Design-Entscheidungen:
 ### AP1 – Drucklayout (#1, 2 CS)
 1. Neues HTML/CSS-Template (gemeinsam für AF+ITSec): `width:100%; table-layout:fixed; border-collapse:collapse;` + `<colgroup>` 35 %/65 % (linke Spalte größer lt. Anforderung), `word-wrap:break-word; overflow-wrap:anywhere;`, `tr{page-break-inside:avoid}`, Abschnittsüberschriften `th colspan=2`.
 2. Feld-Bugs mitfixen: „Ende der Leistungserbringung"-empty-Check (F15), Duplikatfeld `Andere_Softwareloesungen_Zugriff` (F15) – **korrektes Feld beim Kunden erfragen**.
-3. Feindesign-Abstimmung mit HSE (Beispiel-PDF erzeugen).
+3. Feindesign-Abstimmung mit HSE: Beispiel-PDF erzeugen und **per Mail an Annette Brunner zur Freigabe** (Entscheidung Jan, 07.08.).
 
 ### AP2 – Neuer Druck-Flow + App-Umbau (#2, 8 CS)
 1. Flow „EFABO Druck & Versand" bauen (siehe B), inkl. Try/Catch + Response.
@@ -82,7 +82,7 @@ Design-Entscheidungen:
 ## E. Offene Fragen an Kunde/intern
 
 1. P2: Nachtrag automatisierte Mail-Variante beauftragt? (intern Robert Mueller, dann HSE)
-2. ~~`legalcoordinator@hse.com` als Empfänger~~ ✅ bestätigt (Jan, 07.08.). Offen bleibt: Fallback-Mail beim manuellen Button auch dorthin oder zusätzlich an Auslöser?
+2. ~~`legalcoordinator@hse.com` als Empfänger~~ ✅ bestätigt (Jan, 07.08.). ~~Fallback-Mail auch an Auslöser?~~ ✅ entschieden (Jan, 07.08.): **zusätzlich an Klicker (CC)** — umgesetzt in Flow-Sources (Child-Input `AusloeserMail`, Parent reicht durch, App übergibt `User().Email`); ab v1.0.2.1.
 3. Korrektes Feld für ITSec-Frage „Haben Dienstleister Zugriff…" (F15-Duplikat)?
-4. DEVTEST-Flow + „Test FLow Anlage" löschen? Testuser aus App.OnStart entfernen (F17)?
+4. ~~DEVTEST-Flow + „Test FLow Anlage" löschen? Testuser entfernen (F17)?~~ ✅ entschieden (Jan, 07.08.): **vorerst nichts löschen** — erst nach vollständigem DEV-Test wieder aufgreifen (GoLive-Vorbereitung).
 5. B3/AP5 (Upload-Stabilisierung) im Budget? Ideen-Teil (Reminder, Infomails) nur nach Zusatzfreigabe – Restbudget nach #1–#5 vermutlich knapp.
