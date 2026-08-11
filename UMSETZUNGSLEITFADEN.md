@@ -30,7 +30,8 @@
 | Datum | Stunden | Buchungstext | Deckt ab |
 |---|---|---|---|
 | 07.08.2026 | 5,00 | „Neubau der Druck- und Versand-Flows: konsolidierter Flow für AF- und IT-Security-PDFs mit neuem Drucklayout, automatischem Versand an Legal Coordinator bei Abschluss/Ablehnung und Fehlerbehandlung" | Flow-Seite von #1–#3 komplett (inkl. Analyse, B2-Bugfixes F5/F6, Auslöser-Kopie-Feature) |
-| | **Gebucht gesamt: 5,00** | **Restbudget: 11,00 von 16,00** | Restaufwand geschätzt ~6 h (App-Umbau, Aktivierung+Test, Feindesign, GoLive, PM) |
+| 11.08.2026 | 3,00 | „App-Umbau via Coauthoring: neuer zentraler Druck-Button auf Detailansicht (Rollen-/Status-Sichtbarkeit, Flow-Anbindung vorbereitet), 7 veraltete Druck-/Verlängerungs-Buttons entfernt, 4 Review-Bugfixes übernommen, Auth-/Verbindungsprobleme gelöst und dokumentiert, App gespeichert und veröffentlicht" | App-Seite von #2 (Teil 1 + Teil 2 der Anleitung, außer 1.1 Flow-Anbindung/P4); Doku P6–P8 |
+| | **Gebucht gesamt: 8,00** | **Restbudget: 8,00 von 16,00** | Restaufwand geschätzt ~5 h (Flow-Aktivierung+Test nach P4, Feindesign, B3-Fix, GoLive, PM) |
 
 ## 3. Anforderungen im Detail
 
