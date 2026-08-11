@@ -104,7 +104,6 @@ Screens:
                         Y: =DataCardKey212.Y
       - Logo_Image_10:
           Control: Image
-          Group: Header_Group_10
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Height: =87
@@ -114,7 +113,6 @@ Screens:
             X: =1189
       - Header_Label_10:
           Control: Label
-          Group: Header_Group_10
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Font: =Font.'Open Sans'
@@ -127,7 +125,6 @@ Screens:
             Y: =14
       - Highlight_Rectangle_10:
           Control: Rectangle
-          Group: Header_Group_10
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Fill: =varHSEBranding.HSEOrange
@@ -137,62 +134,12 @@ Screens:
             Y: =75
       - Seperation_Rectangle_10:
           Control: Rectangle
-          Group: Header_Group_10
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Fill: =varHSEBranding.LightGray
             Height: =8
             Width: =1366
             Y: =87
-      - btn_PrintEFABO:
-          Control: Classic/Button
-          Properties:
-            BorderColor: =ColorFade(Self.Fill, -15%)
-            BorderThickness: =0
-            Color: =varHSEBranding.White
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            DisplayMode: =DisplayMode.Edit
-            Fill: =varHSEBranding.HSEOrange
-            FocusedBorderThickness: =0
-            Font: =Font.'Open Sans'
-            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
-            HoverColor: =RGBA(255, 255, 255, 1)
-            HoverFill: =ColorFade(varHSEBranding.HSEOrange, -20%)
-            OnSelect: |-
-              =// TODO (P4): Flow '[Parent] EFABO Druck und Versand' ist noch nicht als Datenquelle
-              // in der App (Aktivierung blockiert, siehe PROBLEME.md P4). Sobald der Flow
-              // aktiviert und über Power Automate > "Flow hinzufügen" verbunden ist,
-              // diesen Block durch den echten Aufruf ersetzen:
-              //
-              // UpdateContext({cvarPrintResult: '[Parent]EFABODruckundVersand'.Run(EfaboAntrag.ID, User().Email)});
-              // If(
-              //     IsBlank(cvarPrintResult.message),
-              //     Notify(
-              //         "Der Export ist fehlgeschlagen. Bitte versuchen Sie es erneut oder wenden Sie sich an den Support.",
-              //         NotificationType.Error,
-              //         8000
-              //     ),
-              //     Notify(cvarPrintResult.message, NotificationType.Success, 6000)
-              // )
-              Notify(
-                  "Die Druckfunktion ist noch nicht aktiviert (Flow-Verbindung ausstehend).",
-                  NotificationType.Warning,
-                  6000
-              )
-            PressedBorderColor: =Self.Fill
-            PressedColor: =Self.Fill
-            PressedFill: =Self.Color
-            RadiusBottomLeft: =0
-            RadiusBottomRight: =0
-            RadiusTopLeft: =0
-            RadiusTopRight: =0
-            Text: ="Prüfdokumente an Legal Coordinator senden"
-            Visible: |-
-              =(varRolleUser = "Prüfende Rechtsanwälte" || varRolleUser = "Sachbearbeiter Recht") &&
-              (EfaboAntrag.Status.Value = "Abgeschlossen" || EfaboAntrag.Status.Value = "Abgelehnt")
-            Width: =420
-            X: =620
-            Y: =20
       - ViewForm:
           Control: Form
           Variant: Classic
@@ -337,7 +284,7 @@ Screens:
                         Font: =Font.'Open Sans'
                         Height: =34
                         Size: =11
-                        Text: |+
+                        Text: |
                           ="Legal: "& LookUp(colRessource,Title = "lbl_Status_Value" && Sprache.Value = varSelectedCulture && Wert =ThisItem.'Prüfung Legal',Text)
                         Visible: =ThisItem.Status.Value="In Prüfung"
                         Width: =220
@@ -3955,7 +3902,7 @@ Screens:
                         BorderColor: =RGBA(0, 0, 0, 1)
                         Font: =Font.'Open Sans'
                         Height: =34
-                        Text: |+
+                        Text: |
                           =Parent.DisplayName
                         Tooltip: ="""Genehmigungsvorbehalt oder Kündigungsrecht für den Fall, dass bei einer Vertragspartei ein vollständiger oder teilweiser Wechsel des Gesellschafters stattfindet."""
                         Width: =(Parent.Width - 60) * 0.4
@@ -4756,7 +4703,7 @@ Screens:
                   BorderColor: =varHSEBranding.LightGray
                   DataField: ="Whitelist"
                   Default: =ThisItem.Whitelist
-                  DisplayName: |+
+                  DisplayName: |
                     =//"Tätigkeit ist in der Whitelist?" 
                     //"Ist die Dienstleistung auf der HSE Whitelist enthalten?"
                     LookUp(colRessource,Title = "lbl_Whitelist" && Sprache.Value = varSelectedCulture,Text) 
@@ -4813,7 +4760,7 @@ Screens:
                         Color: =varHSEBranding.Black
                         Font: =Font.'Open Sans'
                         Height: =34
-                        Text: |+
+                        Text: |
                           =//"Tätigkeit ist in der Whitelist?" 
                           //"Ist die Dienstleistung auf der HSE Whitelist enthalten?"
                           Parent.DisplayName
@@ -4899,7 +4846,7 @@ Screens:
                   DataField: ="Generalfreigabe"
                   Default: =ThisItem.Generalfreigabe
                   DisplayName: =LookUp(colRessource,Title = "lbl_Generalfreigabe" && Sprache.Value = varSelectedCulture,Text)
-                  Height: |+
+                  Height: |
                     =If(dcv_GeneralFreigabe_1.Value,130,72)
                   Required: =dcv_GeneralFreigabe_1.Value
                   Update: =dcv_GeneralFreigabe_1.Value //If(dcv_GeneralFreigabe_1.Value && cb_Generalfreigabe_1;true)
@@ -5003,7 +4950,7 @@ Screens:
                     100
                   MaxLength: =DataSourceInfo([@'EFABO Anträge'], DataSourceInfo.MaxLength, Kommentar)
                   Required: =false
-                  Update: |+
+                  Update: |
                     =dcv_KommentarAntragsteller.Text
                   Width: =1366
                   X: =0
@@ -5065,7 +5012,7 @@ Screens:
                         DisabledBorderColor: =varHSEBranding.LightGray
                         DisabledColor: =ColorFade(varHSEBranding.Black,50%)
                         DisabledFill: =ColorFade(varHSEBranding.LightGray,70%)
-                        DisplayMode: |+
+                        DisplayMode: |
                           =If(varRolleUser = "Antragssteller" && (EfaboAntrag.Status.Value = "Prüfung Genehmiger" || EfaboAntrag.Status.Value = "In Prüfung"),DisplayMode.Edit,DisplayMode.Disabled)
                         Fill: =varHSEBranding.White
                         FocusedBorderThickness: =3
@@ -5091,7 +5038,7 @@ Screens:
                 Control: TypedDataCard
                 Variant: ClassicTextualEdit
                 Properties:
-                  BorderColor: |+
+                  BorderColor: |
                     =varHSEBranding.LightGray
                   DataField: ="Kommentar_x0020_Genehmiger"
                   Default: =ThisItem.'Kommentar Genehmiger'
@@ -5855,7 +5802,7 @@ Screens:
                         DisabledBorderColor: =varHSEBranding.LightGray
                         DisabledColor: =ColorFade(varHSEBranding.Black,50%)
                         DisabledFill: =ColorFade(varHSEBranding.LightGray,70%)
-                        DisplayMode: |+
+                        DisplayMode: |
                           =//If((varRolleUser = "Prüfende Rechtsanwälte" || varRolleUser = "Sachbearbeiter Recht") && (EfaboAntrag.'Prüfung Legal' = "In Prüfung" || EfaboAntrag.'Prüfung Legal' = "Anlage Akte in Lecare"),DisplayMode.Edit,DisplayMode.Disabled)
                           DisplayMode.Disabled
                         Fill: =varHSEBranding.White
@@ -5888,7 +5835,7 @@ Screens:
                         DisabledBorderColor: =varHSEBranding.LightGray
                         DisabledColor: =ColorFade(varHSEBranding.Black,50%)
                         DisabledFill: =ColorFade(varHSEBranding.LightGray,70%)
-                        DisplayMode: |+
+                        DisplayMode: |
                           =If((varRolleUser = "Prüfende Rechtsanwälte" || varRolleUser = "Sachbearbeiter Recht") && (EfaboAntrag.'Prüfung Legal' = "In Prüfung" || EfaboAntrag.'Prüfung Legal' = "Anlage Akte in Lecare"),DisplayMode.Edit,DisplayMode.Disabled)
                         Fill: =varHSEBranding.White
                         FocusedBorderThickness: =3
@@ -7892,7 +7839,7 @@ Screens:
                   MaxLength: =DataSourceInfo([@'EFABO Anträge'], DataSourceInfo.MaxLength, PruefungArbeitsrechtlicheFragen)
                   Required: =false
                   Update: =DataCardValue28.Text
-                  Visible: |+
+                  Visible: |
                     =false
                   Width: =683
                   X: =1
@@ -8948,7 +8895,6 @@ Screens:
                   Y: =4
       - Rectangle3:
           Control: Rectangle
-          Group: gpr_SaveCopyView
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Fill: =RGBA(0, 0, 0, 0.5)
@@ -8958,7 +8904,6 @@ Screens:
             Width: =1366
       - Rectangle4:
           Control: Rectangle
-          Group: gpr_SaveCopyView
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Fill: =RGBA(255, 255, 255, 1)
@@ -8970,7 +8915,6 @@ Screens:
             Y: =284
       - Button1_16:
           Control: Classic/Button
-          Group: gpr_SaveCopyView
           Properties:
             BorderColor: =ColorFade(Self.Fill, -15%)
             BorderThickness: =0
@@ -9014,7 +8958,6 @@ Screens:
             Y: =349
       - Button1_17:
           Control: Classic/Button
-          Group: gpr_SaveCopyView
           Properties:
             BorderColor: =ColorFade(Self.Fill, -15%)
             BorderThickness: =0
@@ -9067,7 +9010,6 @@ Screens:
             Y: =349
       - ic_Close:
           Control: Classic/Icon
-          Group: gpr_SaveCopyView
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Color: =RGBA(0, 0, 0, 1)
@@ -9086,7 +9028,6 @@ Screens:
             Y: =284
       - btn_NeuerAntrag_5:
           Control: Classic/Button
-          Group: grp_NavigationAF_5
           Properties:
             BorderColor: =ColorFade(Self.Fill, -15%)
             BorderThickness: =0
@@ -9114,7 +9055,6 @@ Screens:
             Y: =95
       - btn_ArbeitsrechtlicheFreigabe_6:
           Control: Classic/Button
-          Group: grp_NavigationAF_5
           Properties:
             BorderColor: =ColorFade(Self.Fill, -15%)
             BorderThickness: =0
@@ -9144,7 +9084,6 @@ Screens:
             Y: =95
       - btn_ITSecurityFreigabe_5:
           Control: Classic/Button
-          Group: grp_NavigationAF_5
           Properties:
             BorderColor: =ColorFade(Self.Fill, -15%)
             BorderThickness: =0
@@ -9172,3 +9111,51 @@ Screens:
             Width: =250
             X: =1094
             Y: =95
+      - btn_PrintEFABO:
+          Control: Classic/Button
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =varHSEBranding.White
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            Fill: =varHSEBranding.HSEOrange
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(varHSEBranding.HSEOrange, -20%)
+            OnSelect: |-
+              =// TODO (P4): Flow '[Parent] EFABO Druck und Versand' ist noch nicht als Datenquelle
+              // in der App (Aktivierung blockiert, siehe PROBLEME.md P4). Sobald der Flow
+              // aktiviert und über Power Automate > "Flow hinzufügen" verbunden ist,
+              // diesen Block durch den echten Aufruf ersetzen:
+              //
+              // UpdateContext({cvarPrintResult: '[Parent]EFABODruckundVersand'.Run(EfaboAntrag.ID, User().Email)});
+              // If(
+              //     IsBlank(cvarPrintResult.message),
+              //     Notify(
+              //         "Der Export ist fehlgeschlagen. Bitte versuchen Sie es erneut oder wenden Sie sich an den Support.",
+              //         NotificationType.Error,
+              //         8000
+              //     ),
+              //     Notify(cvarPrintResult.message, NotificationType.Success, 6000)
+              // )
+              Notify(
+                  "Die Druckfunktion ist noch nicht aktiviert (Flow-Verbindung ausstehend).",
+                  NotificationType.Warning,
+                  6000
+              )
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Text: ="Prüfdokumente an Legal Coordinator senden"
+            Visible: |-
+              =(varRolleUser = "Prüfende Rechtsanwälte" || varRolleUser = "Sachbearbeiter Recht") &&
+              (EfaboAntrag.Status.Value = "Abgeschlossen" || EfaboAntrag.Status.Value = "Abgelehnt")
+            Width: =420
+            X: =620
+            Y: =20

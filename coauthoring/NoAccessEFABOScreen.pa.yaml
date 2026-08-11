@@ -6,7 +6,6 @@ Screens:
     Children:
       - Logo_Image_6:
           Control: Image
-          Group: Header_Group_6
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Height: =103
@@ -16,7 +15,6 @@ Screens:
             X: =1182
       - Header_Label_6:
           Control: Label
-          Group: Header_Group_6
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Font: =Font.'Open Sans'
@@ -29,7 +27,6 @@ Screens:
             Y: =14
       - Highlight_Rectangle_6:
           Control: Rectangle
-          Group: Header_Group_6
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Fill: =varHSEBranding.HSEOrange
@@ -39,7 +36,6 @@ Screens:
             Y: =75
       - Seperation_Rectangle_6:
           Control: Rectangle
-          Group: Header_Group_6
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Fill: =RGBA(237, 237, 237, 1)

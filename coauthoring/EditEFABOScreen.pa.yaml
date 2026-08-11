@@ -109,7 +109,6 @@ Screens:
                         Y: =DataCardKey153.Y
       - Logo_Image_9:
           Control: Image
-          Group: Header_Group_9
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Height: =87
@@ -120,7 +119,6 @@ Screens:
             X: =1189
       - Header_Label_9:
           Control: Label
-          Group: Header_Group_9
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Font: =Font.'Open Sans'
@@ -133,7 +131,6 @@ Screens:
             Y: =14
       - Highlight_Rectangle_9:
           Control: Rectangle
-          Group: Header_Group_9
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Fill: =varHSEBranding.HSEOrange
@@ -4629,7 +4626,7 @@ Screens:
                   BorderColor: =varHSEBranding.LightGray
                   DataField: ="Whitelist"
                   Default: =ThisItem.Whitelist
-                  DisplayName: |+
+                  DisplayName: |
                     =//"Tätigkeit ist in der Whitelist?" 
                     //"Ist die Dienstleistung auf der HSE Whitelist enthalten?"
                     LookUp(colRessource,Title = "lbl_Whitelist" && Sprache.Value = varSelectedCulture,Text) 
@@ -4692,7 +4689,7 @@ Screens:
                         Color: =varHSEBranding.Black
                         Font: =Font.'Open Sans'
                         Height: =34
-                        Text: |+
+                        Text: |
                           =//"Tätigkeit ist in der Whitelist?" 
                           //"Ist die Dienstleistung auf der HSE Whitelist enthalten?"
                           Parent.DisplayName
@@ -4882,7 +4879,7 @@ Screens:
                   Height: =100
                   MaxLength: =DataSourceInfo([@'EFABO Anträge'], DataSourceInfo.MaxLength, 'Kommentar Genehmiger')
                   Required: =false
-                  Update: |+
+                  Update: |
                     =dcv_KommentarGenehmigerEdit.Text
                   Visible: =ThisItem.Status.Value <> "Entwurf"
                   Width: =1366
@@ -6655,7 +6652,6 @@ Screens:
                   Y: =4
       - Rectangle3_1:
           Control: Rectangle
-          Group: gpr_SaveCopyView_1
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Fill: =RGBA(0, 0, 0, 0.5)
@@ -6665,7 +6661,6 @@ Screens:
             Width: =1366
       - Rectangle4_1:
           Control: Rectangle
-          Group: gpr_SaveCopyView_1
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Fill: =RGBA(255, 255, 255, 1)
@@ -6677,7 +6672,6 @@ Screens:
             Y: =284
       - Button1_20:
           Control: Classic/Button
-          Group: gpr_SaveCopyView_1
           Properties:
             BorderColor: =ColorFade(Self.Fill, -15%)
             BorderThickness: =0
@@ -6721,7 +6715,6 @@ Screens:
             Y: =349
       - Button1_24:
           Control: Classic/Button
-          Group: gpr_SaveCopyView_1
           Properties:
             BorderColor: =ColorFade(Self.Fill, -15%)
             BorderThickness: =0
@@ -6774,7 +6767,6 @@ Screens:
             Y: =349
       - ic_Close_1:
           Control: Classic/Icon
-          Group: gpr_SaveCopyView_1
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Color: =RGBA(0, 0, 0, 1)
@@ -6793,7 +6785,6 @@ Screens:
             Y: =284
       - btn_NeuerAntrag_6:
           Control: Classic/Button
-          Group: grp_NavigationAF_6
           Properties:
             BorderColor: =ColorFade(Self.Fill, -15%)
             BorderThickness: =0
@@ -6821,7 +6812,6 @@ Screens:
             Y: =98
       - btn_ArbeitsrechtlicheFreigabe_7:
           Control: Classic/Button
-          Group: grp_NavigationAF_6
           Properties:
             BorderColor: =ColorFade(Self.Fill, -15%)
             BorderThickness: =0
@@ -6890,7 +6880,6 @@ Screens:
             Y: =98
       - btn_ITSecurityFreigabe_6:
           Control: Classic/Button
-          Group: grp_NavigationAF_6
           Properties:
             BorderColor: =ColorFade(Self.Fill, -15%)
             BorderThickness: =0
@@ -6964,7 +6953,6 @@ Screens:
             Y: =98
       - Seperation_Rectangle_9:
           Control: Rectangle
-          Group: Header_Group_9
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Fill: =varHSEBranding.LightGray

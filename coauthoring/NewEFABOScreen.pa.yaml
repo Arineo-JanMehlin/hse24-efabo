@@ -14,7 +14,6 @@ Screens:
     Children:
       - Logo_Image:
           Control: Image
-          Group: Header_Group
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Height: =87
@@ -25,7 +24,6 @@ Screens:
             X: =1189
       - Header_Label:
           Control: Label
-          Group: Header_Group
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Font: =Font.'Open Sans'
@@ -38,7 +36,6 @@ Screens:
             Y: =14
       - Highlight_Rectangle:
           Control: Rectangle
-          Group: Header_Group
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Fill: =varHSEBranding.HSEOrange
@@ -48,7 +45,6 @@ Screens:
             Y: =75
       - Seperation_Rectangle:
           Control: Rectangle
-          Group: Header_Group
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Fill: =varHSEBranding.LightGray
@@ -1931,7 +1927,7 @@ Screens:
                         HoverColor: =varHSEBranding.Black
                         HoverFill: =ColorFade(varHSEBranding.LightGray,70%)
                         IsSearchable: =false
-                        Items: |+
+                        Items: |
                           =//Choices([@'EFABO Anträge'].Vertragsart)
                           Filter(colRessource,Feld="drp_Vertragsart" && Sprache.Value = varSelectedCulture)
                         PressedBorderColor: =ColorFade(varHSEBranding.LightGray,70%)
@@ -4530,7 +4526,7 @@ Screens:
                   BorderColor: =varHSEBranding.LightGray
                   DataField: ="Whitelist"
                   Default: =false
-                  DisplayName: |+
+                  DisplayName: |
                     =//"Tätigkeit ist in der Whitelist?" 
                     //"Ist die Dienstleistung auf der HSE Whitelist enthalten?"
                     LookUp(colRessource,Title = "lbl_Whitelist" && Sprache.Value = varSelectedCulture,Text) 
@@ -4561,7 +4557,7 @@ Screens:
                         Color: =varHSEBranding.Black
                         Font: =Font.'Open Sans'
                         Height: =34
-                        Text: |+
+                        Text: |
                           =//"Tätigkeit ist in der Whitelist?" 
                           //"Ist die Dienstleistung auf der HSE Whitelist enthalten?"
                           Parent.DisplayName
@@ -5190,7 +5186,6 @@ Screens:
                   Y: =4
       - btn_NeuerAntrag:
           Control: Classic/Button
-          Group: grp_NavigationAF
           Properties:
             BorderColor: =ColorFade(Self.Fill, -15%)
             BorderThickness: =0
@@ -5218,7 +5213,6 @@ Screens:
             Y: =95
       - btn_ArbeitsrechtlicheFreigabe:
           Control: Classic/Button
-          Group: grp_NavigationAF
           Properties:
             BorderColor: =ColorFade(Self.Fill, -15%)
             BorderThickness: =0
@@ -5266,7 +5260,6 @@ Screens:
             Y: =95
       - btn_ITSecurityFreigabe:
           Control: Classic/Button
-          Group: grp_NavigationAF
           Properties:
             BorderColor: =ColorFade(Self.Fill, -15%)
             BorderThickness: =0

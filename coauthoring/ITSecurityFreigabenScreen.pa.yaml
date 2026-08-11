@@ -46,7 +46,6 @@ Screens:
     Children:
       - Logo_Image_4:
           Control: Image
-          Group: Header_Group_4
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Height: =87
@@ -115,7 +114,6 @@ Screens:
                   Y: =4
       - Header_Label_4:
           Control: Label
-          Group: Header_Group_4
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Font: =Font.'Open Sans'
@@ -128,7 +126,6 @@ Screens:
             Y: =14
       - Highlight_Rectangle_4:
           Control: Rectangle
-          Group: Header_Group_4
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Fill: =varHSEBranding.HSEOrange
@@ -138,7 +135,6 @@ Screens:
             Y: =75
       - Seperation_Rectangle_4:
           Control: Rectangle
-          Group: Header_Group_4
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Fill: =varHSEBranding.LightGray
@@ -999,7 +995,7 @@ Screens:
                         PaddingTop: =0
                         Text: '=LookUp(colRessource,Title = "lbl_KI_Checkliste" && Sprache.Value = varSelectedCulture,Text) '
                         Visible: =dcv_Verwendung_KI.Value
-                        Width: |+
+                        Width: |
                           =LookUp(colRessource,Title = "lbl_KI_Checkliste" && Sprache.Value = varSelectedCulture,Wert)
                         Wrap: =false
                         X: =35
@@ -2206,7 +2202,7 @@ Screens:
                 Control: TypedDataCard
                 Variant: ClassicTextualEdit
                 Properties:
-                  BorderColor: |+
+                  BorderColor: |
                     =varHSEBranding.LightGray
                   DataField: ="Anzahl_Nutzer"
                   Default: =ThisItem.Anzahl_Nutzer
@@ -3919,7 +3915,7 @@ Screens:
                         RadiusTopLeft: =0
                         RadiusTopRight: =0
                         Tooltip: =Parent.DisplayName
-                        Width: |+
+                        Width: |
                           =1055
                         X: =279.2
                         Y: =10
@@ -3952,7 +3948,7 @@ Screens:
                         RadiusTopRight: =0
                         Tooltip: =Parent.DisplayName
                         Visible: =If(varRolleUser = "Antragssteller" && (EfaboAntrag.'Prüfung ITSec' = "In Prüfung" || EfaboAntrag.Status.Value = "Prüfung Genehmiger"),true,false)
-                        Width: |+
+                        Width: |
                           =1055
                         X: =279.2
                         Y: =100
@@ -4379,7 +4375,7 @@ Screens:
                         RadiusTopLeft: =0
                         RadiusTopRight: =0
                         Text: '=LookUp(colRessource,Title = "btn_Entwurf" && Sprache.Value = varSelectedCulture,Text) '
-                        Visible: |+
+                        Visible: |
                           =EfaboAntrag.Status.Value = "Entwurf" && varRolleUser = "Antragssteller"
                         Width: =270
                         X: =770
@@ -4619,7 +4615,6 @@ Screens:
                         Y: =8
       - btn_NeuerAntrag_2:
           Control: Classic/Button
-          Group: grp_NavigationAF_2
           Properties:
             BorderColor: =ColorFade(Self.Fill, -15%)
             BorderThickness: =0
@@ -4664,7 +4659,6 @@ Screens:
             Y: =95
       - btn_ArbeitsrechtlicheFreigabe_2:
           Control: Classic/Button
-          Group: grp_NavigationAF_2
           Properties:
             BorderColor: =ColorFade(Self.Fill, -15%)
             BorderThickness: =0
@@ -4732,7 +4726,6 @@ Screens:
             Y: =95
       - btn_ITSecurityFreigabe_3:
           Control: Classic/Button
-          Group: grp_NavigationAF_2
           Properties:
             BorderColor: =ColorFade(Self.Fill, -15%)
             BorderThickness: =0
@@ -4759,7 +4752,6 @@ Screens:
             Y: =95
       - Rectangle2_1:
           Control: Rectangle
-          Group: grp_HinttextITSec
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Fill: =RGBA(0, 0, 0, 0.2)
@@ -4768,7 +4760,6 @@ Screens:
             Width: =1366
       - Rectangle5_1:
           Control: Rectangle
-          Group: grp_HinttextITSec
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Fill: =RGBA(255, 255, 255, 1)
@@ -4779,7 +4770,6 @@ Screens:
             Y: =234
       - Label2_11:
           Control: Label
-          Group: grp_HinttextITSec
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Font: =Font.'Open Sans'
@@ -4795,7 +4785,6 @@ Screens:
             Y: =234
       - ic_CloseHinttext_1:
           Control: Classic/Icon
-          Group: grp_HinttextITSec
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Color: =varHSEBranding.HSEOrange
@@ -4812,7 +4801,6 @@ Screens:
             Y: =234
       - lbl_Hinttext_1:
           Control: Label
-          Group: grp_HinttextITSec
           Properties:
             BorderColor: =RGBA(0, 18, 107, 1)
             Font: =Font.'Open Sans'
