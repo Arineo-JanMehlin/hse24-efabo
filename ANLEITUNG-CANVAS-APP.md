@@ -1,7 +1,11 @@
 # Anleitung: Canvas-App-Anpassungen EFABO (Studio)
 
-> Stand 07.08.2026. Voraussetzung: Solution EFABO **v1.0.2.0** ist in DEV importiert (✅ erledigt).
-> Reihenfolge einhalten — Teil 0 zwingend vor Teil 1!
+> Stand 11.08.2026. Voraussetzung: Solution EFABO **v1.0.2.0** ist in DEV importiert (✅ erledigt).
+>
+> ✅ **11.08.: Teil 1 (bis auf 1.1) und Teil 2 (2.1–2.4) via Coauthoring-MCP umgesetzt** (Commits `1c0a8ae`, `55dd8d6`):
+> btn_PrintEFABO auf ViewEFABOScreen (OnSelect = Platzhalter-Notify, echter Flow-Call auskommentiert bis P4 gelöst),
+> alle 7 Alt-Controls gelöscht, Bugfixes 2.1–2.4 aktiv. **Noch offen: In Studio speichern + veröffentlichen!**
+> Danach offen: 1.1 (Flow als Datenquelle, braucht Teil 0), btn_PrintEFABO-OnSelect scharf schalten, Smoke-Test, 2.5 (B3, separater Termin).
 
 ## Teil 0 – Flows aktivieren & testen (Maker-Portal, ~10 Min.)
 
