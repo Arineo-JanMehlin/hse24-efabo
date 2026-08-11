@@ -85,4 +85,4 @@ Design-Entscheidungen:
 2. ~~`legalcoordinator@hse.com` als Empfänger~~ ✅ bestätigt (Jan, 07.08.). ~~Fallback-Mail auch an Auslöser?~~ ✅ entschieden (Jan, 07.08.): **zusätzlich an Klicker (CC)** — umgesetzt in Flow-Sources (Child-Input `AusloeserMail`, Parent reicht durch, App übergibt `User().Email`); ab v1.0.2.1.
 3. Korrektes Feld für ITSec-Frage „Haben Dienstleister Zugriff…" (F15-Duplikat)?
 4. ~~DEVTEST-Flow + „Test FLow Anlage" löschen? Testuser entfernen (F17)?~~ ✅ entschieden (Jan, 07.08.): **vorerst nichts löschen** — erst nach vollständigem DEV-Test wieder aufgreifen (GoLive-Vorbereitung).
-5. B3/AP5 (Upload-Stabilisierung) im Budget? Ideen-Teil (Reminder, Infomails) nur nach Zusatzfreigabe – Restbudget nach #1–#5 vermutlich knapp.
+5. ~~B3/AP5 (Upload-Stabilisierung) im Budget?~~ ✅ entschieden (Jan, 11.08.): **Minimal-Fix wird mitgemacht** (aus Restbudget, ~1 h) — Patch → `Form.OnSuccess` + `IfError` an den 4 Absende-Buttons, Rest nur dokumentiert. Spezifikation: `ANLEITUNG-CANVAS-APP.md` 2.5. Timing: nach Smoke-Test Teil 0/1. Ideen-Teil (Reminder, Infomails) weiterhin nur nach Zusatzfreigabe.

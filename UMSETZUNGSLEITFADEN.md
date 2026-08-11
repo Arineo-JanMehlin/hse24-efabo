@@ -87,7 +87,7 @@ Ziel:
 |-----|--------------|--------|
 | B1 | Print-Button funktioniert sporadisch nicht; nur kleine Notify-Zeile ohne Fehlermeldung. Auf Prod für manche User ok, für andere nicht. Workaround war unmanaged Layer (Flow in App entfernt/neu hinzugefügt). | offen – wird durch neuen Button + neuen Flow (#2/#3) obsolet |
 | B2 | Nachträgliches Setzen von „Einsatz Software" setzt Berechtigungen nicht korrekt; bei initialer Erstellung funktioniert es. | offen – Analyse nötig (vermutlich Sharing-/Berechtigungs-Flow triggert nur bei Create) |
-| B3 | Anhang-Upload schlägt manchmal fehl. | offen – Analyse nötig |
+| B3 | Anhang-Upload schlägt manchmal fehl. | Minimal-Fix eingeplant (Entscheidung Jan 11.08.): Attachment-Patch → `Form.OnSuccess` + `IfError`-Notify an 4 Buttons, ~1 h, nach Smoke-Test — Details `ANLEITUNG-CANVAS-APP.md` 2.5 |
 | B4 | EFABO-Verlängerung (Button, szenarioabhängig eingeblendet) funktionierte zeitweise nicht, „ging dann wieder". | beobachten – Ursache unklar |
 
 ## 5. Ideen (NICHT Teil des Angebots – nur bei Restbudget/Zusatzfreigabe)

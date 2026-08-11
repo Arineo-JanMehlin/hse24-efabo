@@ -5,7 +5,7 @@
 > ✅ **11.08.: Teil 1 (bis auf 1.1) und Teil 2 (2.1–2.4) via Coauthoring-MCP umgesetzt** (Commits `1c0a8ae`, `55dd8d6`):
 > btn_PrintEFABO auf ViewEFABOScreen (OnSelect = Platzhalter-Notify, echter Flow-Call auskommentiert bis P4 gelöst),
 > alle 7 Alt-Controls gelöscht, Bugfixes 2.1–2.4 aktiv. **Noch offen: In Studio speichern + veröffentlichen!**
-> Danach offen: 1.1 (Flow als Datenquelle, braucht Teil 0), btn_PrintEFABO-OnSelect scharf schalten, Smoke-Test, 2.5 (B3, separater Termin).
+> Danach offen: 1.1 (Flow als Datenquelle, braucht Teil 0), btn_PrintEFABO-OnSelect scharf schalten, Smoke-Test, 2.5 (B3-Minimal-Fix, **fest eingeplant**, nach Smoke-Test).
 
 ## Teil 0 – Flows aktivieren & testen (Maker-Portal, ~10 Min.)
 
@@ -164,9 +164,28 @@ UpdateContext({NextStatus: "In Prüfung"}),
 UpdateContext({NextStatus: "Prüfung Genehmiger"})
 ```
 
-### 2.5 Optional (Bug B3, Anhang-Upload sporadisch)
+### 2.5 Bug B3 (Anhang-Upload sporadisch) — Minimal-Fix, fest eingeplant (Entscheidung Jan 11.08.)
 
-Ursache: `SubmitForm(...)` und direkt folgendes `Patch(...Attachment.Updates)` schreiben quasi gleichzeitig auf dasselbe Item (Race). Sauberer Fix = Patch in das jeweilige `Form.OnSuccess` verschieben. Betroffen: `btn_ÄnderungenSpeichern`, `btn_EntwurfAbschicken` (EditEFABOScreen), Absenden-Buttons AF-/ITSec-Screens. Aufwand ~1 h, empfehle separaten Termin — nicht im Schnelldurchlauf machen.
+Ursache (F9-Verdacht, nicht reproduziert): `SubmitForm(...)` und direkt folgendes `Patch(...Attachment.Updates)` schreiben quasi gleichzeitig auf dasselbe Item (Race/ETag-Konflikt); Fehler verpuffen stumm, weil kein `IfError` um die Patches liegt.
+
+**Minimal-Fix (~1 h, separate Session, erst NACH Smoke-Test von Teil 0/1 — nicht zwei Änderungen gleichzeitig ins Feld):**
+
+1. Attachment-`Patch` aus dem Button-`OnSelect` in das `OnSuccess` des jeweiligen Formulars verschieben (läuft dann garantiert erst nach erfolgreichem Submit).
+2. Jeden verschobenen Patch einpacken in:
+   ```
+   IfError(
+       Patch(...),
+       Notify("Anhang-Upload fehlgeschlagen: " & FirstError.Message, NotificationType.Error, 8000)
+   )
+   ```
+
+Betroffene Buttons (4): `btn_ÄnderungenSpeichern`, `btn_EntwurfAbschicken` (beide EditEFABOScreen), Absenden-Button AF-Screen, Absenden-Button ITSec-Screen.
+
+**Bewusst NICHT im Minimal-Fix** (nur dokumentiert, Details `Analyse/02-canvas-app.md` §4; voller Umbau 2–3 h, nur falls B3 nach Minimal-Fix erneut auftritt):
+- Hilfsformulare `EditForm_Attachment`/`ViewForm_Attachments` ohne `Item`-Property (Updates ggf. leer)
+- restliche ~6 Patch-Aufrufstellen ohne `IfError` (u. a. View-Misch-Patches)
+- gleiche Race in `btn_VerlängerungBeantragen` (Status-Patch nach SubmitForm)
+- `MaxAttachmentSize: 50` MB vs. tatsächliche SharePoint-Limits
 
 ## Rollback
 
