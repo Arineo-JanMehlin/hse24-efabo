@@ -6164,8 +6164,8 @@ Screens:
                                   // Wenn Ersteller = Verantwortlicher = Genehmiger -> anderen Success Text abfragen
                           // die eigentliche Logik wird im Workflow EFABO - Neuer Antrag abgefangen
                                   EditForm.LastSubmit.'Genehmiger (gem. Orga-Unterschriften)'.Email = EditForm.LastSubmit.'Verantwortlicher Mitarbeiter'.Email && EditForm.LastSubmit.'Genehmiger (gem. Orga-Unterschriften)'.Email = EditForm.LastSubmit.'Erstellt von'.Email,
-                                  {NextStatus: "In Prüfung"},
-                                  {NextStatus: "Prüfung Genehmiger"}
+                                  UpdateContext({NextStatus: "In Prüfung"}),
+                                  UpdateContext({NextStatus: "Prüfung Genehmiger"})
                               )
                           )
                         PressedBorderColor: =Self.Fill

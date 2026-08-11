@@ -105,6 +105,11 @@ Screens:
             OnFailure: |-
               =//varStatus zurücksetzen wegen Entwurf
               Set(varStatus,Blank());
+              Notify(
+                  "Die Arbeitsrechtliche Freigabe konnte nicht gespeichert werden: " & AF_Form.Error,
+                  NotificationType.Error,
+                  8000
+              )
             OnSuccess: |-
               =//Noch einbauen - Notify nicht wenn varFormStatus = "New"
               If(

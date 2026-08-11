@@ -156,7 +156,7 @@ Screens:
             NumberOfColumns: =2
             OnFailure: |-
               =Notify(
-                  "Error: "&EditForm.Error,
+                  "Error: "&ViewForm.Error,
                   NotificationType.Error,
                   3000
               );

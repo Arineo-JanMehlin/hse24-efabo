@@ -231,14 +231,14 @@ App:
               );
               Concurrent(
                   If(
-                      Lower(EfaboAntrag.'Verantwortlicher Mitarbeiter'.Email) = User().Email,
+                      Lower(EfaboAntrag.'Verantwortlicher Mitarbeiter'.Email) = Lower(User().Email),
                       Set(
                           varAntragsteller,
                           true
                       )
                   ),
                   If(
-                      User().Email = Lower(EfaboAntrag.'Genehmiger (gem. Orga-Unterschriften)'.Email) Or User().Email = "desvc.efabo@hse.com",
+                      Lower(User().Email) = Lower(EfaboAntrag.'Genehmiger (gem. Orga-Unterschriften)'.Email) Or Lower(User().Email) = "desvc.efabo@hse.com",
                       Set(
                           varGenehmiger,
                           true
