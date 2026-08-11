@@ -40,7 +40,9 @@
 
 ## Teil 1 – App-Umbau (Pflicht, ~20 Min.)
 
-> ⛔ **Blocker (Stand 07.08., P6 in PROBLEME.md):** Jan hat keinen Zugriff auf die SharePoint-Site `EFABO_DEV` → Studio lädt die Datenquellen nicht, Bearbeitung und Test blockiert. SA-Connections sind fürs Studio **nicht** nötig (Consent-Dialog „Zulassen" erstellt eigene Connections) — es fehlt nur der Site-Zugriff. Entsperren: Site-Owner nimmt `jan.mehlin_external@hse.com` als Mitglied (Bearbeiten) auf + in die EFABO-SharePoint-Gruppen (Recht/IT-Security) für Rollentests. Selbstservice: Site-URL öffnen → „Zugriff anfordern".
+> ⛔ **Blocker (Stand 07.08., P6 in PROBLEME.md):** Jan hat keinen Zugriff auf die SharePoint-Site `EFABO_DEV` → Studio lädt die Datenquellen nicht, Bearbeitung und Test blockiert. SA-Connections sind fürs Studio **nicht** nötig (Consent-Dialog „Zulassen" erstellt eigene Connections) — es fehlt nur der Site-Zugriff. Entsperren: Site-Owner nimmt `jan.mehlin_external@hse.com` als Mitglied (Bearbeiten) auf + in die EFABO-SharePoint-Gruppen (Recht/IT-Security) für Rollentests. Selbstservice: Site-URL öffnen → „Zugriff anfordern". **Update 11.08.: Berechtigungen beantragt, läuft.**
+>
+> ⚠️ **Coauthoring nach jedem Import neu aktivieren (P7):** Jeder Solution-Import, der die App enthält (v1.0.2.0 ✔ passiert, künftig v1.0.2.1, Prod), setzt das Coauthoring-Flag zurück. Vor MCP-Arbeit: Studio → App öffnen → Einstellungen → **Co-Authoring** aktivieren → speichern. Live-App-GUID DEV für `connect`: `82f0abdb-6e73-46b5-a033-2611cea27ef9`.
 
 App **„Erfassungsbogen Verträge"** im Studio öffnen (Bearbeiten).
 
