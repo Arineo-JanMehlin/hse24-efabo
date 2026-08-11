@@ -4666,68 +4666,6 @@ Screens:
                   Text: ="Button"
                   Width: =55
                   Y: =4
-      - btn_PrintAF:
-          Control: Classic/Button
-          Properties:
-            BorderColor: =ColorFade(Self.Fill, -15%)
-            BorderThickness: =0
-            Color: =varHSEBranding.White
-            DisabledBorderColor: =RGBA(166, 166, 166, 1)
-            Fill: =varHSEBranding.HSEOrange
-            FocusedBorderThickness: =0
-            Font: =Font.'Open Sans'
-            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
-            HoverColor: =RGBA(255, 255, 255, 1)
-            HoverFill: =ColorFade(varHSEBranding.HSEOrange, -20%)
-            OnSelect: |-
-              =UpdateContext(
-                  {
-                      cvarMessage: CreateHTML_PDF_AF.Run(
-                          User().Email,
-                          LookUp(
-                              'Arbeitsrechtliche Freigabe',
-                              Title = Text(EfaboAntrag.ID)
-                          ).ID
-                      ).message
-                  }
-              );
-              Notify(
-                  cvarMessage,
-                  NotificationType.Success,
-                  5000
-              )
-              //Navigate(AFPrintScreen);;
-            PressedBorderColor: =Self.Fill
-            PressedColor: =Self.Fill
-            PressedFill: =Self.Color
-            RadiusBottomLeft: =0
-            RadiusBottomRight: =0
-            RadiusTopLeft: =0
-            RadiusTopRight: =0
-            Text: ="Print"
-            Visible: |-
-              =//Parent.DisplayMode<>View || Parent.DisplayMode<>Edit
-              EfaboAntrag.Status.Value="Abgeschlossen" || "Zurückgezogen" || "Abgelehnt" || "Verlängerung beantragt"
-              //true
-            Width: =230
-            X: =30
-            Y: =95
-      - Icon5:
-          Control: Classic/Icon
-          Properties:
-            BorderColor: =RGBA(0, 18, 107, 1)
-            Color: =RGBA(255, 255, 255, 1)
-            Height: =40
-            Icon: =Icon.DocumentPDF
-            OnSelect: =Select(btn_PrintAF)
-            PaddingBottom: =3
-            PaddingLeft: =3
-            PaddingRight: =3
-            PaddingTop: =3
-            Visible: =btn_PrintAF.Visible
-            Width: =40
-            X: =30
-            Y: =95
       - Rectangle2:
           Control: Rectangle
           Group: grp_Hinttext
@@ -4824,22 +4762,6 @@ Screens:
             Text: =LookUp(colRessource,Title = "btn_APVerlängern" && Sprache.Value = varSelectedCulture,Text)
             Visible: =EfaboAntrag.Status.Value = "Abgeschlossen" && varRolleUser = "Antragssteller"
             Width: =411
-            X: =278
-            Y: =95
-      - Icon5_1:
-          Control: Classic/Icon
-          Properties:
-            BorderColor: =RGBA(0, 18, 107, 1)
-            Color: =RGBA(255, 255, 255, 1)
-            Height: =40
-            Icon: =Icon.Clock
-            OnSelect: =Select(btn_PrintAF)
-            PaddingBottom: =3
-            PaddingLeft: =3
-            PaddingRight: =3
-            PaddingTop: =3
-            Visible: =btn_PrintAF.Visible
-            Width: =40
             X: =278
             Y: =95
       - btn_NeuerAntrag_4:

@@ -144,6 +144,55 @@ Screens:
             Height: =8
             Width: =1366
             Y: =87
+      - btn_PrintEFABO:
+          Control: Classic/Button
+          Properties:
+            BorderColor: =ColorFade(Self.Fill, -15%)
+            BorderThickness: =0
+            Color: =varHSEBranding.White
+            DisabledBorderColor: =RGBA(166, 166, 166, 1)
+            DisplayMode: =DisplayMode.Edit
+            Fill: =varHSEBranding.HSEOrange
+            FocusedBorderThickness: =0
+            Font: =Font.'Open Sans'
+            HoverBorderColor: =ColorFade(Self.BorderColor, 20%)
+            HoverColor: =RGBA(255, 255, 255, 1)
+            HoverFill: =ColorFade(varHSEBranding.HSEOrange, -20%)
+            OnSelect: |-
+              =// TODO (P4): Flow '[Parent] EFABO Druck und Versand' ist noch nicht als Datenquelle
+              // in der App (Aktivierung blockiert, siehe PROBLEME.md P4). Sobald der Flow
+              // aktiviert und über Power Automate > "Flow hinzufügen" verbunden ist,
+              // diesen Block durch den echten Aufruf ersetzen:
+              //
+              // UpdateContext({cvarPrintResult: '[Parent]EFABODruckundVersand'.Run(EfaboAntrag.ID, User().Email)});
+              // If(
+              //     IsBlank(cvarPrintResult.message),
+              //     Notify(
+              //         "Der Export ist fehlgeschlagen. Bitte versuchen Sie es erneut oder wenden Sie sich an den Support.",
+              //         NotificationType.Error,
+              //         8000
+              //     ),
+              //     Notify(cvarPrintResult.message, NotificationType.Success, 6000)
+              // )
+              Notify(
+                  "Die Druckfunktion ist noch nicht aktiviert (Flow-Verbindung ausstehend).",
+                  NotificationType.Warning,
+                  6000
+              )
+            PressedBorderColor: =Self.Fill
+            PressedColor: =Self.Fill
+            PressedFill: =Self.Color
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Text: ="Prüfdokumente an Legal Coordinator senden"
+            Visible: |-
+              =(varRolleUser = "Prüfende Rechtsanwälte" || varRolleUser = "Sachbearbeiter Recht") &&
+              (EfaboAntrag.Status.Value = "Abgeschlossen" || EfaboAntrag.Status.Value = "Abgelehnt")
+            Width: =420
+            X: =620
+            Y: =20
       - ViewForm:
           Control: Form
           Variant: Classic
