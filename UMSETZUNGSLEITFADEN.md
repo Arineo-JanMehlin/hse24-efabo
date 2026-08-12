@@ -1,7 +1,9 @@
 # HSE24 EFABO – Umsetzungsleitfaden
 
 > Konsolidiert aus: `Anforderungen/Neue Anforderungen 05.08.26.md`, `Anforderungen/Termin am 06.08.26.md`, E-Mail „WG: Bitte um Aufwandschätzung und Angebot" (A. Brunner, HSE, 20.01.2026 / weitergeleitet 06.08.2026).
-> Stand: 07.08.2026
+> Stand: 12.08.2026
+>
+> ⏸️ **Projekt wartet aktuell auf HSE:** Zugriff auf den Service Account `desvc.efabo@hse.com` bzw. Freigabe seiner 3 Connections (P4) und Zugriff auf die SharePoint-Site `EFABO_DEV` (P6). Bis dahin sind Flow-Aktivierung, Smoke-Test, Feindesign-Freigabe und GoLive blockiert. Alles technisch Machbare ist umgesetzt: Flows v1.0.2.1 in DEV, App-Umbau serverseitig, offene Rückfragen geklärt. Wiedereinstieg: `ANLEITUNG-CANVAS-APP.md` Teil 0.
 
 ---
 
@@ -17,11 +19,11 @@
 
 | # | Position | Aufwand (CS = h) | Status |
 |---|----------|------------------|--------|
-| 1 | Anpassung Drucklayout | 2,00 | offen |
-| 2 | Drucklogik für EFABO Hauptformular | 8,00 | offen |
-| 3 | Neue Workflow-Logik: automatischer Druck + Benachrichtigung bei EFABO-Status „Abgeschlossen" oder „Abgelehnt" | 3,00 | offen |
-| 4 | Entfernen Druckbuttons in App | 0,50 | entfällt ggf. (geht in #2/#3 auf, Fallback-Button bleibt) |
-| 5 | Test und GoLive | 1,50 | offen |
+| 1 | Anpassung Drucklayout | 2,00 | umgesetzt (neues HTML-Template in DEV) – **Feindesign-Freigabe durch Annette offen**, braucht Beispiel-PDF ⇒ P4 |
+| 2 | Drucklogik für EFABO Hauptformular | 8,00 | umgesetzt (konsolidierter Flow + `btn_PrintEFABO`) – **offen:** Flow als Datenquelle (1.1), OnSelect scharf schalten, Smoke-Test ⇒ P4/P6 |
+| 3 | Neue Workflow-Logik: automatischer Druck + Benachrichtigung bei EFABO-Status „Abgeschlossen" oder „Abgelehnt" | 3,00 | umgesetzt (Auto-Aufrufe in „Geänderter Vertrag", Mail an Legal Coordinator) – **Test offen** ⇒ P4 |
+| 4 | Entfernen Druckbuttons in App | 0,50 | ✅ erledigt (7 Alt-Controls entfernt, geht in #2 auf; Fallback-Button = `btn_PrintEFABO`) |
+| 5 | Test und GoLive | 1,50 | offen (blockiert durch P4/P6, Prod-Layer-Prüfung P1) |
 | 6 | Projektmanagement / Abstimmung | 1,00 | laufend |
 | | **Summe** | **16,00** | |
 
@@ -31,7 +33,8 @@
 |---|---|---|---|
 | 07.08.2026 | 5,00 | „Neubau der Druck- und Versand-Flows: konsolidierter Flow für AF- und IT-Security-PDFs mit neuem Drucklayout, automatischem Versand an Legal Coordinator bei Abschluss/Ablehnung und Fehlerbehandlung" | Flow-Seite von #1–#3 komplett (inkl. Analyse, B2-Bugfixes F5/F6, Auslöser-Kopie-Feature) |
 | 11.08.2026 | 2,00 | „App-Umbau via Coauthoring: neuer zentraler Druck-Button auf Detailansicht (Rollen-/Status-Sichtbarkeit, Flow-Anbindung vorbereitet), 7 veraltete Druck-/Verlängerungs-Buttons entfernt, 4 Review-Bugfixes übernommen, Auth-/Verbindungsprobleme gelöst und dokumentiert, App gespeichert und veröffentlicht" | App-Seite von #2 (Teil 1 + Teil 2 der Anleitung, außer 1.1 Flow-Anbindung/P4); Doku P6–P8 |
-| | **Gebucht gesamt: 7,00** | **Restbudget: 9,00 von 16,00** | Restaufwand geschätzt ~5 h (Flow-Aktivierung+Test nach P4, Feindesign, B3-Fix, GoLive, PM) |
+| 12.08.2026 | 1,00 | „Deployment-Paket für die Flow-Änderungen gebaut und in DEV eingespielt (Benachrichtigungskopie an den Auslöser, Korrektur eines falsch zugeordneten IT-Security-Feldes im Druckdokument), Import verifiziert, Rückfrage zur automatisierten Benachrichtigung geklärt und optionale Zusatzleistungen geschätzt" | Flow-Deployment v1.0.2.1, F15-Feldfix, P2-Klärung, P9-Doku |
+| | **Gebucht gesamt: 8,00** | **Restbudget: 8,00 von 16,00** | Restaufwand geschätzt ~4,5 h (Flow-Aktivierung+Test nach P4, Feindesign, B3-Fix, GoLive, PM) |
 
 ## 3. Anforderungen im Detail
 
