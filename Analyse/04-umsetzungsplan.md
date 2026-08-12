@@ -81,7 +81,7 @@ Design-Entscheidungen:
 
 ## E. Offene Fragen an Kunde/intern
 
-1. P2: Nachtrag automatisierte Mail-Variante beauftragt? (intern Robert Mueller, dann HSE)
+1. ~~P2: Nachtrag automatisierte Mail-Variante beauftragt?~~ ✅ **entschieden (Jan, 12.08.): durch Position #3 gedeckt, kein Nachtrag.** Die vier tatsächlich außerhalb liegenden Punkte sind in `Nachtrag-Zusatzleistungen.md` geschätzt (8,5 h + 1,0 h Spec-Termin = 9,5 h) — intern durch Robert Mueller prüfen, dann an HSE.
 2. ~~`legalcoordinator@hse.com` als Empfänger~~ ✅ bestätigt (Jan, 07.08.). ~~Fallback-Mail auch an Auslöser?~~ ✅ entschieden (Jan, 07.08.): **zusätzlich an Klicker (CC)** — umgesetzt in Flow-Sources (Child-Input `AusloeserMail`, Parent reicht durch, App übergibt `User().Email`); ab v1.0.2.1.
 3. ~~Korrektes Feld für ITSec-Frage „Haben Dienstleister Zugriff…" (F15-Duplikat)?~~ ✅ **selbst geklärt (12.08.), keine Kundenrückfrage nötig:** korrektes Feld ist `DL_Zugriff_auf_Software_Daten`, ermittelt aus den Formularbindungen der App (`coauthoring/ITSecurityFreigabenScreen.pa.yaml`: `DataField "DL_Zugriff_auf_Software_Daten"` Z. 2306, separates Feld `DataField "Andere_Softwareloesungen_Zugriff"` Z. 2474). Fix im neuen Flow `EFABO Druck und Versand` angewendet, in `EFABO_1.0.2.1_flowsonly.zip` enthalten. Der alte `CreateHTML_PDF_ITSec` bleibt unangetastet (Löschkandidat).
 4. ~~DEVTEST-Flow + „Test FLow Anlage" löschen? Testuser entfernen (F17)?~~ ✅ entschieden (Jan, 07.08.): **vorerst nichts löschen** — erst nach vollständigem DEV-Test wieder aufgreifen (GoLive-Vorbereitung).

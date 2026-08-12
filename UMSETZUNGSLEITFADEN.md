@@ -73,7 +73,7 @@ Ziel:
   - Kurzer Text mit „abgeschlossen" bzw. „abgelehnt"
 - [ ] Fehlerhandling im Flow (Pflicht – bisheriger Print-Fehler zeigt nur Notify-Zeile ohne Meldung)
 
-**Zu klären (Annette, 06.08.):** Ob automatisierte Mail-Variante an definierte Adresse im Angebot bereits mitgeschätzt war → intern klären, neue Aufwände per Mail zur Freigabe an HSE senden.
+~~**Zu klären (Annette, 06.08.):** Ob automatisierte Mail-Variante an definierte Adresse im Angebot bereits mitgeschätzt war~~ ✅ **Geklärt (Jan, 12.08.): durch Position #3 gedeckt, kein Nachtrag.** Position #3 nennt „automatischer Druck **+ Benachrichtigung**" explizit; der feste Empfänger ist im Flow ein Literal. Bestätigung an Annette + separates Mini-Angebot für die echten Zusatzpunkte: `Nachtrag-Zusatzleistungen.md`.
 
 ### 3.4 Test & GoLive (#5)
 

@@ -34,20 +34,17 @@
 > # Gültige RoleNames: CanView (= "Kann verwenden"), CanViewWithShare, CanEdit
 > ```
 
-> ⚠️ **Vor Aktivierung: v1.0.2.1 importieren — aber nur das Flows-Paket!** Die Flow-Sources enthalten seit 07.08. das Auslöser-Kopie-Feature (manueller Button → Klicker bekommt Mail in CC, Entscheidung Jan 07.08.) und seit 12.08. den F15-Feldfix (siehe unten). Der DEV-Stand v1.0.2.0 hat beides nicht.
+> ✅ **12.08. erledigt: v1.0.2.1 als Flows-only-Paket in DEV importiert** (`export/EFABO_1.0.2.1_flowsonly.zip`, 98 KB, unmanaged, 13 Flows + Env-Vars). Enthält das Auslöser-Kopie-Feature vom 07.08. (Klicker in CC) und den F15-Feldfix vom 12.08. DEV-Solution steht jetzt auf **1.0.2.1**.
 >
-> 🔴 **Nicht das volle Paket importieren!** `src/CanvasApps/` ist noch der Alt-Stand aus v1.0.1.5 (mit `btn_PrintAF`/`btn_PrintITSec` und `CreateHTML_PDF_*` als Datenquellen). Der App-Umbau vom 11.08. existiert **nur** in der Live-App/`coauthoring/` und ist **nicht** nach `src/` zurückgeschrieben. Ein Import mit CanvasApp würde Teil 1 + Teil 2 komplett zurückrollen und zusätzlich das Coauthoring-Flag löschen (P7).
+> 🔴 **Warum Flows-only:** `src/CanvasApps/` ist noch der Alt-Stand aus v1.0.1.5 (mit `btn_PrintAF`/`btn_PrintITSec` und `CreateHTML_PDF_*` als Datenquellen). Der App-Umbau vom 11.08. existiert nur serverseitig bzw. in `coauthoring/`. Ein Import **mit** CanvasApp hätte Teil 1 + Teil 2 zurückgerollt und das Coauthoring-Flag gelöscht (P7). Deshalb wurde der RootComponent `type="300"` aus `Solution.xml` entfernt und `src/CanvasApps/` nicht mitgepackt.
 >
-> ✅ **Fertig gepackt: `export/EFABO_1.0.2.1_flowsonly.zip`** (98 KB, unmanaged, v1.0.2.1, 13 Flows + Env-Vars, CanvasApp-RootComponent `type="300"` entfernt). Unmanaged-Import = Upsert → die App in DEV bleibt unangetastet, Coauthoring-Flag bleibt gesetzt. Import:
+> ✅ **Nachweis geführt (Re-Export aus DEV nach dem Import):** DEV-Solution hat **16** RootComponents — mein Paket hatte 15, `<RootComponent type="300" schemaName="hse_erfassungsbogenvertrge_f6658">` ist unverändert vorhanden. Der exportierte msapp enthält `btn_PrintEFABO` (2 Dateien) und **keinen** der 7 Alt-Controls. Unmanaged Import = Upsert, entfernt nachweislich nichts.
 >
-> ```powershell
-> pac auth create --deviceCode --environment 066791b7-04a5-43a6-b01d-b1d6b971e869 --name HSE24-Dev   # P8: Token hält nur 11 h
-> pac solution import --path "export\EFABO_1.0.2.1_flowsonly.zip" --activate-plugins --publish-changes
-> ```
+> ⚠️ **Transportfehler beim Import ist nicht gleich Importfehler:** `pac solution import` brach mit „Fehler beim Empfangen der HTTP-Antwort … Verbindung wurde softwaregesteuert abgebrochen" auf dem SOAP-Endpunkt ab, der Import lief serverseitig aber durch. **Nach so einem Abbruch erst `pac solution list` prüfen, nicht blind neu importieren.**
 >
-> ⚠️ **Nach dem Import Flow-States prüfen:** Im Paket stehen `Neuer Antrag`, `Geänderter Vertrag`, `Geänderter Vertrag - DEV TEST` und beide neuen Druck-Flows auf `StateCode 0` (F10). Ein Import kann aktive Flows in DEV **abschalten**. Insbesondere `Neuer Antrag` danach kontrollieren — steht er aus, bekommen neu erstellte Test-EFABOs keine Item-Berechtigungen und keine Genehmiger-Mail.
+> ⚠️ **Flow-States in DEV nach Import** (aus Re-Export verifiziert): kein bisher aktiver Flow wurde abgeschaltet. Auf `StateCode 0` stehen `Neuer Antrag`, `Geänderter Vertrag`, `Geänderter Vertrag - DEV TEST`, `EFABO Druck und Versand`, `[Parent] EFABO Druck und Versand`. 🔴 **`Neuer Antrag` ist in DEV aus** — solange das so ist, bekommen neu erstellte Test-EFABOs **keine** Item-Berechtigungen und **keine** Genehmiger-Mail. Vor dem Smoke-Test einschalten, sonst ist der Test wertlos.
 >
-> 📌 **Ab jetzt Flows und App getrennt deployen.** App-Änderungen gehen über Studio/Coauthoring, Flow-Änderungen über das Flows-only-Paket. Für das Prod-GoLive muss die App vorher aus DEV frisch exportiert werden (nach Speichern + Veröffentlichen), sonst reist der Alt-Stand mit.
+> 📌 **Ab jetzt Flows und App getrennt deployen.** App-Änderungen über Studio/Coauthoring, Flow-Änderungen über das Flows-only-Paket. Fürs Prod-GoLive App erst speichern + veröffentlichen, dann frisch aus DEV exportieren — der Re-Export vom 12.08. zeigt, dass dieser Weg den korrekten App-Stand liefert.
 
 1. [make.powerapps.com](https://make.powerapps.com/environments/066791b7-04a5-43a6-b01d-b1d6b971e869/solutions) → Solution **EFABO** öffnen.
 2. **Connection References prüfen** (Zahnrad an jedem Flow bzw. Solution → Connection References): alle 3 müssen eine gültige Connection haben — `EFABO SharePoint`, `Office 365 Outlook EFABO`, **`OneDrive for Business EFABO`** (wichtig: unter wessen Account die OneDrive-Connection läuft — dort landen die temporären HTML-Dateien und von dort läuft die PDF-Konvertierung. Ziel: `desvc.efabo@hse.com`).
