@@ -6,6 +6,8 @@
 > btn_PrintEFABO auf ViewEFABOScreen (OnSelect = Platzhalter-Notify, echter Flow-Call auskommentiert bis P4 gelöst),
 > alle 7 Alt-Controls gelöscht, Bugfixes 2.1–2.4 aktiv. **Noch offen: In Studio speichern + veröffentlichen!**
 > Danach offen: 1.1 (Flow als Datenquelle, braucht Teil 0), btn_PrintEFABO-OnSelect scharf schalten, Smoke-Test, 2.5 (B3-Minimal-Fix, **fest eingeplant**, nach Smoke-Test).
+>
+> ✅ **12.08.: F15-Feldfix im neuen Druck-Flow + Flows-only-Paket gebaut** (siehe Teil 0). Der konsolidierte Flow hatte den Duplikat-Feld-Bug aus `CreateHTML_PDF_ITSec` geerbt: Zeile „Haben Dienstleister Zugriff auf die Software oder verarbeitete Daten?" las `body/Andere_Softwareloesungen_Zugriff` statt `body/DL_Zugriff_auf_Software_Daten`. Korrektes Feld aus den Formularbindungen der App ermittelt (`ITSecurityFreigabenScreen.pa.yaml` Z. 2306/2474) — **kein SharePoint-Zugriff nötig, offene Kundenrückfrage damit erledigt**.
 
 ## Teil 0 – Flows aktivieren & testen (Maker-Portal, ~10 Min.)
 
@@ -32,7 +34,20 @@
 > # Gültige RoleNames: CanView (= "Kann verwenden"), CanViewWithShare, CanEdit
 > ```
 
-> ⚠️ **Vor Aktivierung: v1.0.2.1 importieren!** Die Flow-Sources enthalten seit 07.08. das Auslöser-Kopie-Feature (manueller Button → Klicker bekommt Mail in CC, Entscheidung Jan 07.08.). Der DEV-Stand v1.0.2.0 hat das noch nicht. Erst packen + importieren, dann aktivieren.
+> ⚠️ **Vor Aktivierung: v1.0.2.1 importieren — aber nur das Flows-Paket!** Die Flow-Sources enthalten seit 07.08. das Auslöser-Kopie-Feature (manueller Button → Klicker bekommt Mail in CC, Entscheidung Jan 07.08.) und seit 12.08. den F15-Feldfix (siehe unten). Der DEV-Stand v1.0.2.0 hat beides nicht.
+>
+> 🔴 **Nicht das volle Paket importieren!** `src/CanvasApps/` ist noch der Alt-Stand aus v1.0.1.5 (mit `btn_PrintAF`/`btn_PrintITSec` und `CreateHTML_PDF_*` als Datenquellen). Der App-Umbau vom 11.08. existiert **nur** in der Live-App/`coauthoring/` und ist **nicht** nach `src/` zurückgeschrieben. Ein Import mit CanvasApp würde Teil 1 + Teil 2 komplett zurückrollen und zusätzlich das Coauthoring-Flag löschen (P7).
+>
+> ✅ **Fertig gepackt: `export/EFABO_1.0.2.1_flowsonly.zip`** (98 KB, unmanaged, v1.0.2.1, 13 Flows + Env-Vars, CanvasApp-RootComponent `type="300"` entfernt). Unmanaged-Import = Upsert → die App in DEV bleibt unangetastet, Coauthoring-Flag bleibt gesetzt. Import:
+>
+> ```powershell
+> pac auth create --deviceCode --environment 066791b7-04a5-43a6-b01d-b1d6b971e869 --name HSE24-Dev   # P8: Token hält nur 11 h
+> pac solution import --path "export\EFABO_1.0.2.1_flowsonly.zip" --activate-plugins --publish-changes
+> ```
+>
+> ⚠️ **Nach dem Import Flow-States prüfen:** Im Paket stehen `Neuer Antrag`, `Geänderter Vertrag`, `Geänderter Vertrag - DEV TEST` und beide neuen Druck-Flows auf `StateCode 0` (F10). Ein Import kann aktive Flows in DEV **abschalten**. Insbesondere `Neuer Antrag` danach kontrollieren — steht er aus, bekommen neu erstellte Test-EFABOs keine Item-Berechtigungen und keine Genehmiger-Mail.
+>
+> 📌 **Ab jetzt Flows und App getrennt deployen.** App-Änderungen gehen über Studio/Coauthoring, Flow-Änderungen über das Flows-only-Paket. Für das Prod-GoLive muss die App vorher aus DEV frisch exportiert werden (nach Speichern + Veröffentlichen), sonst reist der Alt-Stand mit.
 
 1. [make.powerapps.com](https://make.powerapps.com/environments/066791b7-04a5-43a6-b01d-b1d6b971e869/solutions) → Solution **EFABO** öffnen.
 2. **Connection References prüfen** (Zahnrad an jedem Flow bzw. Solution → Connection References): alle 3 müssen eine gültige Connection haben — `EFABO SharePoint`, `Office 365 Outlook EFABO`, **`OneDrive for Business EFABO`** (wichtig: unter wessen Account die OneDrive-Connection läuft — dort landen die temporären HTML-Dateien und von dort läuft die PDF-Konvertierung. Ziel: `desvc.efabo@hse.com`).
