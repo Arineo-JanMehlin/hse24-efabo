@@ -25,7 +25,7 @@
 | 4 | Entfernen Druckbuttons in App | 0,50 | ✅ erledigt (7 Alt-Controls entfernt, geht in #2 auf; Fallback-Button = `btn_PrintEFABO`) |
 | 5 | Test und GoLive | 1,50 | offen (blockiert durch P4/P6, Prod-Layer-Prüfung P1) |
 | 6 | Projektmanagement / Abstimmung | 1,00 | laufend |
-| | **Summe** | **16,00** | |
+| | **Summe** | **16,00** | ⚠️ Task-Budget im Buchungssystem (SC10923) zeigt **Estimated Hours: 15,00** — 1h Differenz zu dieser Summe ungeklärt |
 
 ### Stundenbuchungen (intern, Arineo)
 
