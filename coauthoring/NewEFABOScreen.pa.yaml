@@ -383,7 +383,7 @@ Screens:
                         DisabledBorderColor: =varHSEBranding.LightGray
                         DisabledColor: =ColorFade(varHSEBranding.Black,50%)
                         DisabledFill: =ColorFade(varHSEBranding.LightGray,70%)
-                        DisplayFields: =["DisplayName","Email","Picture"]
+                        DisplayFields: =["DisplayName"]
                         Fill: =varHSEBranding.White
                         FocusedBorderThickness: =3
                         Font: =Font.'Open Sans'
@@ -538,7 +538,7 @@ Screens:
                         Font: =Font.'Open Sans'
                         HoverColor: =varHSEBranding.Black
                         HoverFill: =ColorFade(varHSEBranding.LightGray,70%)
-                        Items: =Choices([@'EFABO Anträge'].Fachbereich)
+                        Items: =Choices([@'EFABO Anträge'].Fachbereich).Value
                         OnChange: =
                         OnSelect: =
                         PressedBorderColor: =ColorFade(varHSEBranding.LightGray,70%)
@@ -633,7 +633,7 @@ Screens:
                         DisabledBorderColor: =varHSEBranding.LightGray
                         DisabledColor: =ColorFade(varHSEBranding.Black,50%)
                         DisabledFill: =ColorFade(varHSEBranding.LightGray,70%)
-                        DisplayFields: =["DisplayName","Email","Picture"]
+                        DisplayFields: =["DisplayName","Email"]
                         Fill: =varHSEBranding.White
                         FocusedBorderThickness: =3
                         Font: =Font.'Open Sans'

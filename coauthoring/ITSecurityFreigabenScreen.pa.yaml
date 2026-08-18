@@ -158,6 +158,11 @@ Screens:
             OnFailure: |-
               =//varStatus zurücksetzen wegen Entwurf
               Set(varStatus,Blank());
+              Notify(
+                  "Die IT-Security Freigabe konnte nicht gespeichert werden: " & ITS_Form.Error,
+                  NotificationType.Error,
+                  8000
+              )
             OnSuccess: |-
               =//Noch einbauen - Notify nicht wenn varFormStatus = "New"
               If(
@@ -603,7 +608,7 @@ Screens:
                         DisabledBorderColor: =varHSEBranding.LightGray
                         DisabledColor: =ColorFade(varHSEBranding.Black,50%)
                         DisabledFill: =ColorFade(varHSEBranding.LightGray,70%)
-                        DisplayFields: =["DisplayName","Email","Picture"]
+                        DisplayFields: =["DisplayName","Email"]
                         DisplayMode: |-
                           =If(
                               EfaboAntrag.Status.Value <> "Abgelehnt" && (varFormStatus = "New" || (varRolleUser = "Antragssteller" && (EfaboAntrag.PruefungITSec = "In Prüfung" || EfaboAntrag.Status.Value = "Entwurf" || EfaboAntrag.Status.Value = "Prüfung Genehmiger"))),

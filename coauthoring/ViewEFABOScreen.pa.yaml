@@ -598,7 +598,7 @@ Screens:
                         DisabledBorderColor: =varHSEBranding.LightGray
                         DisabledColor: =ColorFade(varHSEBranding.Black,50%)
                         DisabledFill: =ColorFade(varHSEBranding.LightGray,70%)
-                        DisplayFields: =["DisplayName","Email","Picture"]
+                        DisplayFields: =["DisplayName","Email"]
                         DisplayMode: =If(varRolleUser = "Genehmiger" && EfaboAntrag.Status.Value<>"Abgeschlossen" && EfaboAntrag.Status.Value<>"Abgelehnt" && EfaboAntrag.Status.Value<>"Zurückgezogen"&& EfaboAntrag.Status.Value <> "Verlängerung beantragt",DisplayMode.Edit,DisplayMode.Disabled)
                         Fill: =varHSEBranding.White
                         FocusedBorderThickness: =3
@@ -846,7 +846,7 @@ Screens:
                         DisabledBorderColor: =varHSEBranding.LightGray
                         DisabledColor: =ColorFade(varHSEBranding.Black,50%)
                         DisabledFill: =ColorFade(varHSEBranding.LightGray,70%)
-                        DisplayFields: =["DisplayName","Email","Picture"]
+                        DisplayFields: =["DisplayName","Email"]
                         DisplayMode: =DisplayMode.Disabled
                         Fill: =varHSEBranding.White
                         FocusedBorderThickness: =3
@@ -5934,7 +5934,7 @@ Screens:
                         DisabledBorderColor: =varHSEBranding.LightGray
                         DisabledColor: =ColorFade(varHSEBranding.Black,50%)
                         DisabledFill: =ColorFade(varHSEBranding.LightGray,70%)
-                        DisplayFields: =["DisplayName","Email","Picture"]
+                        DisplayFields: =["DisplayName","Email"]
                         DisplayMode: =If(varRolleUser = "Sachbearbeiter Recht" && EfaboAntrag.'Prüfung Legal' = "Anlage Akte in Lecare",DisplayMode.Edit,DisplayMode.Disabled)
                         Fill: =varHSEBranding.White
                         FocusedBorderThickness: =3

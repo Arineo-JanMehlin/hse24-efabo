@@ -600,7 +600,7 @@ Screens:
                         DisabledBorderColor: =varHSEBranding.LightGray
                         DisabledColor: =ColorFade(varHSEBranding.Black,50%)
                         DisabledFill: =ColorFade(varHSEBranding.LightGray,70%)
-                        DisplayFields: =["DisplayName","Email","Picture"]
+                        DisplayFields: =["Claims"]
                         Fill: =varHSEBranding.White
                         FocusedBorderThickness: =3
                         Font: =Font.'Open Sans'
@@ -610,7 +610,7 @@ Screens:
                         PressedBorderColor: =ColorFade(varHSEBranding.LightGray,70%)
                         PressedColor: =ColorFade(varHSEBranding.LightGray,70%)
                         PressedFill: =ColorFade(varHSEBranding.LightGray,70%)
-                        SearchFields: =["DisplayName"]
+                        SearchFields: =["Claims"]
                         SelectMultiple: =false
                         SelectionColor: =varHSEBranding.Black
                         SelectionFill: =ColorFade(varHSEBranding.LightGray,75%)
@@ -844,7 +844,7 @@ Screens:
                         DisabledBorderColor: =varHSEBranding.LightGray
                         DisabledColor: =ColorFade(varHSEBranding.Black,50%)
                         DisabledFill: =ColorFade(varHSEBranding.LightGray,70%)
-                        DisplayFields: =["DisplayName","Email","Picture"]
+                        DisplayFields: =["DisplayName","Email"]
                         Fill: =varHSEBranding.White
                         FocusedBorderThickness: =3
                         Font: =Font.'Open Sans'
@@ -5416,7 +5416,7 @@ Screens:
                         DisabledBorderColor: =varHSEBranding.LightGray
                         DisabledColor: =ColorFade(varHSEBranding.Black,50%)
                         DisabledFill: =ColorFade(varHSEBranding.LightGray,70%)
-                        DisplayFields: =["DisplayName","Email","Picture"]
+                        DisplayFields: =["DisplayName","Email"]
                         DisplayMode: =DisplayMode.Disabled
                         Fill: =varHSEBranding.White
                         FocusedBorderThickness: =3

@@ -4,10 +4,12 @@
 >
 > ✅ **11.08.: Teil 1 (bis auf 1.1) und Teil 2 (2.1–2.4) via Coauthoring-MCP umgesetzt** (Commits `1c0a8ae`, `55dd8d6`):
 > btn_PrintEFABO auf ViewEFABOScreen (OnSelect = Platzhalter-Notify, echter Flow-Call auskommentiert bis P4 gelöst),
-> alle 7 Alt-Controls gelöscht, Bugfixes 2.1–2.4 aktiv. **Noch offen: In Studio speichern + veröffentlichen!**
-> Danach offen: 1.1 (Flow als Datenquelle, braucht Teil 0), btn_PrintEFABO-OnSelect scharf schalten, Smoke-Test, 2.5 (B3-Minimal-Fix, **fest eingeplant**, nach Smoke-Test).
+> alle 7 Alt-Controls gelöscht, Bugfixes 2.1–2.4 aktiv. In Studio gespeichert + veröffentlicht (18.08.) ✅.
+> Weiterhin offen (P4/SA blockiert): 1.1 (Flow als Datenquelle, braucht Teil 0), btn_PrintEFABO-OnSelect scharf schalten, Smoke-Test, 2.5 (B3-Minimal-Fix, **fest eingeplant**, nach Smoke-Test).
 >
 > ✅ **12.08.: F15-Feldfix im neuen Druck-Flow + Flows-only-Paket gebaut** (siehe Teil 0). Der konsolidierte Flow hatte den Duplikat-Feld-Bug aus `CreateHTML_PDF_ITSec` geerbt: Zeile „Haben Dienstleister Zugriff auf die Software oder verarbeitete Daten?" las `body/Andere_Softwareloesungen_Zugriff` statt `body/DL_Zugriff_auf_Software_Daten`. Korrektes Feld aus den Formularbindungen der App ermittelt (`ITSecurityFreigabenScreen.pa.yaml` Z. 2306/2474) — **kein SharePoint-Zugriff nötig, offene Kundenrückfrage damit erledigt**.
+>
+> ✅ **18.08.: P6 gelöst (Site-Zugriff da), Teil 1.4 (Speichern+Veröffentlichen) nachgeholt, Teil 2 komplett.** Coauthoring-MCP verbindet (`login_hint=jan.mehlin_external@hse.com`), `sync_canvas`/`compile_canvas` laufen sauber. ITSec-OnFailure-Notify nachgezogen (F16-Rest), `NewForm.OnFailure` bleibt bewusst auskommentiert (Entscheidung Jan). Dabei **F21 gefunden+gefixt**: alle Personen-/Choice-Comboboxen (Verantwortlicher Mitarbeiter, Fachbereich, Genehmiger, Techn. Ansprechpartner HSE, Prüfender Rechtsanwalt) zeigten leere Labels — totes `Picture`-Feld in `DisplayFields` (9 Stellen) plus Studio-Panel-Cache, der YAML-Änderungen an ComboBox-Anzeigefeldern nicht automatisch übernimmt. Fix: `Picture` aus `DisplayFields` entfernt + „Primärer Text"/„SearchField" im Studio-Panel pro Combobox neu gesetzt. **Gotcha für künftige Coauthoring-Sessions:** ComboBox-`DisplayFields`/`SearchFields`-Änderungen per YAML immer zusätzlich im Studio-Panel antippen (gleichen Wert neu auswählen), sonst bleibt die alte Anzeige hängen.
 
 ## Teil 0 – Flows aktivieren & testen (Maker-Portal, ~10 Min.)
 
@@ -56,7 +58,7 @@
 
 ## Teil 1 – App-Umbau (Pflicht, ~20 Min.)
 
-> ⛔ **Blocker (Stand 07.08., P6 in PROBLEME.md):** Jan hat keinen Zugriff auf die SharePoint-Site `EFABO_DEV` → Studio lädt die Datenquellen nicht, Bearbeitung und Test blockiert. SA-Connections sind fürs Studio **nicht** nötig (Consent-Dialog „Zulassen" erstellt eigene Connections) — es fehlt nur der Site-Zugriff. Entsperren: Site-Owner nimmt `jan.mehlin_external@hse.com` als Mitglied (Bearbeiten) auf + in die EFABO-SharePoint-Gruppen (Recht/IT-Security) für Rollentests. Selbstservice: Site-URL öffnen → „Zugriff anfordern". **Update 11.08.: Berechtigungen beantragt, läuft.**
+> ✅ **Gelöst (18.08., P6 in PROBLEME.md):** Site-Zugriff aktiv, Studio lädt Datenquellen, Bearbeitung + Coauthoring-MCP laufen (`connect` mit `login_hint=jan.mehlin_external@hse.com`).
 >
 > ⚠️ **Coauthoring nach jedem Import neu aktivieren (P7):** Jeder Solution-Import, der die App enthält (v1.0.2.0 ✔ passiert, künftig v1.0.2.1, Prod), setzt das Coauthoring-Flag zurück. Vor MCP-Arbeit: Studio → App öffnen → Einstellungen → **Co-Authoring** aktivieren → speichern. Live-App-GUID DEV für `connect`: `82f0abdb-6e73-46b5-a033-2611cea27ef9`.
 
