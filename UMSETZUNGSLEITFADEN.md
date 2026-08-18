@@ -31,11 +31,12 @@
 
 | Datum | Stunden | Buchungstext | Deckt ab |
 |---|---|---|---|
+| 06.08.2026 | 1,00 | „Austausch mit Annette und Farina zu den offenen Themen in der EFABO Lösung (Drucklayout, automatischer Versand) und weiteres Vorgehen" | Anforderungsklärung vor #1–#3 |
 | 07.08.2026 | 5,00 | „Neubau der Druck- und Versand-Flows: konsolidierter Flow für AF- und IT-Security-PDFs mit neuem Drucklayout, automatischem Versand an Legal Coordinator bei Abschluss/Ablehnung und Fehlerbehandlung" | Flow-Seite von #1–#3 komplett (inkl. Analyse, B2-Bugfixes F5/F6, Auslöser-Kopie-Feature) |
-| 11.08.2026 | 2,00 | „App-Umbau via Coauthoring: neuer zentraler Druck-Button auf Detailansicht (Rollen-/Status-Sichtbarkeit, Flow-Anbindung vorbereitet), 7 veraltete Druck-/Verlängerungs-Buttons entfernt, 4 Review-Bugfixes übernommen, Auth-/Verbindungsprobleme gelöst und dokumentiert, App gespeichert und veröffentlicht" | App-Seite von #2 (Teil 1 + Teil 2 der Anleitung, außer 1.1 Flow-Anbindung/P4); Doku P6–P8 |
-| 12.08.2026 | 1,00 | „Deployment-Paket für die Flow-Änderungen gebaut und in DEV eingespielt (Benachrichtigungskopie an den Auslöser, Korrektur eines falsch zugeordneten IT-Security-Feldes im Druckdokument), Import verifiziert, Rückfrage zur automatisierten Benachrichtigung geklärt und optionale Zusatzleistungen geschätzt" | Flow-Deployment v1.0.2.1, F15-Feldfix, P2-Klärung, P9-Doku |
-| 18.08.2026 | 2,00 | „App-Bugfixing via Coauthoring: leere ComboBox-Anzeigen und Vertragsvolumen-Hinweistext behoben, IT-Security-Fehlerbehandlung ergänzt, Live-Test begleitet" | P6-Bestätigung, F21/F22-Fixes, ITSec-Notify, Doku AENDERUNGEN-SEIT-V477.md |
-| | **Gebucht gesamt: 10,00** | **Restbudget: 6,00 von 16,00** | Restaufwand geschätzt ~4,5 h (Flow-Aktivierung+Test nach P4, Feindesign, B3-Fix, GoLive, PM) |
+| 11.08.2026 | 1,00 | „EFABO Pos. 2: App-Umbau: neuer Druck-Button (ViewScreen), 7 tote Controls entfernt, 4 Review-Bugfixes übernommen, Auth-/Verbindungsprobleme gelöst, App veröffentlicht" | App-Seite von #2 (Teil 1 + Teil 2 der Anleitung, außer 1.1 Flow-Anbindung/P4); Doku P6–P8 |
+| 12.08.2026 | 1,00 | „Flow Anpassung EFABO Druck und Versand: Benachrichtigungskopie an den Auslöser, Korrektur eines falsch zugeordneten IT-Security-Feldes im Druckdokument" | Flow-Deployment v1.0.2.1, F15-Feldfix, P2-Klärung, P9-Doku |
+| 18.08.2026 | 0,50 | „Canvas App Anpassungen: IT-Security-Fehlerbehandlung ergänzt" | ITSec-Notify, F21/F22-Fixes, P6-Bestätigung, Doku AENDERUNGEN-SEIT-V477.md |
+| | **Gebucht gesamt: 8,50** | **Restbudget: 7,50 von 16,00** | Restaufwand geschätzt ~4,5 h (Flow-Aktivierung+Test nach P4, Feindesign, B3-Fix, GoLive, PM) |
 
 ## 3. Anforderungen im Detail
 
