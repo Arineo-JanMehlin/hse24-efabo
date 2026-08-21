@@ -36,7 +36,8 @@
 | 11.08.2026 | 1,00 | „EFABO Pos. 2: App-Umbau: neuer Druck-Button (ViewScreen), 7 tote Controls entfernt, 4 Review-Bugfixes übernommen, Auth-/Verbindungsprobleme gelöst, App veröffentlicht" | App-Seite von #2 (Teil 1 + Teil 2 der Anleitung, außer 1.1 Flow-Anbindung/P4); Doku P6–P8 |
 | 12.08.2026 | 1,00 | „Flow Anpassung EFABO Druck und Versand: Benachrichtigungskopie an den Auslöser, Korrektur eines falsch zugeordneten IT-Security-Feldes im Druckdokument" | Flow-Deployment v1.0.2.1, F15-Feldfix, P2-Klärung, P9-Doku |
 | 18.08.2026 | 0,50 | „Canvas App Anpassungen: IT-Security-Fehlerbehandlung ergänzt" | ITSec-Notify, F21/F22-Fixes, P6-Bestätigung, Doku AENDERUNGEN-SEIT-V477.md |
-| | **Gebucht gesamt: 8,50** | **Restbudget: 7,50 von 16,00** | Restaufwand geschätzt ~4,5 h (Flow-Aktivierung+Test nach P4, Feindesign, B3-Fix, GoLive, PM) |
+| 21.08.2026 | 1,50 | „EFABO Flow-Stabilisierung: Umstellung aller Flows auf die Service-Account-Verbindung, Behebung eines Export-Blockers in der Lösung, vollständiger Abgleich Entwicklungs- und Produktionsumgebung mit Korrektur zweier Flow-Fehler, Testplan für die Abnahme erstellt“ | CR-Konsolidierung f07a0 + SA-Ownership, 873bd-Export-Blocker, DEV/Prod-Vollabgleich inkl. Layer, Schema-/AF-Fixes, Analyse/06+07, Changelog |
+| | **Gebucht gesamt: 10,00** | **Restbudget: 4,00 (lt. Buchungssystem SC10923, Stand 21.08.)** | Restaufwand: DEV-Test (Analyse/07), Feindesign-Freigabe, Bereinigung, Prod-GoLive, PM — muss in 4 h passen |
 
 ## 3. Anforderungen im Detail
 
