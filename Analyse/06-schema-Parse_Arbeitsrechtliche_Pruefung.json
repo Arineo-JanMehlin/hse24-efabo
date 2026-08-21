@@ -1,0 +1,190 @@
+{
+  "type": "object",
+  "properties": {
+    "@@odata.etag": {
+      "type": "string"
+    },
+    "ItemInternalId": {
+      "type": "string"
+    },
+    "ID": {
+      "type": "integer"
+    },
+    "Title": {
+      "type": "string"
+    },
+    "Weisungen_des_Kreditors_von_HSE_": {
+      "type": "boolean"
+    },
+    "Weisungen_von_Kreditor_erteilt": {
+      "type": "boolean"
+    },
+    "Ausschlie_x00df_liche_Teilnahme_": {
+      "type": "boolean"
+    },
+    "Benutzt_Kreditor_ausschlie_x00df": {
+      "type": "boolean"
+    },
+    "Beautragung_des_Kreditors_in_let": {
+      "type": "boolean"
+    },
+    "Prominenter_vor_der_Kamera_Exper": {
+      "type": "boolean"
+    },
+    "Muss_Kreditor_in_HSE_Raeumlichke": {
+      "type": "boolean"
+    },
+    "Zeitraum_Leistungen_Fachbereich_": {
+      "type": "string"
+    },
+    "Arbeit_des_Kreditors_mit_mehr_al": {
+      "type": "boolean"
+    },
+    "Warum_mehr_als_eine_Person": {
+      "type": "string"
+    },
+    "Wie_viele_Tage_vor_Ort": {
+      "type": "string"
+    },
+    "Warum_keine_pauschale_Verg_x00fc": {
+      "type": "string"
+    },
+    "Kommentar_Legal": {
+      "type": "string"
+    },
+    "Kreditor_in_Dienstplaene_und_Abl": {
+      "type": "boolean"
+    },
+    "Beschaeftigung_des_Kreditors_bei": {
+      "type": "boolean"
+    },
+    "Kreditor_laenger_6_Monate_ben_x0": {
+      "type": "boolean"
+    },
+    "Kosten_groe_x00df_er_gleich_5000": {
+      "type": "boolean"
+    },
+    "Warum_muss_Kreditor_Leistung_hoe": {
+      "type": "string"
+    },
+    "Ausgleich_Kapazitaetsengpaesse": {
+      "type": "boolean"
+    },
+    "Pauschale_Verguetung_Kreditor": {
+      "type": "boolean"
+    },
+    "Best_x00e4_tigung_der_Antworten": {
+      "type": "boolean"
+    },
+    "Author": {
+      "type": "object",
+      "properties": {
+        "@@odata.type": {
+          "type": "string"
+        },
+        "Claims": {
+          "type": "string"
+        },
+        "DisplayName": {
+          "type": "string"
+        },
+        "Email": {
+          "type": "string"
+        },
+        "Picture": {
+          "type": "string"
+        },
+        "Department": {},
+        "JobTitle": {
+          "type": "string"
+        }
+      }
+    },
+    "Author#Claims": {
+      "type": "string"
+    },
+    "Created": {
+      "type": "string"
+    },
+    "Zugriff_des_Dienstleisters_auf_H": {
+      "type": "boolean"
+    },
+    "Beschreibung_Weisungen_von_MA": {
+      "type": "string"
+    },
+    "Beschreibung_Weisungen_Kreditor": {
+      "type": "string"
+    },
+    "Projektbescheibung_Zeitraum": {
+      "type": "string"
+    },
+    "Beschreibung_Hard_Software": {
+      "type": "string"
+    },
+    "Kommentar_Antragsteller": {
+      "type": "string"
+    },
+    "Modified": {
+      "type": "string"
+    },
+    "Editor": {
+      "type": "object",
+      "properties": {
+        "@@odata.type": {
+          "type": "string"
+        },
+        "Claims": {
+          "type": "string"
+        },
+        "DisplayName": {
+          "type": "string"
+        },
+        "Email": {
+          "type": "string"
+        },
+        "Picture": {
+          "type": "string"
+        },
+        "Department": {},
+        "JobTitle": {
+          "type": "string"
+        }
+      }
+    },
+    "Editor#Claims": {
+      "type": "string"
+    },
+    "{Identifier}": {
+      "type": "string"
+    },
+    "{IsFolder}": {
+      "type": "boolean"
+    },
+    "{Thumbnail}": {
+      "type": "object",
+      "properties": {
+        "Large": {},
+        "Medium": {},
+        "Small": {}
+      }
+    },
+    "{Link}": {
+      "type": "string"
+    },
+    "{Name}": {
+      "type": "string"
+    },
+    "{FilenameWithExtension}": {
+      "type": "string"
+    },
+    "{Path}": {
+      "type": "string"
+    },
+    "{FullPath}": {
+      "type": "string"
+    },
+    "{VersionNumber}": {
+      "type": "string"
+    }
+  }
+}

@@ -41,6 +41,18 @@ Diese Datei dokumentiert ausschließlich die Änderungen, die **im Rahmen dieses
 
 ---
 
+## 21.08.2026 — Flow-Nachträge (per Web API direkt in DEV, als SA)
+
+| Änderung | Beschreibung |
+|---|---|
+| CR-Konsolidierung | Alle 11 Flows auf Connection Reference `hse_sharedsharepointonline_f07a0` (SA-Verbindung) umgestellt; CR `hse_EFABOSharePoint` gelöscht; CR `hse_sharedsharepointonline_873bd` aus der Solution entfernt → Export-Blocker behoben, `pac solution export` läuft |
+| Druck-Flows unter SA | „EFABO Druck und Versand“ + „[Parent] …“ mit identischen GUIDs unter `desvc.efabo@hse.com` neu angelegt — alle Solution-Flows gehören jetzt dem SA |
+| `Neuer Antrag` | ParseJson-Schema-Fix `Parse_Arbeitsrechtliche_Prüfung` (46 Properties statt versehentlich eingefügter Aktionsdefinition; nur Designer-relevant) |
+| `CreateHTML_PDF_AF` | Toter ITSec-Abruf entfernt + PDF-Name korrigiert (Prod-Stand übernommen); fehlende Env-Var-Parameter-Deklaration `Arbeitsrechtliche Freigabe` ergänzt, ungenutzte `IT-Security Freigabe`-Deklaration entfernt |
+| Doku | Vollabgleich DEV ↔ Prod inkl. unmanaged Layer: `Analyse/06-alm-drift-dev-prod.md`; Testplan + Flow-Bereinigung: `Analyse/07-testplan-und-bereinigung.md` |
+
+---
+
 ## Betroffene Dateien (Coauthoring-YAML)
 
 - `coauthoring/NewEFABOScreen.pa.yaml`
@@ -50,7 +62,7 @@ Diese Datei dokumentiert ausschließlich die Änderungen, die **im Rahmen dieses
 
 ## Offene Punkte (nicht Teil dieser Änderungen)
 
-- P4: Service-Account-Zugriff weiterhin ungeklärt (Connection-Sharing)
+- ~~P4: Service-Account-Zugriff ungeklärt (Connection-Sharing)~~ erledigt 21.08.: Arbeit läuft direkt als SA (Device-Code-Login, 11h-Relogin akzeptiert), alle Solution-Flows gehören dem SA
 - F17: Hartkodierte Testuser in `GenehmigerColl` — Rückfrage vor Prod-Umstellung
 - F18: Ballast-Screens (TestingScreen, Screen2, AvailableColorsAndControlsScreen) — optionales Cleanup
 - F19: Druck-Flows laufen `runtimeSource: invoker`, für Auto-Druck (#3) Umstellung auf Service-Account nötig
