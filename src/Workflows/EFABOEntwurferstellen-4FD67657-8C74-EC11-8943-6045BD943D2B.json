@@ -4,7 +4,7 @@
       "shared_sharepointonline_1": {
         "runtimeSource": "invoker",
         "connection": {
-          "connectionReferenceLogicalName": "hse_EFABOSharePoint"
+          "connectionReferenceLogicalName": "hse_sharedsharepointonline_f07a0"
         },
         "api": {
           "name": "shared_sharepointonline"

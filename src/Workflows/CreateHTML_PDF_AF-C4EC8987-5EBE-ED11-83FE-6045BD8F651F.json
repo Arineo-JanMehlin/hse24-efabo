@@ -24,7 +24,7 @@
           "name": "shared_sharepointonline"
         },
         "connection": {
-          "connectionReferenceLogicalName": "hse_EFABOSharePoint"
+          "connectionReferenceLogicalName": "hse_sharedsharepointonline_f07a0"
         },
         "runtimeSource": "invoker"
       }
@@ -48,11 +48,11 @@
             "schemaName": "hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62"
           }
         },
-        "IT-Security Freigabe (hse_ITSecurityFreigabe)": {
-          "defaultValue": "15e4a9aa-67e1-46a3-b61e-8d713d4c32f5",
+        "Arbeitsrechtliche Freigabe (new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d)": {
+          "defaultValue": "312ce00d-e31d-4435-8e4c-63e76f0e6dfa",
           "type": "String",
           "metadata": {
-            "schemaName": "hse_ITSecurityFreigabe"
+            "schemaName": "new_shared_sharepointonline_428af0dfff6745bf9e6329739ce3ae0d"
           }
         }
       },
@@ -107,7 +107,7 @@
           },
           "runAfter": {
             "Compose_-_HTML_structure": [
-              "SUCCEEDED"
+              "Succeeded"
             ]
           },
           "runtimeConfiguration": {
@@ -146,7 +146,7 @@
           "inputs": {
             "parameters": {
               "folderPath": "/Downloads",
-              "name": "Export IT Security Fragen für EFABO (@{outputs('Get_item_-_ITSec_Fragen')?['body/Title']}).pdf",
+              "name": "Arbeitsrechtliche Fragen für EFABO (@{outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Title']}).pdf",
               "body": "@body('Convert_file_using_path_-_to_PDF')"
             },
             "host": {
@@ -197,29 +197,6 @@
           },
           "metadata": {
             "operationMetadataId": "33960eb0-852b-4c05-9dcd-062add37c583"
-          }
-        },
-        "Get_item_-_ITSec_Fragen": {
-          "type": "OpenApiConnection",
-          "inputs": {
-            "parameters": {
-              "dataset": "@parameters('EFABO Site Collection (hse_shared_sharepointonline_f3b34deb01d2402392de0130d84b5b62)')",
-              "table": "@parameters('IT-Security Freigabe (hse_ITSecurityFreigabe)')",
-              "id": "@triggerBody()['number']"
-            },
-            "host": {
-              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
-              "operationId": "GetItem",
-              "connectionName": "shared_sharepointonline_1"
-            }
-          },
-          "runAfter": {
-            "Get_item_-_Arbeitsrechtliche_Fragen": [
-              "SUCCEEDED"
-            ]
-          },
-          "metadata": {
-            "operationMetadataId": "0dc53256-afc3-4871-8786-303476c65dcd"
           }
         },
         "Respond_to_a_PowerApp_or_flow": {
@@ -274,7 +251,7 @@
           "type": "Compose",
           "inputs": "<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>Title</title>\n</head>\n<body>\n<style>\n    * {\n        font-family: Arial;\n        font-size: 11px;\n    }\n    th,td {\n        padding:6px;\n        text-align: start;\n        vertical-align: text-top;\n    }\n\n    th{\n        max-width: 100px;\n        min-width: 100px;\n    }\n    td{\n        max-width: 340px;\n        min-width: 340px;\n    }\n    h3{\n        font-size: 20px;\n        font-weight: bolder;\n        padding-bottom: 4px;\n        margin-bottom: 0px;\n    }\n   td{\n        background-color:#f3f3f3;\n    }\n\n</style>\n <h3>Export Arbeitsrechtliche Fragen für EFABO (@{outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Title']})</h3>\n<table>\n    <tr>\n        <th>Beginn der Leistungserbringung </th>\n        <td>@{If(empty(outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Beginn_der_Leistungserbringung']),'',formatDateTime(outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Beginn_der_Leistungserbringung'],'dd.MM.yyyy'))}</td>\n    </tr>\n\t<tr>\n\t    <th>Ende der Leistungserbringung</th>\n        <td>@{If(empty(outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Beginn_der_Leistungserbringung']),'',formatDateTime(outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Ende_der_Leistungserbringung'],'dd.MM.yyyy'))}</td>\n\t</tr>\n\t<tr>\n\t\t<th>Leistungsbeschreibung</th>\n        <td>@{outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Leistungsbeschreibung']}</td>\n    </tr>\n    <tr>\n\t\t<th>Was ist die spezielle Expertise des Kreditors? (Warum kann der Auftrag nicht durch einen HSE Mitarbeiter erbracht werden?)</th>\n        <td>@{outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Expertise_des_Kreditors']}</td>\n    </tr>\n    <tr>\n        <th>Sollen mit der Tätigkeit Kapazitätsengpässe interner Kräfte ausgeglichen werden, die deswegen entstehen, weil es in dem Team Vakanzen gibt oder zu wenig Headcount für die Erfüllung des Tagesgeschäfts (Ressourcenengpässe) vorliegt?</th>\n        <td>@{if(equals(outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Ausgleich_Kapazitaetsengpaesse'],false),'Nein','Ja')}</td>\n    </tr>\n    <tr>\n        <th>Wird die externe Resource (nachfolgend genannt: Kreditor/Erfüllungsgehilfen des Kreditors*) in Dienstpläne integriert oder sonst in die organisatorischen Abläufe im Fachbereich und im Betrieb eingebunden?</th>\n        <td>@{if(equals(outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Kreditor_in_Dienstplaene_und_Abl'],false),'Nein','Ja')}</td>\n    </tr>\n\t<tr>\n        <th>Werden dem Kreditor von HSE Mitarbeitern oder Leiharbeitnehmern (Arbeitnehmerüberlassung) Weisungen bzgl. der Art und Weise, des Ortes oder der Zeit der Arbeitsleistung erteilt?</th>\n        <td>@{if(equals(outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Weisungen_des_Kreditors_von_HSE_'],false),'Nein','Ja')}</td>\n    </tr>\n\t<tr>\n        <th>Beschreibe die Weisungen des Mitarbeiters genauer.</th>\n        <td>@{outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Beschreibung_Weisungen_von_MA']}</td>\n    </tr>\n\t<tr>\n        <th>Erteilt der Kreditor Festangestellten oder Leiharbeitnehmern (Arbeitnehmerüberlassung) von HSE Weisungen bzgl. der Art und Weise, des Ortes oder der Zeit der Erbringung der Arbeitsleistung?</th>\n        <td>@{if(equals(outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Weisungen_von_Kreditor_erteilt'],false),'Nein','Ja')}</td>\n    </tr>\n\t<tr>\n        <th>Beschreibe die Weisungen des Kreditors genauer.</th>\n        <td>@{outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Beschreibung_Weisungen_Kreditor']}</td>\n    </tr>\n\t<tr>\n        <th>Nimmt der Kreditor an ausschließlich internen Teammeetings, Jour Fixes, Teamevents, Mitarbeiterveranstaltungen oder Ähnlichem teil?</th>\n        <td>@{if(equals(outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Ausschlie_x00df_liche_Teilnahme_'],false),'Nein','Ja')}</td>\n    </tr>\n\t<tr>\n        <th>Greift der Dienstleister/Werkunternehmer für die Erfüllung seines Vertrages mit HSE auf mehrere bei ihm festangestellte Personen oder Kreditoren zu, auf deren Auswahl HSE keinerlei Einfluss hat?</th>\n        <td>@{if(equals(outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Zugriff_des_Dienstleisters_auf_H'],false),'Nein','Ja')}</td>\n    </tr>\n\t<tr>\n        <th>War der Kreditor in den letzten drei Jahren bei HSE als Arbeitnehmer oder in Arbeitnehmerüberlassung beschäftigt (notfalls von HR bestätigen lassen)?</th>\n        <td>@{if(equals(outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Beschaeftigung_des_Kreditors_bei'],false),'Nein','Ja')}</td>\n    </tr>\n\t<tr>\n        <th>Bitte gib das genaue Projekt und den Zeitraum an.</th>\n        <td>@{outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Projektbescheibung_Zeitraum']}</td>\n    </tr>\n\t<tr>\n        <th>Arbeitet der Kreditor ausschließlich mit eigener Hard- und Software (diese wird nicht von HSE zur Verfügung gestellt)?</th>\n        <td>@{if(equals(outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Benutzt_Kreditor_ausschlie_x00df'],false),'Nein','Ja')}</td>\n    </tr>\n\t<tr>\n        <th>Welche Hard- oder Software soll dem Kreditor zur Verfügung gestellt werden?</th>\n        <td>@{outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Beschreibung_Hard_Software']}</td>\n    </tr>\n\t<tr>\n        <th>Wurde der Kreditor (bzw. Erfüllungsgehilfen des Kreditors) bereits innerhalb der letzten 12 Monaten von HSE beauftragt (notfalls direkt vom Kreditor bestätigen lassen)?</th>\n        <td>@{if(equals(outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Beautragung_des_Kreditors_in_let'],false),'Nein','Ja')}</td>\n    </tr>\n\t<tr>\n        <th>Wird der Kreditor für länger als 6 Monate benötigt?</th>\n        <td>@{if(equals(outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Kreditor_laenger_6_Monate_ben_x0'],false),'Nein','Ja')}</td>\n    </tr>\n\t<tr>\n        <th>Für welchem Zeitraum soll der Kreditor eingesetzt werden und warum ist ein Einsatz für länger als 6 Monate erforderlich?</th>\n        <td>@{outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Zeitraum_Warum_laenger_6_Monate_']}</td>\n    </tr>\n\t<tr>\n        <th>Muss der Kreditor die Leistung für HSE höchstpersönlich erbringen oder es handelt sich um einen prominenten HSE-vor-der-Kamera-Experten?</th>\n        <td>@{if(equals(outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Prominenter_vor_der_Kamera_Exper'],false),'Nein','Ja')}</td>\n    </tr>\n\t<tr>\n        <th>Genaue Beschreibung, warum es ausnahmsweise unerlässlich ist, dass der Kreditor die Leistung höchstpersönlich erbringt.</th>\n        <td>@{outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Warum_muss_Kreditor_Leistung_hoe']}</td>\n    </tr>\n\t<tr>\n        <th>Arbeitet der Kreditor mit mehr als einer konkreten Kontakt-Person (zzgl. eines Vertreters für Abwesenheiten) bei HSE (festangestellt oder HSE als Leiharbeitnehmer überlassen) zusammen oder fungiert diese eine Person fungiert als alleinige Schnittstelle in beide Richtungen?</th>\n        <td>@{if(equals(outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Arbeit_des_Kreditors_mit_mehr_al'],false),'Nein','Ja')}</td>\n    </tr>\n\t<tr>\n        <th>Warum muss der Kreditor zwingend mit mehr als einer individualisierten Person von HSE (zzgl. Vertreter für Abwesenheiten) zusammen arbeiten und wer sind diese Ansprechpartner? Soll der Kreditor in einem \"Team\" zusammen mit HSE Mitarbeitern tätig werden? Wenn ja, wer sind die Teammitglieder?</th>\n        <td>@{outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Warum_mehr_als_eine_Person']}</td>\n    </tr>\n\t<tr>\n        <th>Wird der Kreditor in den Räumlichkeiten von HSE tätig, bzw. (falls die Tätigkeit nicht ausschließlich remote erbracht werden kann) – handelt es sich um maximal 1 Anwesenheitstag pro Woche und wird ein Sitzplatz in einem abgegrenzten Bereich zur Verfügung gestellt, der deutlich als Sitzplatz eines Externen gekennzeichnet ist?</th>\n        <td>@{if(equals(outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Muss_Kreditor_in_HSE_Raeumlichke'],false),'Nein','Ja')}</td>\n    </tr>\n\t<tr>\n        <th>Wenn ja, an wie vielen Tagen pro Woche soll der Kreditor bei HSE vor Ort tätig werden und warum ist das zwingend notwendig und wo soll der Kreditor sitzen (Bereich und Raumnummer)?</th>\n        <td>@{outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Wie_viele_Tage_vor_Ort']}</td>\n    </tr>\n\t<tr>\n        <th>Ist die eingesetzte Externe Resource sozialversicherungspflichtig?</th>\n        <td>@{if(equals(outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Sozialversicherungspflichtig'],false),'Nein','Ja')}</td>\n    </tr>\n\t<tr>\n        <th>Erklärung des Lieferanten bei Einsatz nicht sozialversicherungspflichtig beschäftigter Resourcen.</th>\n        <td>@{outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Solzialversicherungspflichtig_Er']}</td>\n    </tr>\n\t<tr>\n        <th>Wird der Kreditor pauschal (mit einem festen Betrag) für seine gesamte Leistung vergütet?</th>\n        <td>@{if(equals(outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Pauschale_Verguetung_Kreditor'],false),'Nein','Ja')}</td>\n    </tr>\n\t<tr>\n        <th>Warum ist eine pauschale Vergütung des Leistungspakets nicht möglich?</th>\n        <td>@{outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Warum_keine_pauschale_Verg_x00fc']}</td>\n    </tr>\n\t<tr>\n        <th>Sind die geschätzten Kosten Ihrer Anfrage größer/gleich 50.000 EUR?</th>\n        <td>@{if(equals(outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Kosten_groe_x00df_er_gleich_5000'],false),'Nein','Ja')}</td>\n    </tr>\n\t<tr>\n        <th>Hiermit bestätige ich, dass ich die obigen Fragen vollständig und richtig beantwortet habe.</th>\n        <td>@{if(equals(outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Best_x00e4_tigung_der_Antworten'],false),'Nein','Ja')}</td>\n    </tr>\n<tr>\n        <th>Neues Ende der Leistungserbringung</th>\n        <td>@{outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Ende_der_Leistungserbringung_Neu']}</td>\n    </tr>\n<tr>\n        <th>Gibt es Änderungen?</th>\n        <td>@{outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Aenderungen']}</td>\n    </tr>\n\t<tr>\n        <th>Kommentar Antragsteller</th>\n        <td>@{outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Kommentar_Antragsteller']}</td>\n    </tr>\n<tr>\n        <th>Kommentar Legal</th>\n        <td>@{outputs('Get_item_-_Arbeitsrechtliche_Fragen')?['body/Kommentar_Legal']}</td>\n    </tr>\n</table>\n</body>\n</html>",
           "runAfter": {
-            "Get_item_-_ITSec_Fragen": [
+            "Get_item_-_Arbeitsrechtliche_Fragen": [
               "Succeeded"
             ]
           },

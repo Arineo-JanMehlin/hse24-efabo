@@ -6,7 +6,7 @@
           "name": "shared_sharepointonline"
         },
         "connection": {
-          "connectionReferenceLogicalName": "hse_EFABOSharePoint"
+          "connectionReferenceLogicalName": "hse_sharedsharepointonline_f07a0"
         },
         "runtimeSource": "embedded"
       },
@@ -702,1008 +702,190 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "content": {
+                    "@@odata.etag": {
+                      "type": "string"
+                    },
+                    "ItemInternalId": {
+                      "type": "string"
+                    },
+                    "ID": {
+                      "type": "integer"
+                    },
+                    "Title": {
+                      "type": "string"
+                    },
+                    "Weisungen_des_Kreditors_von_HSE_": {
+                      "type": "boolean"
+                    },
+                    "Weisungen_von_Kreditor_erteilt": {
+                      "type": "boolean"
+                    },
+                    "Ausschlie_x00df_liche_Teilnahme_": {
+                      "type": "boolean"
+                    },
+                    "Benutzt_Kreditor_ausschlie_x00df": {
+                      "type": "boolean"
+                    },
+                    "Beautragung_des_Kreditors_in_let": {
+                      "type": "boolean"
+                    },
+                    "Prominenter_vor_der_Kamera_Exper": {
+                      "type": "boolean"
+                    },
+                    "Muss_Kreditor_in_HSE_Raeumlichke": {
+                      "type": "boolean"
+                    },
+                    "Zeitraum_Leistungen_Fachbereich_": {
+                      "type": "string"
+                    },
+                    "Arbeit_des_Kreditors_mit_mehr_al": {
+                      "type": "boolean"
+                    },
+                    "Warum_mehr_als_eine_Person": {
+                      "type": "string"
+                    },
+                    "Wie_viele_Tage_vor_Ort": {
+                      "type": "string"
+                    },
+                    "Warum_keine_pauschale_Verg_x00fc": {
+                      "type": "string"
+                    },
+                    "Kommentar_Legal": {
+                      "type": "string"
+                    },
+                    "Kreditor_in_Dienstplaene_und_Abl": {
+                      "type": "boolean"
+                    },
+                    "Beschaeftigung_des_Kreditors_bei": {
+                      "type": "boolean"
+                    },
+                    "Kreditor_laenger_6_Monate_ben_x0": {
+                      "type": "boolean"
+                    },
+                    "Kosten_groe_x00df_er_gleich_5000": {
+                      "type": "boolean"
+                    },
+                    "Warum_muss_Kreditor_Leistung_hoe": {
+                      "type": "string"
+                    },
+                    "Ausgleich_Kapazitaetsengpaesse": {
+                      "type": "boolean"
+                    },
+                    "Pauschale_Verguetung_Kreditor": {
+                      "type": "boolean"
+                    },
+                    "Best_x00e4_tigung_der_Antworten": {
+                      "type": "boolean"
+                    },
+                    "Author": {
                       "type": "object",
                       "properties": {
-                        "@@odata.etag": {
+                        "@@odata.type": {
                           "type": "string"
                         },
-                        "ItemInternalId": {
+                        "Claims": {
                           "type": "string"
                         },
-                        "ID": {
-                          "type": "integer"
-                        },
-                        "Title": {
+                        "DisplayName": {
                           "type": "string"
                         },
-                        "Modified": {
+                        "Email": {
                           "type": "string"
                         },
-                        "Created": {
+                        "Picture": {
                           "type": "string"
                         },
-                        "Author": {
-                          "type": "object",
-                          "properties": {
-                            "@@odata.type": {
-                              "type": "string"
-                            },
-                            "Claims": {
-                              "type": "string"
-                            },
-                            "DisplayName": {
-                              "type": "string"
-                            },
-                            "Email": {
-                              "type": "string"
-                            },
-                            "Picture": {
-                              "type": "string"
-                            },
-                            "Department": {
-                              "type": "string"
-                            },
-                            "JobTitle": {
-                              "type": "string"
-                            }
-                          }
-                        },
-                        "Author#Claims": {
-                          "type": "string"
-                        },
-                        "Editor": {
-                          "type": "object",
-                          "properties": {
-                            "@@odata.type": {
-                              "type": "string"
-                            },
-                            "Claims": {
-                              "type": "string"
-                            },
-                            "DisplayName": {
-                              "type": "string"
-                            },
-                            "Email": {
-                              "type": "string"
-                            },
-                            "Picture": {
-                              "type": "string"
-                            },
-                            "Department": {
-                              "type": "string"
-                            },
-                            "JobTitle": {
-                              "type": "string"
-                            }
-                          }
-                        },
-                        "Editor#Claims": {
-                          "type": "string"
-                        },
-                        "Zweck_der_Software": {
-                          "type": "string"
-                        },
-                        "Website_des_Herstellers": {
-                          "type": "string"
-                        },
-                        "Techn_Ansprechpartner_HSE": {
-                          "type": "object",
-                          "properties": {
-                            "@@odata.type": {
-                              "type": "string"
-                            },
-                            "Claims": {
-                              "type": "string"
-                            },
-                            "DisplayName": {
-                              "type": "string"
-                            },
-                            "Email": {},
-                            "Picture": {},
-                            "Department": {},
-                            "JobTitle": {}
-                          }
-                        },
-                        "Techn_Ansprechpartner_HSE#Claims": {
-                          "type": "string"
-                        },
-                        "Techn_Ansprechpartner_DL": {
-                          "type": "string"
-                        },
-                        "Techn_Ansprechpartner_Anbieter": {
-                          "type": "string"
-                        },
-                        "Verwendung_KI": {
-                          "type": "boolean"
-                        },
-                        "Lizenvariante": {
-                          "type": "string"
-                        },
-                        "Anzahl_Lizenzen": {
-                          "type": "string"
-                        },
-                        "Schutzbedarf_Verfuegbarkeit": {
-                          "type": "object",
-                          "properties": {
-                            "@@odata.type": {
-                              "type": "string"
-                            },
-                            "Id": {
-                              "type": "integer"
-                            },
-                            "Value": {
-                              "type": "string"
-                            }
-                          }
-                        },
-                        "Schutzbedarf_Verfuegbarkeit#Id": {
-                          "type": "integer"
-                        },
-                        "Schutzbedarf_Integritaet": {
-                          "type": "object",
-                          "properties": {
-                            "@@odata.type": {
-                              "type": "string"
-                            },
-                            "Id": {
-                              "type": "integer"
-                            },
-                            "Value": {
-                              "type": "string"
-                            }
-                          }
-                        },
-                        "Schutzbedarf_Integritaet#Id": {
-                          "type": "integer"
-                        },
-                        "Schutzbedarf_Vertraulichkeit": {
-                          "type": "object",
-                          "properties": {
-                            "@@odata.type": {
-                              "type": "string"
-                            },
-                            "Id": {
-                              "type": "integer"
-                            },
-                            "Value": {
-                              "type": "string"
-                            }
-                          }
-                        },
-                        "Schutzbedarf_Vertraulichkeit#Id": {
-                          "type": "integer"
-                        },
-                        "Personenbezogene_Daten": {
-                          "type": "boolean"
-                        },
-                        "Personenbezogene_Daten_mit_erhoe": {
-                          "type": "boolean"
-                        },
-                        "Vertrauliche_Daten": {
-                          "type": "boolean"
-                        },
-                        "Streng_Vertrauliche_Daten": {
-                          "type": "boolean"
-                        },
-                        "Freitext_Kategorie_Daten": {
-                          "type": "string"
-                        },
-                        "Benutzergruppe_Software": {
-                          "type": "string"
-                        },
-                        "Anzahl_Nutzer": {
-                          "type": "string"
-                        },
-                        "Andere_Softwareloesungen_Zugriff": {
-                          "type": "boolean"
-                        },
-                        "Daten_von_DL_verarbeitet": {
-                          "type": "boolean"
-                        },
-                        "DL_Zugriff_auf_Software_Daten": {
-                          "type": "boolean"
-                        },
-                        "Welche_Systeme_Software": {
-                          "type": "string"
-                        },
-                        "Wo_Systeme": {
-                          "type": "string"
-                        },
-                        "Software_erreichbar_Internet": {
-                          "type": "string"
-                        },
-                        "Betreiber_Systeme": {
-                          "type": "string"
-                        },
-                        "Standarsierte_Schnittstellen": {
-                          "type": "boolean"
-                        },
-                        "Transportweg_Verschluesselung": {
-                          "type": "string"
-                        },
-                        "Genutztes_Verfahren": {
-                          "type": "string"
-                        },
-                        "Wo_Speicherung_Authentifikations": {
-                          "type": "string"
-                        },
-                        "Zugriff_nur_aus_HSE_Netzwerk": {
-                          "type": "boolean"
-                        },
-                        "{Identifier}": {
-                          "type": "string"
-                        },
-                        "{IsFolder}": {
-                          "type": "boolean"
-                        },
-                        "{Thumbnail}": {
-                          "type": "object",
-                          "properties": {
-                            "Large": {},
-                            "Medium": {},
-                            "Small": {}
-                          }
-                        },
-                        "{Link}": {
-                          "type": "string"
-                        },
-                        "{Name}": {
-                          "type": "string"
-                        },
-                        "{FilenameWithExtension}": {
-                          "type": "string"
-                        },
-                        "{Path}": {
-                          "type": "string"
-                        },
-                        "{FullPath}": {
-                          "type": "string"
-                        },
-                        "{ContentType}": {
-                          "type": "object",
-                          "properties": {
-                            "@@odata.type": {
-                              "type": "string"
-                            },
-                            "Id": {
-                              "type": "string"
-                            },
-                            "Name": {
-                              "type": "string"
-                            }
-                          }
-                        },
-                        "{ContentType}#Id": {
-                          "type": "string"
-                        },
-                        "{HasAttachments}": {
-                          "type": "boolean"
-                        },
-                        "{VersionNumber}": {
+                        "Department": {},
+                        "JobTitle": {
                           "type": "string"
                         }
                       }
                     },
-                    "schema": {
+                    "Author#Claims": {
+                      "type": "string"
+                    },
+                    "Created": {
+                      "type": "string"
+                    },
+                    "Zugriff_des_Dienstleisters_auf_H": {
+                      "type": "boolean"
+                    },
+                    "Beschreibung_Weisungen_von_MA": {
+                      "type": "string"
+                    },
+                    "Beschreibung_Weisungen_Kreditor": {
+                      "type": "string"
+                    },
+                    "Projektbescheibung_Zeitraum": {
+                      "type": "string"
+                    },
+                    "Beschreibung_Hard_Software": {
+                      "type": "string"
+                    },
+                    "Kommentar_Antragsteller": {
+                      "type": "string"
+                    },
+                    "Modified": {
+                      "type": "string"
+                    },
+                    "Editor": {
                       "type": "object",
                       "properties": {
-                        "type": {
+                        "@@odata.type": {
                           "type": "string"
                         },
-                        "properties": {
-                          "type": "object",
-                          "properties": {
-                            "ItemInternalId": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "ID": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Title": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Modified": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Created": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Author": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                },
-                                "properties": {
-                                  "type": "object",
-                                  "properties": {
-                                    "Claims": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    },
-                                    "DisplayName": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    },
-                                    "Email": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    },
-                                    "Picture": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    },
-                                    "Department": {
-                                      "type": "object",
-                                      "properties": {}
-                                    },
-                                    "JobTitle": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    },
-                                    "@@odata.type": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            },
-                            "Author#Claims": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Editor": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                },
-                                "properties": {
-                                  "type": "object",
-                                  "properties": {
-                                    "Claims": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    },
-                                    "DisplayName": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    },
-                                    "Email": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    },
-                                    "Picture": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    },
-                                    "Department": {
-                                      "type": "object",
-                                      "properties": {}
-                                    },
-                                    "JobTitle": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    },
-                                    "@@odata.type": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            },
-                            "Editor#Claims": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Zweck_der_Software": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Website_des_Herstellers": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Techn_Ansprechpartner_HSE": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                },
-                                "properties": {
-                                  "type": "object",
-                                  "properties": {
-                                    "Claims": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    },
-                                    "DisplayName": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    },
-                                    "Email": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    },
-                                    "Picture": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    },
-                                    "Department": {
-                                      "type": "object",
-                                      "properties": {}
-                                    },
-                                    "JobTitle": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    },
-                                    "@@odata.type": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            },
-                            "Techn_Ansprechpartner_HSE#Claims": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Techn_Ansprechpartner_DL": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Techn_Ansprechpartner_Anbieter": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Verwendung_KI": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Lizenvariante": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Anzahl_Lizenzen": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Schutzbedarf_Verfuegbarkeit": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                },
-                                "properties": {
-                                  "type": "object",
-                                  "properties": {
-                                    "Id": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    },
-                                    "Value": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    },
-                                    "@@odata.type": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            },
-                            "Schutzbedarf_Verfuegbarkeit#Id": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Schutzbedarf_Integritaet": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                },
-                                "properties": {
-                                  "type": "object",
-                                  "properties": {
-                                    "Id": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    },
-                                    "Value": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    },
-                                    "@@odata.type": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            },
-                            "Schutzbedarf_Integritaet#Id": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Schutzbedarf_Vertraulichkeit": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                },
-                                "properties": {
-                                  "type": "object",
-                                  "properties": {
-                                    "Id": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    },
-                                    "Value": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    },
-                                    "@@odata.type": {
-                                      "type": "object",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string"
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              }
-                            },
-                            "Schutzbedarf_Vertraulichkeit#Id": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Personenbezogene_Daten": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Personenbezogene_Daten_mit_erhoe": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Vertrauliche_Daten": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Streng_Vertrauliche_Daten": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Freitext_Kategorie_Daten": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Benutzergruppe_Software": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Anzahl_Nutzer": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Andere_Softwareloesungen_Zugriff": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Daten_von_DL_verarbeitet": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "DL_Zugriff_auf_Software_Daten": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Welche_Systeme_Software": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Wo_Systeme": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Software_erreichbar_Internet": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Betreiber_Systeme": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Standarsierte_Schnittstellen": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Transportweg_Verschluesselung": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Genutztes_Verfahren": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Wo_Speicherung_Authentifikations": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "Zugriff_nur_aus_HSE_Netzwerk": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "{Identifier}": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "{IsFolder}": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "{Thumbnail}": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                },
-                                "properties": {
-                                  "type": "object",
-                                  "properties": {
-                                    "Large": {
-                                      "type": "object",
-                                      "properties": {}
-                                    },
-                                    "Medium": {
-                                      "type": "object",
-                                      "properties": {}
-                                    },
-                                    "Small": {
-                                      "type": "object",
-                                      "properties": {}
-                                    }
-                                  }
-                                }
-                              }
-                            },
-                            "{Link}": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "{Name}": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "{FilenameWithExtension}": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "{Path}": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "{FullPath}": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "{HasAttachments}": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "{VersionNumber}": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "@@odata.etag": {
-                              "type": "object",
-                              "properties": {
-                                "type": {
-                                  "type": "string"
-                                }
-                              }
-                            }
-                          }
+                        "Claims": {
+                          "type": "string"
+                        },
+                        "DisplayName": {
+                          "type": "string"
+                        },
+                        "Email": {
+                          "type": "string"
+                        },
+                        "Picture": {
+                          "type": "string"
+                        },
+                        "Department": {},
+                        "JobTitle": {
+                          "type": "string"
                         }
                       }
+                    },
+                    "Editor#Claims": {
+                      "type": "string"
+                    },
+                    "{Identifier}": {
+                      "type": "string"
+                    },
+                    "{IsFolder}": {
+                      "type": "boolean"
+                    },
+                    "{Thumbnail}": {
+                      "type": "object",
+                      "properties": {
+                        "Large": {},
+                        "Medium": {},
+                        "Small": {}
+                      }
+                    },
+                    "{Link}": {
+                      "type": "string"
+                    },
+                    "{Name}": {
+                      "type": "string"
+                    },
+                    "{FilenameWithExtension}": {
+                      "type": "string"
+                    },
+                    "{Path}": {
+                      "type": "string"
+                    },
+                    "{FullPath}": {
+                      "type": "string"
+                    },
+                    "{VersionNumber}": {
+                      "type": "string"
                     }
                   }
                 }
